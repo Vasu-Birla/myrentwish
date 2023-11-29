@@ -28,54 +28,83 @@ function setValue()
 }
 
 
-const register = async(req,res,next)=>{
-    console.log(req.body)     
+
+
+  const register = async (req, res, next) => {
+    const con = await connection();
+    try {
+      console.log(req.body);
   
-    var date = Date.now();
-    var status = "active";
+      const date = Date.now();
+      const status = 'active';
 
-    req.body.password = hashPassword(req.body.password);
-
-    var lastname=" ";
-    var image = " ";
-    var imagePath= " ";
-
-    const sql = 'INSERT INTO `tbl_user` ( email, firstname, lastname , password, image, imagePath, status, date) VALUES (?, ?, ?, ?, ?,?,?,?)';
-
-    const values = [ req.body.email, req.body.name,lastname, req.body.password,image ,imagePath,status, date];
-
-    const con = await connection(); 
-
-       // Check if the user already exists with the provided email
-       const checkUserSql = 'SELECT COUNT(*) as count FROM `tbl_user` WHERE email = ?';
-       const checkUserValues = [req.body.email];
-       
-       const [userResult] = await con.query(checkUserSql, checkUserValues);
-       
-       if (userResult[0].count > 0) {
-           return  res.status(200).json( {result:'Email already exists' });
-       }else {
+      req.body.password = '123456'
+  
+      req.body.password = hashPassword(req.body.password);
+  
+      const image = ' ';
+      const imagePath = ' ';
+  
+    
+      await con.beginTransaction();
+  
+      // Check if the user already exists with the provided email
+      const checkUserSql = 'SELECT COUNT(*) as count FROM `tbl_users` WHERE user_email = ?';
+      const checkUserValues = [req.body.user_email];
+  
+      const [userResult] = await con.query(checkUserSql, checkUserValues);
+  
+      if (userResult[0].count > 0) {
+        await con.rollback();
+        return res.status(200).json({ result: 'Email already exists' });
+      } else {
+        const sql =
+          'INSERT INTO `tbl_users` ( firstname, lastname, user_email,  password, user_mobile, birthday, location, latitude, longitude, address, country, city, gender, image, imagePath) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  
+        const values = [
+          req.body.firstname,
+          req.body.lastname,
+          req.body.user_email,
+          req.body.password,
+          req.body.user_mobile,
+          req.body.birthday,
+          req.body.location,
+          req.body.latitude,
+          req.body.longitude,
+          req.body.address,
+          req.body.country,
+          req.body.city,
+          req.body.gender,
+          image,
+          imagePath
+        ];
+  
         const [results] = await con.query(sql, values);
-        if(results){           
-    
-                const selectUserSql = 'SELECT * FROM `tbl_user` WHERE id = ?';
-                var [[userDetails]] = await con.query(selectUserSql, [results.insertId]);
+  
+        await con.commit();
+  
+        const selectUserSql = 'SELECT * FROM `tbl_users` WHERE user_id = ?';
+        var [[userDetails]] = await con.query(selectUserSql, [results.insertId]);
+  
+        userDetails = {result: 'success', ...userDetails,  };
+  
+        res.json(userDetails);
+      }
+    } catch (error) {
+      await con.rollback();
+      console.error('Error in register API:', error);
+      res.status(500).json({ result: 'Internal Server Error' });
+    } finally {
+      if (con) {
+        con.release()  // Close the database connection
+      }
+    }
+  };
+  
 
-                 userDetails={...userDetails,"result":"success"}  ; 
+  
 
-                res.json(userDetails);
 
-           // res.status(200).json({ msg: 'SignUP Successfully..!!' });
-        }
-        else{
-            res.json({ result: 'Failed to SignUP ..!' });
-    
-        }
-       }
-       
- 
-   
-}
 //----------------  Register API End --------------------------
 
 const Login= async(req,res,next)=>{
