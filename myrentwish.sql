@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 29, 2023 at 08:49 AM
+-- Generation Time: Nov 29, 2023 at 08:53 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -62,7 +62,7 @@ CREATE TABLE `tbl_users` (
   `user_email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `user_mobile` varchar(15) DEFAULT NULL,
-  `birthday` varchar(255) NOT NULL DEFAULT current_timestamp(),
+  `birthday` varchar(255) NOT NULL,
   `location` varchar(255) DEFAULT 'notDetected',
   `latitude` varchar(255) NOT NULL DEFAULT 'notDetected',
   `longitude` varchar(255) NOT NULL DEFAULT 'notDetected',
@@ -81,7 +81,7 @@ CREATE TABLE `tbl_users` (
 --
 
 INSERT INTO `tbl_users` (`user_id`, `firstname`, `lastname`, `user_email`, `password`, `user_mobile`, `birthday`, `location`, `latitude`, `longitude`, `address`, `country`, `city`, `gender`, `image`, `imagePath`, `status`, `created_at`) VALUES
-(8, 'Kilvish', 'Birla', 'kilvishbirla2@gmail.com', '$2a$10$8tBE.Rm8j/0rAAfpSxeE..v3v6v8DrO2eminiJOnHmPjQPiBE7gmW', '9039568219', '0000-00-00', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', ' ', ' ', 'active', '2023-11-29 07:39:02');
+(8, 'Kilvish', 'Birla', 'kilvishbirla2@gmail.com', '$2a$10$8tBE.Rm8j/0rAAfpSxeE..v3v6v8DrO2eminiJOnHmPjQPiBE7gmW', '9039568219', '', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', ' ', ' ', 'active', '2023-11-29 07:39:02');
 
 --
 -- Indexes for dumped tables
