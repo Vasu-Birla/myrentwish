@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 29, 2023 at 08:44 AM
+-- Generation Time: Nov 29, 2023 at 08:49 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -62,7 +62,7 @@ CREATE TABLE `tbl_users` (
   `user_email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `user_mobile` varchar(15) DEFAULT NULL,
-  `birthday` date NOT NULL DEFAULT current_timestamp(),
+  `birthday` varchar(255) NOT NULL DEFAULT current_timestamp(),
   `location` varchar(255) DEFAULT 'notDetected',
   `latitude` varchar(255) NOT NULL DEFAULT 'notDetected',
   `longitude` varchar(255) NOT NULL DEFAULT 'notDetected',
