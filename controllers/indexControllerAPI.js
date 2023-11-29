@@ -38,8 +38,7 @@ function setValue()
       const date = Date.now();
       const status = 'active';
 
-      req.body.password = '123456'
-  
+   
       req.body.password = hashPassword(req.body.password);
   
       const image = ' ';
