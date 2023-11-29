@@ -84,6 +84,8 @@ function setValue()
   
         const selectUserSql = 'SELECT * FROM `tbl_users` WHERE user_id = ?';
         var [[userDetails]] = await con.query(selectUserSql, [results.insertId]);
+
+        // userDetails.user_id = userDetails.user_id.toString();
   
         userDetails = {result: 'success', ...userDetails,  };
   
@@ -196,7 +198,7 @@ const ForgotPassword = async (req, res, next) => {
           res.json({ result: "Invalid Email" });
         } else {
           sendMailOTP(email, otp, user);
-          res.json({ result: "success", user_id: user.id, otp: otp });
+          res.json({ result: "success", user_id: user.user_id, otp: otp });
         }
       }
     } catch (error) {
@@ -587,21 +589,112 @@ const updloadBYUser   = async(req,res,next)=>{
 
 //------------------------ veiw/edit Single User Start  -------------------------
 
-const profile = async(req,res,next)=>{    
-    const con = await connection(); 
 
-
-    const userID = req.body.user_id;
-    const [[user]] = await con.query('SELECT * FROM tbl_user WHERE id = ?', [userID ]);
-
-    if(user.status=="active"){
+  const profile = async (req, res, next) => {
+    const con = await connection();
+    try {        
+      const userID = req.body.user_id;
+      const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+  
+      if (user && user.status == "active") {
         res.json(user);
-    }else{
-        res.json({ result: "Deactivated User's Profile can not be Open"});   
+      } else {
+        res.json({ result: "Deactivated User's Profile cannot be Open" });
+      }
+    } catch (error) {
+      console.error('Error in profile API:', error);
+      res.status(500).json({ result: 'Internal Server Error' });
+    } finally {  
+        con.release();
     }
+  };
+
+
+
+  const updateProfile = async (req, res, next) => {
+    const con = await connection();
+    try {
       
+      await con.beginTransaction();
+  
+      const userID = req.body.user_id;
+  
+      // Fetch the existing user details
+      const [[existingUser]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+  
+      if (!existingUser) {
+        await con.rollback();
+        res.json({ result: "User not found" });
+        return;
+      }
+
    
-  }
+
+      var image =  existingUser.image
+      var imagePath=  existingUser.imagePath 
+     if (req.file) {
+       image =  req.file.filename ;
+       imagePath=   req.file.path = `http://${process.env.Host1}/uploads/${req.file.filename}`; 
+    }
+  
+      // Update user details
+      const updatedUser = {
+        firstname: req.body.firstname || existingUser.firstname,
+        lastname: req.body.lastname || existingUser.lastname,
+        user_email: req.body.user_email || existingUser.user_email,
+        user_mobile: req.body.user_mobile || existingUser.user_mobile,
+        birthday: req.body.birthday || existingUser.birthday,
+        location: req.body.location || existingUser.location,
+        latitude: req.body.latitude || existingUser.latitude,
+        longitude: req.body.longitude || existingUser.longitude,
+        address: req.body.address || existingUser.address,
+        country: req.body.country || existingUser.country,
+        city: req.body.city || existingUser.city,
+        gender: req.body.gender || existingUser.gender,
+        image: image,
+        imagePath: imagePath
+      };
+
+
+
+      console.log(updatedUser)
+        
+      // Update the user details in the database
+      const updateSql =
+        'UPDATE tbl_users SET firstname=?, lastname=?, user_email=?, user_mobile=?, birthday=?, location=?, latitude=?, longitude=?, address=?, country=?, city=?, gender=?, image=?, imagePath=? WHERE user_id=?';
+      const updateValues = [
+        updatedUser.firstname,
+        updatedUser.lastname,
+        updatedUser.user_email,
+        updatedUser.user_mobile,
+        updatedUser.birthday,
+        updatedUser.location,
+        updatedUser.latitude,
+        updatedUser.longitude,
+        updatedUser.address,
+        updatedUser.country,
+        updatedUser.city,
+        updatedUser.gender,
+        updatedUser.image,
+        updatedUser.imagePath,
+        userID,
+      ];
+  
+      await con.query(updateSql, updateValues);
+  
+      await con.commit();  
+      res.json({ result: "success" });
+
+    } catch (error) {
+      // Rollback the transaction in case of an error
+      await con.rollback();
+      console.error('Error in updateProfile API:', error);
+      res.status(500).json({ result: 'Internal Server Error' });
+    } finally {    
+        con.release();
+    }
+  };
+  
 
 
   
@@ -640,9 +733,7 @@ if(results){
 }
 
     
-   
-   
-  }
+}
 
 
 //------------------------ veiw/edit Single User End -------------------------
@@ -1084,7 +1175,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
     getProducts,prodcutDetails,fvtList, addtoFVT, addtocol, colList, 
     removeFromCol, updloadBYUser, profile, profilePost, similarColl,
      aboutUs, TC_User, UserPrivacy, contactUS, aboutUs1, createPayment, 
-     successPayment, cancelPayment ,paymentStatus, obtainToken
+     successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile
 
 }
 

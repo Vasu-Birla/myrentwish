@@ -26,7 +26,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     successPayment,
     cancelPayment,
     paymentStatus,
-    obtainToken} from '../controllers/indexControllerAPI.js';
+    obtainToken,
+    updateProfile} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -35,6 +36,10 @@ const router = express.Router();
 
 //------------- API Routing Start -----------------------
 
+
+
+
+//------------- USer Profile Section  ----------------
 
 router.route('/register').post( upload.none(),register);
 
@@ -45,6 +50,25 @@ router.route('/logout').get( Logout);
 router.route('/forgotpassword').post( upload.none(),ForgotPassword );
 
 router.route('/resetpassword').post( upload.none(),resetpassword);
+
+
+router.route('/profile').post(upload.none(),profile)
+
+router.route('/updateprofile').post(upload.single('image'),updateProfile)
+
+router.route('/updateUser').post(upload.single('image'),profilePost)
+
+
+
+
+
+
+
+
+
+
+
+//------------- Product Secttion -----------------
 
 router.route('/products').post(upload.none(),getProducts);
 
@@ -63,9 +87,7 @@ router.route('/removefromCol').post( upload.none(),removeFromCol);
 
 router.route('/uploadToyImg').post( upload.single('image'),updloadBYUser);
 
-router.route('/getUser').post(upload.none(),profile)
 
-router.route('/updateUser').post(upload.single('image'),profilePost)
 
 router.route('/similarColl').post(upload.none(), similarColl )
 
