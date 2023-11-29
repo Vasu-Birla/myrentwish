@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+        <title> HOME PAGE  INVOICE MANAGEMENT</title>
+		
+		<!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="../assets/img/favicon.png">
+		
+		<!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+		
+		<!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
+		
+		<!-- Feathericon CSS -->
+        <link rel="stylesheet" href="../assets/css/feathericon.min.css">
+
+		
+		<link rel="stylesheet" href="../assets/plugins/morris/morris.css">
+		
+		<!-- Main CSS -->
+        <link rel="stylesheet" href="../assets/css/style.css">
+    </head>
+    <body>
+	
+		<!-- Main Wrapper -->
+        <div class="main-wrapper">
+		
+			<!-- Header -->
+            <div class="header">
+			
+				<!-- Logo -->
+                <div class="header-left">
+                    <a href="/" class="logo">
+						<img src="../assets/img/logo1.png" style="width: 150px; height: 60px;"  alt="Logo">
+					</a>
+					<a href="/" class="logo logo-small">
+						<img src="../assets/img/logo-small1.png"  alt="Logo" width="30" height="30">
+					</a>
+                </div>
+				<!-- /Logo -->
+				
+				<a href="javascript:void(0);" id="toggle_btn">
+					<i class="fe fe-text-align-left"></i>
+				</a>
+				
+				
+				<!-- Mobile Menu Toggle -->
+				<a class="mobile_btn" id="mobile_btn">
+					<i class="fa fa-bars"></i>
+				</a>
+				<!-- /Mobile Menu Toggle -->
+				
+				<!-- Header Right Menu -->
+				<ul class="nav user-menu">
+					
+					<!-- User Menu -->
+					<li class="nav-item dropdown has-arrow">
+						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+							<span class="user-img"><img class="rounded-circle" src="http://<%= host %>/uploads/<%- user.image %>" width="31" alt="Ryan Taylor"></span>
+						</a>
+						<div class="dropdown-menu">
+							<div class="user-header">
+								<div class="avatar avatar-sm">
+									<img src="http://<%= host %>/uploads/<%- user.image %>" alt="User Image" class="avatar-img rounded-circle">
+								</div>
+								<div class="user-text">
+									<h6><%- user.firstname %></h6>
+									<p class="text-muted mb-0">Administrator</p>
+								</div>
+							</div>
+							<a class="dropdown-item" href="/admin/profile">My Profile</a>
+							<a class="dropdown-item" href="/admin/logout">Logout</a>
+						</div>
+					</li>
+					<!-- /User Menu -->
+					
+				</ul>
+				<!-- /Header Right Menu -->
+				
+            </div>
+			<!-- /Header -->
+			
+			<!-- Sidebar -->
+			<div class="sidebar" id="sidebar">
+				<div class="sidebar-inner slimscroll">
+					<div id="sidebar-menu" class="sidebar-menu">
+						<ul>
+							<li class="menu-title"> 
+								<span>Main</span>
+							</li>
+							<li class="active"> 
+								<a href="/admin"><i class="fe fe-home"></i> <span>Dashboard</span></a>
+							</li>
+
+							<li class="submenu">
+								<a href="#"><i class="fe fe-user-plus "></i> <span> Company </span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="/admin/addCompany"> Add Company </a></li>
+									<li><a href="/admin/viewCompanies"> View Companies </a></li>
+								</ul>
+							</li>
+	
+							<!-- <li class="submenu">
+								<a href="#"><i class="fe fe-user-plus "></i> <span> Customer </span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="/addCustomer"> Add Customer </a></li>
+									<li><a href="/viewCustomer"> View Customer </a></li>
+								</ul>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-document "></i> <span> Payment </span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="/addPayment"> Add Payment </a></li>
+									<li><a href="/viewPayments"> View Payment </a></li>
+								</ul>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-users"></i> <span> Sales </span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="/addSale"> Add Sales </a></li>
+									<li><a href="/viewSales"> View Sales </a></li>
+								</ul>
+							</li>
+							<li class="submenu">
+								<a href="#"><i class="fe fe-file  "></i> <span> Invoices </span> <span class="menu-arrow"></span></a>
+								<ul style="display: none;">
+									<li><a href="/addInvoice"> Add Invoices </a></li>
+									<li><a href="/viewInvoices"> View Invoices </a></li>
+								</ul>
+							</li> -->
+							<li> 
+								<a href="/admin/userPrivacy"><i class="fe fe-user-plus "></i> <span>Privacy Policy</span></a>
+							</li>
+							
+							<li> 
+								<a href="/admin/tandc"><i class="fe fe-document "></i> <span>Terms & Condition</span></a>
+							</li>
+							<!-- <li> 
+								<a href="/notification"><i class="fe fe-users"></i> <span>Notification</span></a>
+							</li> -->
+							<li class="dropdown ">
+								<a href="/admin/logout" class="nav-link"><i  class="fe fe-desktop"></i>
+								 <span>Logout</span></a>
+						   </li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- /Sidebar -->
+			
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+			
+                <div class="content container-fluid">
+					
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title">Welcome To Invoice Management</h3>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+
+					<div class="row">
+						<div class="col-xl-3 col-sm-6 col-12">
+							<div class="card bg-hovers" style="border-top: 4px solid #e84646;border-bottom: 4px solid #e84646;">
+								<div class="card-body">
+									<div class="dash-widget-header">
+										<span class="dash-widget-icon">
+											<!-- <i class="fe fe-credit-card"></i> -->
+												<i> <img src="../assets/img/icons/icons-1.png"> </i>
+										</span>
+										<!-- <div class="dash-count">
+											<i class="fa fa-arrow-down text-danger"></i> 12%
+										</div> -->
+										<div class="dash-count">
+											<i><img src="../assets/img/order.png"> </i>
+										</div>
+									</div>
+									<div class="dash-widget-info">
+										<h3>Sales </h3>
+										<h6 class="text-muted">$56485</h6>
+										<div class="progress progress-sm">
+											<div class="progress-bar bg-danger w-50"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+							<div class="col-xl-3 col-sm-6 col-12">
+							<div class="card bg-hovers" style="border-top: 4px solid #7bb13c;border-bottom: 4px solid #7bb13c;">
+								<div class="card-body">
+									<div class="dash-widget-header">
+										<span class="dash-widget-icon">
+											<i> <img src="../assets/img/icons/icons-2.png"> </i>
+											<!-- class="fe fe-money" -->
+										</span>
+										<!-- <div class="dash-count">
+											<i class="fa fa-arrow-down text-danger"></i> 12%
+										</div> -->
+											<div class="dash-count">
+											<i><img src="../assets/img/order-2.png"> </i>
+										</div>
+									</div>
+									<div class="dash-widget-info">
+										<h3>Products </h3>
+										<h6 class="text-muted">21587</h6>
+										<div class="progress progress-sm">
+											<div class="progress-bar bg-success w-50"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+							<div class="col-xl-3 col-sm-6 col-12">
+							<div class="card bg-hovers" style="border-top: 4px solid #2962ff;border-bottom: 4px solid #2962ff;">
+								<div class="card-body">
+									<div class="dash-widget-header">
+										<span class="dash-widget-icon">
+											<!-- <i class="fe fe-users"></i> -->
+												<i> <img src="../assets/img/icons/icons-3.png"> </i>
+										</span>
+										<!-- <div class="dash-count">
+											<i class="fa fa-arrow-up text-success"></i> 17%
+										</div> -->
+											<div class="dash-count">
+											<i><img src="../assets/img/order-3.png"> </i>
+										</div>
+									</div>
+									<div class="dash-widget-info">
+										<h3>Customers </h3>
+										<h6 class="text-muted">168</h6>
+										<div class="progress progress-sm">
+											<div class="progress-bar bg-primary w-50"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-3 col-sm-6 col-12">
+							<div class="card bg-hovers" style="border-top: 4px solid #ffbc34;border-bottom: 4px solid #ffbc34;">
+								<div class="card-body">
+									<div class="dash-widget-header">
+										<span class="dash-widget-icon">
+											<!-- <i class="fe fe-folder"></i> -->
+												<i> <img src="../assets/img/icons/icons-4.png"> </i>
+										</span>
+										<!-- <div class="dash-count">
+											<i class="fa fa-arrow-up text-success"></i> 17%
+										</div> -->
+											<div class="dash-count">
+											<i><img src="../assets/img/order-4.png"> </i>
+										</div>
+									</div>
+									<div class="dash-widget-info">
+										<h3>Revenue</h3>
+										<h6 class="text-muted">$62523</h6>
+										<div class="progress progress-sm">
+											<div class="progress-bar bg-warning w-50"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12 col-lg-6">
+						
+							<!-- Sales Chart -->
+							<div class="card card-chart" style="border-top: 4px solid #505050;border-bottom: 4px solid #505050;">
+								<div class="card-header">
+									<h4 class="card-title">Sales Overview</h4>
+								</div>
+								<div class="card-body">
+									<div id="morrisArea"></div>
+								</div>
+							</div>
+							<!-- /Sales Chart -->
+							
+						</div>
+						<div class="col-md-12 col-lg-6">
+						
+							<!-- Invoice Chart -->
+							<div class="card card-chart" style="border-top: 4px solid #505050;border-bottom: 4px solid #505050;">
+								<div class="card-header">
+									<h4 class="card-title">Order Status</h4>
+								</div>
+								<div class="card-body">
+									<div id="morrisLine"></div>
+								</div>
+							</div>
+							<!-- /Invoice Chart -->
+							
+						</div>	
+					</div>
+					
+				</div>			
+			</div>
+			<!-- /Page Wrapper -->
+			<div class="copyright">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="copyright-text">
+								<h3> ©2023 Copyright <b>INVOICE MANAGEMENT</b> All rights reserved | Design & Develop by  by <a href="https://cyberimpulses.com/" target="_blank"> CISS </a></h3>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+        </div>
+		<!-- /Main Wrapper -->
+		
+		<!-- jQuery -->
+        <script src="../assets/js/jquery-3.6.0.min.js"></script>
+		
+		<!-- Bootstrap Core JS -->
+        <script src="../assets/js/bootstrap.bundle.min.js"></script>
+		
+		<!-- Slimscroll JS -->
+        <script src="../assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		
+		<script src="../assets/plugins/raphael/raphael.min.js"></script>    
+		<script src="../assets/plugins/morris/morris.min.js"></script>  
+		<script src="../assets/js/chart.morris.js"></script>
+		
+		<!-- Custom JS -->
+		<script  src="../assets/js/script.js"></script>
+		
+    </body>
+</html>

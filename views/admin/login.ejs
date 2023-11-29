@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+        <title> AdminLOGIN  </title>
+		
+		<!-- Favicon -->
+        <link rel="shortcut icon" type="image/x-icon" href="../assets/img/favicon.png">
+
+		<!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+		
+		<!-- Fontawesome CSS -->
+        <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
+		
+		<!-- Main CSS -->
+        <link rel="stylesheet" href="../assets/css/style.css">
+		<style>
+			
+		</style>
+    </head>
+    <body>
+
+		
+		
+		<!-- Main Wrapper -->
+        <div class="main-wrapper login-body">
+            <div class="login-wrapper" style="background: linear-gradient(3deg, #000000c2, #000000a1), url(../assets/img/bg.png) no-repeat center center fixed;">
+            	<div class="container">
+                	<div class="loginbox">
+        
+                        <div class="login-right">
+							<div class="login-right-wrap ">
+								<div class="logos text-center mb-4">
+                                <img src="../uploads/logo.png" style="width: 50%;" alt="logo.png">
+                                 </div>
+								<!-- <h1> Welcome To Invoice Management </h1> -->
+								<p class="account-subtitle">Login In To Continue</p>
+								
+								<!-- Form -->
+								<!-- <font color="red" size="5"><%- output %></font> -->
+								<% if (output === 'Logged Out !!') { %>
+									<p class="success-text"><%= output %></p>
+								<% } else { %>
+									<p class="error-text"><%= output %></p>
+								<% } %>
+							
+								<form method="post" action="/admin/login">
+									<div class="form-group">
+										<label style="color: white;"> username </label>
+										<input type="text" id="username" name="username" class="form-control form-control-lg"  placeholder="Username">
+									  </div>
+									  <div id="errorMessage" class="alert alert-danger d-none">
+										Account Not found !!
+									  </div>
+									  <div class="form-group">
+										 <label style="color: white;">Password</label>
+										<input onkeyup="checkPass(this.value)" type="password" name="password" class="form-control form-control-lg"  placeholder="Password">
+									  </div>
+								   
+									<div class="form-group">
+										
+								      <div class="text-right forgotpass">
+								      	<!-- <a href="#">Forgot Password?</a> -->
+								      </div>
+									</div>
+									<div class="form-group mt-3 kilvish">
+										<button   class="btn btn-primary btn-block " type="submit"> Login </button>
+									</div>
+									<div class="form-group mt-3">
+										<button id='runaway-btn' class="btn btn-primary btn-block" type="submit" style="display: none;"> Login1 </button>
+									</div>
+									  
+
+									<!-- <button id='runaway-btn'>Click Me &#129315;</button> -->
+								</form>
+								<!-- /Form -->
+								
+								<!-- <div class="text-center dont-have">Don’t have an account? <a href="#">Register</a></div> -->
+							</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		<!-- /Main Wrapper -->
+		
+		<!-- jQuery -->
+        <script src="../assets/js/jquery-3.6.0.min.js"></script>
+		
+		<!-- Bootstrap Core JS -->
+        <script src="../assets/js/bootstrap.bundle.min.js"></script>
+		
+		<!-- Custom JS -->
+		<script src="../assets/js/script.js"></script>
+		
+    </body>
+</html>
+
+
+	<!-- jQuery -->
+	<script src="../assets/js/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js"></script>
+
+<script>
+
+const button = document.getElementById("runaway-btn");
+
+const animateMove = (element, prop, pixels) =>
+  anime({
+    targets: element,
+    [prop]: `${pixels}px`,
+    easing: "easeOutCirc"
+  });
+
+["mouseover", "click"].forEach(function (el) { 
+  button.addEventListener(el, function (event) {
+    const top = getRandomNumber(350 - this.offsetHeight);
+
+	const down = getRandomNumber(1000 - this.offsetHeight);
+    const left = getRandomNumber(1000 - this.offsetWidth);
+
+	const right = getRandomNumber(1000 - this.offsetWidth);
+
+    animateMove(this, "top", top).play();	
+    animateMove(this, "left", left).play();
+	animateMove(this, "right", right).play();	
+	animateMove(this, "right", right).play();
+	animateMove(this, "top", top).play();
+	animateMove(this, "down", down).play();
+	animateMove(this, "left", left).play();
+	animateMove(this, "down", down).play();
+	
+
+
+    
+  });
+});
+
+const getRandomNumber = (num) => {
+
+ return Math.floor(Math.random() * (num + 1));
+};
+
+
+
+
+function checkPass(password){ 
+	var username = document.getElementById('username').value;
+	var data = {username , password}
+
+$.ajax({
+  type: 'POST',
+  url: '/admin/checkPass',
+  data: JSON.stringify(data), // Convert the data object to JSON
+  contentType: 'application/json', // Set the content type to JSON
+  dataType: 'json', // Expect JSON response
+  success: function (result) {
+
+	  if(result.msg == false){
+		
+		const existingButton = document.querySelector('.form-group.mt-3.kilvish button:not(#runaway-btn)');
+    const newButton = document.getElementById('runaway-btn');
+    existingButton.style.display = 'none';
+    newButton.style.display = 'block'; 
+	$("#errorMessage").addClass("d-none");
+					
+	  }else if(result.msg == true) {
+		
+		const existingButton = document.querySelector('.form-group.mt-3.kilvish button:not(#runaway-btn)');
+    const newButton = document.getElementById('runaway-btn');
+    existingButton.style.display = 'block'; 
+    newButton.style.display = 'none';
+	$("#errorMessage").addClass("d-none");
+	
+	  }else{
+		$("#errorMessage").removeClass("d-none");
+	  }
+   
+  },
+  error: function (error) {
+	  $("#successMessage").removeClass("d-none");
+$("#errorMessage").addClass("d-none");
+  
+  },
+});
+
+
+
+
+}
+
+
+
+</script>
