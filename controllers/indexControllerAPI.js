@@ -122,6 +122,7 @@ const Login = async (req, res, next) => {
   
       const [results] = await con.query('SELECT * FROM tbl_users WHERE user_email = ?', [user_email]);
       const user = results[0];
+
   
       if (!user) {
         res.json({ result: "Account does not exist!" });

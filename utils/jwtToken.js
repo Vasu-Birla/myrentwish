@@ -52,7 +52,6 @@ const sendTokenCompany = (company, statusCode, res)=>{
 
 // Creating Token and saving in Cookie for user 
 const sendTokenUser = (user, statusCode, res)=>{
-
     
     const token =  getJWTToken(user.id); 
 
@@ -65,7 +64,7 @@ const sendTokenUser = (user, statusCode, res)=>{
         }                 
         //res.redirect('/user/home/')
       
-       res.status(statusCode).cookie('token',token,options).json({ result: "success","user_id":user.id,"JWT":token});   
+       res.status(statusCode).cookie('token',token,options).json({ result: "success","user_id":user.user_id,"JWT":token});   
     
        
 }
