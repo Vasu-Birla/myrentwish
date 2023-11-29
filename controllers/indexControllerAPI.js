@@ -106,51 +106,52 @@ function setValue()
 
 //----------------  Register API End --------------------------
 
-const Login= async(req,res,next)=>{
-
-    const con = await connection(); 
-
-    const {email,password} = req.body; 
-    //if user don't enter email password
-    if(!email || !password){
-        res.json({ result: "Please Enter Email and Password"});         
-        
+const Login = async (req, res, next) => {
+   const con = await connection();
+    try {
+      
+      await con.beginTransaction();
+  
+      const { user_email, password } = req.body;
+  
+      // If user doesn't enter email or password
+      if (!user_email || !password) {
+        res.json({ result: "Please Enter Email and Password" });
+        return;
+      }
+  
+      const [results] = await con.query('SELECT * FROM tbl_users WHERE user_email = ?', [user_email]);
+      const user = results[0];
+  
+      if (!user) {
+        res.json({ result: "Account does not exist!" });
+        return;
+      }
+  
+      let isValid = comparePassword(password, user.password);
+  
+      if (!isValid) {
+        res.json({ result: "Incorrect Password" });
+        return;
+      }
+  
+      if (user.status === "active") {
+        sendTokenUser(user, 200, res);
+        await con.commit();
+      } else {
+        res.json({ result: "Your Account Has Been Deactivated!" });
+      }
+    } catch (error) {
+      await con.rollback();
+      console.error('Error in Login API:', error);
+      res.json({ result: 'Internal Server Error' });
+    } finally {      
+        con.release();
     }
-    else 
-    {        
-
-       
-        const [results] = await con.query('SELECT * FROM tbl_user WHERE email = ?', [email]);                 
-        const user = results[0];   
-
-
-         if(!user){           
-
-            return res.json({ result: "Account does not exists !!" });   
-          
-            }
-    
-        let isValid = comparePassword( password, user.password );
-       if (!isValid) {
-            res.json({ result: "Incorrect Password"});             
-        
-            }
-        else { 
-                if(user.status == "active") {
-                    sendTokenUser(user,200,res)
-                } 
-                else{
-                    res.json({ result: "You Account Has Been Deactivated .!"});   
-                }          
-               
-                
-             }  
-   
-   
-    }  
-
-   
-}
+  };
+  
+ 
+  
 
 const Logout = async(req,res,next)=>{     
 
