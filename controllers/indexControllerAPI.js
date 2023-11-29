@@ -94,19 +94,21 @@ function setValue()
       console.error('Error in register API:', error);
       res.status(500).json({ result: 'Internal Server Error' });
     } finally {
-      if (con) {
+    
         con.release()  // Close the database connection
-      }
     }
   };
   
 
-  
+
+
 
 
 //----------------  Register API End --------------------------
 
 const Login = async (req, res, next) => {
+
+ 
    const con = await connection();
     try {
       
@@ -172,39 +174,38 @@ const Logout = async(req,res,next)=>{
 
 
 
-const ForgotPassword = async(req,res,next)=>{  
-    const con = await connection(); 
-   
 
-    const {email}=req.body;
 
-    setValue();
-    // console.log(otp)
-    
-
-    if(!email){
-        res.json({ result: "Email Required "});         
-        
-    }else{
-
-        const [[user]] = await con.query('SELECT * FROM tbl_user WHERE email = ?', [email]); 
-        if(!user){           
-            
-            res.json({ result: "Invalid Email" });
-          
-         } 
-        else{
-            sendMailOTP(email,otp,user)
-           
-            res.json({ result: "success","user_id":user.id,otp:otp}); 
-
-        }             
-        
+const ForgotPassword = async (req, res, next) => {
+    const con = await connection();
+    try {
+      const { user_email } = req.body;
+      var email = user_email
+  
+       otp =   Math.random();
+      otp = otp * 1000000;
+        otp = parseInt(otp);
+          console.log(otp);
+  
+      if (!email) {
+        res.json({ result: "Email Required " });
+      } else {
+        const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_email = ?', [email]);
+  
+        if (!user) {
+          res.json({ result: "Invalid Email" });
+        } else {
+          sendMailOTP(email, otp, user);
+          res.json({ result: "success", user_id: user.id, otp: otp });
+        }
+      }
+    } catch (error) {
+      console.error('Error in ForgotPassword API:', error);
+      res.status(500).json({ result: 'Internal Server Error' });
+    } finally {
+      con.release();
     }
-    
-     
-
-}
+  };
 
 
 
@@ -216,28 +217,37 @@ const ForgotPassword = async(req,res,next)=>{
 
 
 
-const resetpassword = async(req,res,next)=>{     
-    const con = await connection(); 
-    
-    var userID= req.body.user_id;   
 
-    var newPassword  = hashPassword(req.body.confirmPass);
+const resetpassword = async (req, res, next) => {
+    const con = await connection();
+  try {
+
+    await con.beginTransaction();
+    const userID = req.body.user_id;
+    const newPassword = hashPassword(req.body.confirmPass);
 
     console.log(newPassword);
 
-    //const [results] = await con.query('UPDATE tbl_user SET password = ? WHERE id = ?', [newPassword, userID]);
+    const [results] = await con.query('UPDATE tbl_users SET password = ? WHERE user_id = ?', [newPassword, userID]);
+    await con.commit();
+    res.json({ result: "success" });
 
-      const [results] = await con.query('UPDATE tbl_user SET password= ? WHERE id = ?', [newPassword , userID]);
-   
-    console.log(results)
+    // if (results && results.affectedRows > 0) {
+    //   res.json({ result: "success" });
+    // } else {
+    //   res.json({ result: "failed" });
+    // }
+  } catch (error) {
+    await con.rollback();
+    console.error('Error in resetpassword API:', error);
+    res.status(500).json({ result: 'failed' });
+  } finally {
+      con.release();
+  }
+};
 
-        if(results){
-            res.json({ result: "success" });
-        }else{
-            res.json({ result: "failed" });
-        }
-   
-}
+
+
 
 
 //-------------------- Product details ------------ 

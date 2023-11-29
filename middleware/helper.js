@@ -125,14 +125,25 @@ const sendMailOTP = function (email,otp,user) {
  });
  
  var mailOptions = {
-   from: 'vasubirla@gmail.com',
-   to: email,
-   subject: 'Verification Mail MyApp',
-   html: "<h3>Your One Time Passord for requested Service is :</h1>"+"<h3>"+otp+"</h1>"
+  from: 'vasubirla@gmail.com',
+  to: email,
+  subject: 'OTP to Reset Password - MyRentWish',
+  html: `
+    <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
+      <h2 style="color: #333333;">MyRentWish - Password Reset OTP</h2>
+      <p style="color: #555555;">Dear User,</p>
+      <p style="color: #555555;">You have requested to reset your password on MyRentWish. Please use the following OTP to complete the process:</p>
+      <div style="background-color: #ffffff; padding: 10px; border: 1px solid #dddddd; border-radius: 5px; margin-top: 15px;">
+        <h3 style="color: #333333;">Your One Time Password (OTP): <span style="color: #007BFF;">${otp}</span></h3>
+      </div>
+      <p style="color: #555555; margin-top: 15px;">If you did not request a password reset, please ignore this email. The OTP is valid for a short period of time.</p>
+      <p style="color: #555555;">Best Regards,<br/>MyRentWish Team</p>
+    </div>
+  `
+};
+
  
- }
- 
- transporter.sendMail(mailOptions, function(error, info){  console.log("emailllll sent...............")
+ transporter.sendMail(mailOptions, function(error, info){  
   
    if (error) {
     console.log("error in sending mail")
