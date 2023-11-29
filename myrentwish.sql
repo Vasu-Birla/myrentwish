@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 29, 2023 at 08:35 AM
+-- Generation Time: Nov 29, 2023 at 08:44 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -81,7 +81,7 @@ CREATE TABLE `tbl_users` (
 --
 
 INSERT INTO `tbl_users` (`user_id`, `firstname`, `lastname`, `user_email`, `password`, `user_mobile`, `birthday`, `location`, `latitude`, `longitude`, `address`, `country`, `city`, `gender`, `image`, `imagePath`, `status`, `created_at`) VALUES
-(5, 'Kilvish', 'Birla', 'kilvishbirla@gmail.com', '$2a$10$oOwE29EEaWudpBEbv4yynu6B92oNOJqOI7SKuMIaY7oPaKDeJnvju', '9039568219', '0000-00-00', 'Indore', '12', '12', 'Sairam ram plaza', 'India', 'Indore', 'male', ' ', ' ', 'active', '2023-11-29 07:04:48');
+(8, 'Kilvish', 'Birla', 'kilvishbirla2@gmail.com', '$2a$10$8tBE.Rm8j/0rAAfpSxeE..v3v6v8DrO2eminiJOnHmPjQPiBE7gmW', '9039568219', '0000-00-00', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', ' ', ' ', 'active', '2023-11-29 07:39:02');
 
 --
 -- Indexes for dumped tables
@@ -113,7 +113,7 @@ ALTER TABLE `tbl_admin`
 -- AUTO_INCREMENT for table `tbl_users`
 --
 ALTER TABLE `tbl_users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
