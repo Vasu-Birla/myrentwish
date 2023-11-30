@@ -725,11 +725,12 @@ const updloadBYUser   = async(req,res,next)=>{
         bathroom_type: req.body.bathroom_type || existingUser.bathroom_type,
         parking_type: req.body.parking_type || existingUser.parking_type,
         prefered_rent: req.body.prefered_rent || existingUser.prefered_rent,
+        skill:req.body.skill || existingUser.skill
       };
   
       // Update the user preferences in the database
       const updateSql =
-        'UPDATE tbl_users SET prefered_gender=?, prefered_city=?, prefered_country=?, bedroom_nums=?, bathroom_type=?, parking_type=?, prefered_rent=? WHERE user_id=?';
+        'UPDATE tbl_users SET prefered_gender=?, prefered_city=?, prefered_country=?, bedroom_nums=?, bathroom_type=?, parking_type=?, prefered_rent=?, skill=? WHERE user_id=?';
       const updateValues = [
         updatedPreferences.prefered_gender,
         updatedPreferences.prefered_city,
@@ -738,6 +739,7 @@ const updloadBYUser   = async(req,res,next)=>{
         updatedPreferences.bathroom_type,
         updatedPreferences.parking_type,
         updatedPreferences.prefered_rent,
+        updatedPreferences.skill,
         userID,
       ];
   
