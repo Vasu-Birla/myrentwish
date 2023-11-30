@@ -30,7 +30,8 @@ function setValue()
 const comapnyHome = async(req,res,next)=>{ 
 
   try {
-    res.render('index');
+    //res.render('index');
+    res.redirect('/admin')
   } catch (error) {
     res.render('kilvish500', {'output':'Internal Server Error'});    
   }

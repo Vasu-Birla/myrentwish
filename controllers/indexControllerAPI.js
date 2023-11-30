@@ -694,6 +694,73 @@ const updloadBYUser   = async(req,res,next)=>{
         con.release();
     }
   };
+
+
+
+  //------------------ Update Preference ---------------------
+
+
+  const updatePreference = async (req, res, next) => {
+      const con = await connection();
+    try {
+ 
+      await con.beginTransaction();  
+      const userID = req.body.user_id;
+  
+      // Fetch the existing user details
+      const [[existingUser]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+  
+      if (!existingUser) {
+        await con.rollback();
+        res.json({ result: "User not found" });
+        return;
+      }
+  
+      // Update user preferences
+      const updatedPreferences = {
+        prefered_gender: req.body.prefered_gender || existingUser.prefered_gender,
+        prefered_city: req.body.prefered_city || existingUser.prefered_city,
+        prefered_country: req.body.prefered_country || existingUser.prefered_country,
+        bedroom_nums: req.body.bedroom_nums || existingUser.bedroom_nums,
+        bathroom_type: req.body.bathroom_type || existingUser.bathroom_type,
+        parking_type: req.body.parking_type || existingUser.parking_type,
+        prefered_rent: req.body.prefered_rent || existingUser.prefered_rent,
+      };
+  
+      // Update the user preferences in the database
+      const updateSql =
+        'UPDATE tbl_users SET prefered_gender=?, prefered_city=?, prefered_country=?, bedroom_nums=?, bathroom_type=?, parking_type=?, prefered_rent=? WHERE user_id=?';
+      const updateValues = [
+        updatedPreferences.prefered_gender,
+        updatedPreferences.prefered_city,
+        updatedPreferences.prefered_country,
+        updatedPreferences.bedroom_nums,
+        updatedPreferences.bathroom_type,
+        updatedPreferences.parking_type,
+        updatedPreferences.prefered_rent,
+        userID,
+      ];
+  
+      await con.query(updateSql, updateValues);
+      await con.commit();
+      res.json({ result: "success" });
+  
+    } catch (error) {
+      // Rollback the transaction in case of an error
+      await con.rollback();
+      console.error('Error in updatePreference API:', error);
+      res.status(500).json({ result: 'Internal Server Error' });
+    } finally {
+      if (con) {
+        con.release();
+      }
+    }
+  };
+  
+
+
+
+
   
 
 
@@ -1175,7 +1242,8 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
     getProducts,prodcutDetails,fvtList, addtoFVT, addtocol, colList, 
     removeFromCol, updloadBYUser, profile, profilePost, similarColl,
      aboutUs, TC_User, UserPrivacy, contactUS, aboutUs1, createPayment, 
-     successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile
+     successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
+     updatePreference
 
 }
 

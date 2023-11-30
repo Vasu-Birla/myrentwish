@@ -27,7 +27,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     cancelPayment,
     paymentStatus,
     obtainToken,
-    updateProfile} from '../controllers/indexControllerAPI.js';
+    updateProfile,
+    updatePreference} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -59,7 +60,7 @@ router.route('/updateprofile').post(upload.single('image'),updateProfile)
 router.route('/updateUser').post(upload.single('image'),profilePost)
 
 
-
+router.route('/updatePreference').post(upload.none(),updatePreference)
 
 
 

@@ -16,7 +16,7 @@ const router = express.Router();
 
 //------------- Routing Start -----------------------
 
-router.route('/').get(isAuthenticatedCompany,comapnyHome)
+router.route('/').get(comapnyHome)
 
 
 router.route('/login').get(login)
