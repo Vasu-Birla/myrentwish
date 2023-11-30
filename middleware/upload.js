@@ -6,7 +6,7 @@ import multer from 'multer';
 // Define storage for uploaded images
 const storage = multer.diskStorage({  
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/'); // Destination folder for uploaded images
+    cb(null,'public/uploads/'); // Destination folder for uploaded images
   },
   filename: function (req, file, cb) { console.log("kilupload api Hited")
 
@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
     const timestamp = Date.now();
     const extname = path.extname(file.originalname);
     const imageName = `img_${img}_${timestamp}${extname}`;
-    cb(null, imageName);
+    cb(null,imageName);
   }
 });
 

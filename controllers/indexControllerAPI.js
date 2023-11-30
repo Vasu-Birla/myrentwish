@@ -772,12 +772,14 @@ const updloadBYUser   = async(req,res,next)=>{
 
 
 
+
 const addProperty = async (req, res, next) => {
-  let con;
+  const con = await connection();
   try {
-    con = await connection();
+   
     await con.beginTransaction();
 
+  
     const userID = req.body.user_id;
 
     // Validate if the user exists
@@ -805,12 +807,21 @@ const addProperty = async (req, res, next) => {
       size_sqft,
       rent_amount,
       available_date,
-      images,
+      prop_status, // Assuming this is part of the request body
     } = req.body;
+
+    // Set is_available based on prop_status
+    const is_available = prop_status === 'available';
+
+
+    const images = req.files.map(file => ({path:`http://${process.env.Host1}/uploads/${file.filename}`}));
+
+    console.log(images)
+
 
     // Insert property details into the tbl_prop table
     const insertSql =
-      'INSERT INTO tbl_prop (user_id, owner_name, owner_contact, owner_email, title, description, address, city, country, prop_type, bedroom_nums, bathroom_type, parking_type, size_sqft, rent_amount, available_date, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      'INSERT INTO tbl_prop (user_id, owner_name, owner_contact, owner_email, title, description, address, city, country, prop_type, bedroom_nums, bathroom_type, parking_type, size_sqft, rent_amount, available_date, is_available, prop_status, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const insertValues = [
       userID,
       owner_name,
@@ -828,19 +839,16 @@ const addProperty = async (req, res, next) => {
       size_sqft,
       rent_amount,
       available_date,
-      JSON.stringify(images), // Assuming images is an array
+      is_available,
+      prop_status,
+      JSON.stringify(images)
+     
     ];
 
     const [results] = await con.query(insertSql, insertValues);
 
-    if (results.insertId) {
-      await con.commit();
-      res.json({ result: "success" });
-    } else {
-      await con.rollback();
-      res.json({ result: "Failed to add property" });
-    }
-
+    await con.commit();
+    res.json({ result: "success" });
   } catch (error) {
     // Rollback the transaction in case of an error
     await con.rollback();
@@ -852,6 +860,32 @@ const addProperty = async (req, res, next) => {
     }
   }
 };
+
+
+
+//-------------fetch single Property ----- 
+
+const property = async (req, res, next) => {
+  const con = await connection();
+  try {        
+    const prop_id = req.body.prop_id;
+    const [[property]] = await con.query('SELECT * FROM tbl_prop WHERE prop_id = ?', [prop_id]);
+
+    if (!property) {
+      return res.json({ result: "Property Not Found" });
+     
+    } 
+
+    //property.images = JSON.parse(property.images) 
+    res.json(property);
+  } catch (error) {
+    console.error('Error in profile API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {  
+      con.release();
+  }
+};
+
 
 
 
@@ -1338,7 +1372,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
     removeFromCol, updloadBYUser, profile, profilePost, similarColl,
      aboutUs, TC_User, UserPrivacy, contactUS, aboutUs1, createPayment, 
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
-     updatePreference, addProperty
+     updatePreference, addProperty, property
 
 }
 
