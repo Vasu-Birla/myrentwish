@@ -6,6 +6,8 @@ const con = await connection();
 import * as path from 'path';
 import upload from '../middleware/upload.js';
 import paypal from 'paypal-rest-sdk';
+import { parse, format } from 'date-fns';
+
 
 paypal.configure({
     mode: 'sandbox', // Replace with 'live' for production
@@ -316,6 +318,7 @@ const prodcutDetails = async(req,res,next)=>{
     const timestamp = parseInt(product.date, 10)
     const date = new Date(timestamp);
     product.date = date.toLocaleString(); // Format: MM/DD/YYYY, HH:MM:SS AM/PM
+    
 
     var similarSellers = []; 
     if(sameCollection){
@@ -816,8 +819,8 @@ const addProperty = async (req, res, next) => {
 
     const images = req.files.map(file => ({path:`http://${process.env.Host1}/uploads/${file.filename}`}));
 
-    console.log(images)
 
+    const formattedDate = format(new Date(available_date), 'yyyy-MM-dd');
 
     // Insert property details into the tbl_prop table
     const insertSql =
@@ -838,7 +841,7 @@ const addProperty = async (req, res, next) => {
       parking_type,
       size_sqft,
       rent_amount,
-      available_date,
+      formattedDate,
       is_available,
       prop_status,
       JSON.stringify(images)
