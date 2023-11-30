@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 30, 2023 at 08:26 AM
+-- Generation Time: Nov 30, 2023 at 10:23 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -71,6 +71,37 @@ CREATE TABLE `tbl_prefer` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_prop`
+--
+
+CREATE TABLE `tbl_prop` (
+  `prop_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `owner_name` varchar(255) DEFAULT NULL,
+  `owner_contact` varchar(20) DEFAULT NULL,
+  `owner_email` varchar(255) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `country` varchar(100) DEFAULT NULL,
+  `prop_type` varchar(50) DEFAULT NULL,
+  `bedroom_nums` int(11) DEFAULT NULL,
+  `bathroom_type` enum('Shared','Private') DEFAULT NULL,
+  `parking_type` enum('Dedicated','Shared','Available','Not Available') DEFAULT NULL,
+  `size_sqft` decimal(10,2) DEFAULT NULL,
+  `rent_amount` decimal(10,2) DEFAULT NULL,
+  `available_date` datetime DEFAULT NULL,
+  `is_available` tinyint(1) DEFAULT 1,
+  `prop_status` enum('available','rented') DEFAULT 'available',
+  `images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`images`)),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_users`
 --
 
@@ -96,6 +127,7 @@ CREATE TABLE `tbl_users` (
   `bathroom_type` varchar(255) NOT NULL,
   `parking_type` varchar(255) NOT NULL,
   `prefered_rent` varchar(255) NOT NULL,
+  `about_me` text NOT NULL,
   `skill` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
   `imagePath` varchar(255) NOT NULL,
@@ -107,11 +139,11 @@ CREATE TABLE `tbl_users` (
 -- Dumping data for table `tbl_users`
 --
 
-INSERT INTO `tbl_users` (`user_id`, `firstname`, `lastname`, `user_email`, `password`, `user_mobile`, `birthday`, `location`, `latitude`, `longitude`, `address`, `country`, `city`, `gender`, `prefered_gender`, `prefered_city`, `prefered_country`, `bedroom_nums`, `bathroom_type`, `parking_type`, `prefered_rent`, `skill`, `image`, `imagePath`, `status`, `created_at`) VALUES
-(8, 'Kilvish', 'Birla', 'kilvishbirla@gmail.com', '$2a$10$jv.Gpm1HMKXAzcPOLhVnR.ns5q2/8re7lEimjfOGsFv9PHl.jxlP2', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', 'female', 'Newyork', 'USA', '1', 'Shared', 'Shared', '200', '', 'img_batman.jpg_1701259463709.jpg', 'http://195.35.23.27:3008/uploads/img_batman.jpg_1701259463709.jpg', 'active', '2023-11-29 07:39:02'),
-(9, 'Vasu', 'Birla', 'vasubirla@gmail.com', '$2a$10$LIWBfxIho8ZodGzPqrfKC.a4mxqpz392NPsl5ETI/p8tJ6Zy/Kw7i', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-11-29 12:21:41'),
-(10, 'aaa', 'Birla', 'aaaa@gmail.com', '$2a$10$8Nm3cjZtKyB0i4rLe9d2q.sXaa2ZQmMT27hboI36nyrOdh1VcSYo.', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-11-30 06:28:29'),
-(12, 'vishnu', 'prajapati', 'vishnuprajapati1@gmail.com', '$2a$10$u9O5qoBN/DfTFPRuOFsaOOqTxTG/Qzsxcpjpb/OQovJT8r/AFU00q', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-11-30 06:49:19');
+INSERT INTO `tbl_users` (`user_id`, `firstname`, `lastname`, `user_email`, `password`, `user_mobile`, `birthday`, `location`, `latitude`, `longitude`, `address`, `country`, `city`, `gender`, `prefered_gender`, `prefered_city`, `prefered_country`, `bedroom_nums`, `bathroom_type`, `parking_type`, `prefered_rent`, `about_me`, `skill`, `image`, `imagePath`, `status`, `created_at`) VALUES
+(8, 'Kilvish', 'Birla', 'kilvishbirla@gmail.com', '$2a$10$jv.Gpm1HMKXAzcPOLhVnR.ns5q2/8re7lEimjfOGsFv9PHl.jxlP2', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', 'female', 'Newyork', 'USA', '1', 'Shared', 'Shared', '200', '', '', 'img_batman.jpg_1701259463709.jpg', 'http://195.35.23.27:3008/uploads/img_batman.jpg_1701259463709.jpg', 'active', '2023-11-29 07:39:02'),
+(9, 'Vasu', 'Birla', 'vasubirla@gmail.com', '$2a$10$LIWBfxIho8ZodGzPqrfKC.a4mxqpz392NPsl5ETI/p8tJ6Zy/Kw7i', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-11-29 12:21:41'),
+(10, 'aaa', 'Birla', 'aaaa@gmail.com', '$2a$10$8Nm3cjZtKyB0i4rLe9d2q.sXaa2ZQmMT27hboI36nyrOdh1VcSYo.', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-11-30 06:28:29'),
+(12, 'vishnu', 'prajapati', 'vishnuprajapati1@gmail.com', '$2a$10$u9O5qoBN/DfTFPRuOFsaOOqTxTG/Qzsxcpjpb/OQovJT8r/AFU00q', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-11-30 06:49:19');
 
 --
 -- Indexes for dumped tables
@@ -128,6 +160,12 @@ ALTER TABLE `tbl_admin`
 --
 ALTER TABLE `tbl_prefer`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_prop`
+--
+ALTER TABLE `tbl_prop`
+  ADD PRIMARY KEY (`prop_id`);
 
 --
 -- Indexes for table `tbl_users`
@@ -150,6 +188,12 @@ ALTER TABLE `tbl_admin`
 --
 ALTER TABLE `tbl_prefer`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_prop`
+--
+ALTER TABLE `tbl_prop`
+  MODIFY `prop_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tbl_users`

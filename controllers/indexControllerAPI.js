@@ -725,12 +725,13 @@ const updloadBYUser   = async(req,res,next)=>{
         bathroom_type: req.body.bathroom_type || existingUser.bathroom_type,
         parking_type: req.body.parking_type || existingUser.parking_type,
         prefered_rent: req.body.prefered_rent || existingUser.prefered_rent,
+        skill:req.body.about_me || existingUser.about_me,
         skill:req.body.skill || existingUser.skill
       };
   
       // Update the user preferences in the database
       const updateSql =
-        'UPDATE tbl_users SET prefered_gender=?, prefered_city=?, prefered_country=?, bedroom_nums=?, bathroom_type=?, parking_type=?, prefered_rent=?, skill=? WHERE user_id=?';
+        'UPDATE tbl_users SET prefered_gender=?, prefered_city=?, prefered_country=?, bedroom_nums=?, bathroom_type=?, parking_type=?, prefered_rent=?, skill=?, about_me=? WHERE user_id=?';
       const updateValues = [
         updatedPreferences.prefered_gender,
         updatedPreferences.prefered_city,
@@ -739,6 +740,7 @@ const updloadBYUser   = async(req,res,next)=>{
         updatedPreferences.bathroom_type,
         updatedPreferences.parking_type,
         updatedPreferences.prefered_rent,
+        updatedPreferences.about_me,
         updatedPreferences.skill,
         userID,
       ];
@@ -759,6 +761,97 @@ const updloadBYUser   = async(req,res,next)=>{
     }
   };
   
+
+
+
+//====================================== Property Section Start ==================================== 
+
+
+
+//--------- Add Property by User -------------------------- 
+
+
+
+const addProperty = async (req, res, next) => {
+  let con;
+  try {
+    con = await connection();
+    await con.beginTransaction();
+
+    const userID = req.body.user_id;
+
+    // Validate if the user exists
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+    if (!user) {
+      await con.rollback();
+      res.json({ result: "User not found" });
+      return;
+    }
+
+    // Extract property details from the request body
+    const {
+      owner_name,
+      owner_contact,
+      owner_email,
+      title,
+      description,
+      address,
+      city,
+      country,
+      prop_type,
+      bedroom_nums,
+      bathroom_type,
+      parking_type,
+      size_sqft,
+      rent_amount,
+      available_date,
+      images,
+    } = req.body;
+
+    // Insert property details into the tbl_prop table
+    const insertSql =
+      'INSERT INTO tbl_prop (user_id, owner_name, owner_contact, owner_email, title, description, address, city, country, prop_type, bedroom_nums, bathroom_type, parking_type, size_sqft, rent_amount, available_date, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const insertValues = [
+      userID,
+      owner_name,
+      owner_contact,
+      owner_email,
+      title,
+      description,
+      address,
+      city,
+      country,
+      prop_type,
+      bedroom_nums,
+      bathroom_type,
+      parking_type,
+      size_sqft,
+      rent_amount,
+      available_date,
+      JSON.stringify(images), // Assuming images is an array
+    ];
+
+    const [results] = await con.query(insertSql, insertValues);
+
+    if (results.insertId) {
+      await con.commit();
+      res.json({ result: "success" });
+    } else {
+      await con.rollback();
+      res.json({ result: "Failed to add property" });
+    }
+
+  } catch (error) {
+    // Rollback the transaction in case of an error
+    await con.rollback();
+    console.error('Error in addProperty API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
 
 
 
@@ -1245,7 +1338,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
     removeFromCol, updloadBYUser, profile, profilePost, similarColl,
      aboutUs, TC_User, UserPrivacy, contactUS, aboutUs1, createPayment, 
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
-     updatePreference
+     updatePreference, addProperty
 
 }
 

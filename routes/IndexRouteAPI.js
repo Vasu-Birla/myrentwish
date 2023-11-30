@@ -28,7 +28,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     paymentStatus,
     obtainToken,
     updateProfile,
-    updatePreference} from '../controllers/indexControllerAPI.js';
+    updatePreference,
+    addProperty} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -61,6 +62,15 @@ router.route('/updateUser').post(upload.single('image'),profilePost)
 
 
 router.route('/updatePreference').post(upload.none(),updatePreference)
+
+
+//------------- Property Section ------------------- 
+
+
+router.route('/addProperty').post(upload.array('images'),addProperty)
+
+
+
 
 
 
