@@ -99,7 +99,7 @@ function setValue()
         // userDetails.user_id = userDetails.user_id.toString();
   
         userDetails = {result: 'success', ...userDetails,  };
-  
+      console.log(userDetails)
         res.json(userDetails);
       }
     } catch (error) {
@@ -884,30 +884,6 @@ console.log(propertyDetails)
 
 
 
-//-------------fetch single Property ----- 
-
-const property = async (req, res, next) => {
-  const con = await connection();
-  try {        
-    const prop_id = req.body.prop_id;
-    const [[property]] = await con.query('SELECT * FROM tbl_prop WHERE prop_id = ?', [prop_id]);
-
-    if (!property) {
-      return res.json({ result: "Property Not Found" });
-     
-    } 
-
-    property.images = JSON.parse(property.images) 
-    property.available_date = format(new Date(property.available_date), 'yyyy-MM-dd');
-
-    res.json(property);
-  } catch (error) {
-    console.error('Error in profile API:', error);
-    res.status(500).json({ result: 'Internal Server Error' });
-  } finally {  
-      con.release();
-  }
-};
 
 
 
@@ -986,6 +962,30 @@ const myProperties = async (req, res, next) => {
   };
 
 
+  //-------------fetch single Property ----- 
+
+const property = async (req, res, next) => {
+  const con = await connection();
+  try {        
+    const prop_id = req.body.prop_id;
+    const [[property]] = await con.query('SELECT * FROM tbl_prop WHERE prop_id = ?', [prop_id]);
+
+    if (!property) {
+      return res.json({ result: "Property Not Found" });
+     
+    } 
+
+    property.images = JSON.parse(property.images) 
+    property.available_date = format(new Date(property.available_date), 'yyyy-MM-dd');
+
+    res.json(property);
+  } catch (error) {
+    console.error('Error in profile API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {  
+      con.release();
+  }
+};
 
 
 
@@ -1000,7 +1000,7 @@ const updateProperty = async (req, res, next) => {
     await con.beginTransaction();
 
     const userID = req.body.user_id;
-    const propertyID = req.body.prop_id; // Assuming you have a property ID in the request
+    const propertyID = req.body.prop_id; 
 
     // Validate if the user exists
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
@@ -1076,10 +1076,15 @@ const images = req.files
     const selectUpdatedPropertySql = 'SELECT * FROM `tbl_prop` WHERE prop_id = ?';
     const [[updatedPropertyDetails]] = await con.query(selectUpdatedPropertySql, [propertyID]);
 
-    // Optionally, format or process the fetched updated property details here
+      
+    updatedPropertyDetails.images = JSON.parse(updatedPropertyDetails.images) 
+    updatedPropertyDetails.available_date = format(new Date(updatedPropertyDetails.available_date), 'yyyy-MM-dd');
 
+    console.log("updated Successfully ->> ", updatedPropertyDetails)
     await con.commit();
-    res.json({ result: 'success', updatedPropertyDetails });
+    res.json({result: 'success', ...updatedPropertyDetails,  });
+
+
   } catch (error) {
     // Rollback the transaction in case of an error
     await con.rollback();

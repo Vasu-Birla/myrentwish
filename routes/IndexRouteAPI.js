@@ -79,7 +79,7 @@ router.route('/myProperties').post(upload.none(),myProperties)
 
 router.route('/property').post(upload.none(),property)
 
-router.route('/updateProperty').post(upload.none(),updateProperty)
+router.route('/updateProperty').post(upload.array('images'),updateProperty)
 
 
 
