@@ -785,7 +785,7 @@ const updloadBYUser   = async(req,res,next)=>{
 
 
 
-const addProperty = async (req, res, next) => {
+const addProperty = async (req, res, next) => {  console.log(req.files)
   const con = await connection();
   try {
    
@@ -827,6 +827,7 @@ const addProperty = async (req, res, next) => {
 
     const images = req.files.map(file => ({path:`http://${process.env.Host1}/uploads/${file.filename}`}));
 
+    console.log(images)
 
     //const formattedDate = format(new Date(available_date), 'yyyy-MM-dd');
 
