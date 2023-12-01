@@ -820,7 +820,9 @@ const addProperty = async (req, res, next) => {
     const images = req.files.map(file => ({path:`http://${process.env.Host1}/uploads/${file.filename}`}));
 
 
-    const formattedDate = format(new Date(available_date), 'yyyy-MM-dd');
+    //const formattedDate = format(new Date(available_date), 'yyyy-MM-dd');
+
+    //const formattedDate = format(new Date(available_date), 'dd-MM-yyyy');
 
     // Insert property details into the tbl_prop table
     const insertSql =
@@ -841,7 +843,7 @@ const addProperty = async (req, res, next) => {
       parking_type,
       size_sqft,
       rent_amount,
-      formattedDate,
+      available_date,
       is_available,
       prop_status,
       JSON.stringify(images)
@@ -850,8 +852,15 @@ const addProperty = async (req, res, next) => {
 
     const [results] = await con.query(insertSql, insertValues);
 
+    const selectPropertySql = 'SELECT * FROM `tbl_prop` WHERE prop_id = ?';
+    var [[propertyDetails]] = await con.query(selectPropertySql, [results.insertId]);
+
+
+    propertyDetails.images = JSON.parse(propertyDetails.images) 
+    propertyDetails.available_date = format(new Date(propertyDetails.available_date), 'yyyy-MM-dd');
+
     await con.commit();
-    res.json({ result: "success" });
+    res.json({result: 'success', ...propertyDetails,  });
   } catch (error) {
     // Rollback the transaction in case of an error
     await con.rollback();
@@ -879,7 +888,7 @@ const property = async (req, res, next) => {
      
     } 
 
-    //property.images = JSON.parse(property.images) 
+    property.images = JSON.parse(property.images) 
     res.json(property);
   } catch (error) {
     console.error('Error in profile API:', error);
