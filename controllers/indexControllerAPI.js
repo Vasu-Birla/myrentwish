@@ -776,6 +776,12 @@ const updloadBYUser   = async(req,res,next)=>{
 
 
 
+
+
+
+
+
+
 //====================================== Property Section Start ==================================== 
 
 
@@ -993,14 +999,16 @@ const property = async (req, res, next) => {
 
 
 
+
+
 const updateProperty = async (req, res, next) => {
  const con = await connection();
   try {
-    
+   
     await con.beginTransaction();
 
     const userID = req.body.user_id;
-    const propertyID = req.body.prop_id; 
+    const propertyID = req.body.prop_id;
 
     // Validate if the user exists
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
@@ -1039,34 +1047,55 @@ const updateProperty = async (req, res, next) => {
     // Set is_available based on prop_status
     const is_available = prop_status === 'available';
 
-// Convert uploaded file data to an array of image paths
-const images = req.files
-? req.files.map(file => ({ path: `http://${process.env.Host1}/uploads/${file.filename}` }))
-: property.images; // Use existing images if no new images are provided
+    // Convert uploaded file data to an array of image paths
+    const images = req.files
+      ? req.files.map(file => ({ path: `http://${process.env.Host1}/uploads/${file.filename}` }))
+      : JSON.parse(property.images); // Use existing images if no new images are provided
 
+    // Create an object with updated property details
+    const updatedPropertyDetails = {
+      owner_name: owner_name || property.owner_name,
+      owner_contact: owner_contact || property.owner_contact,
+      owner_email: owner_email || property.owner_email,
+      title: title || property.title,
+      description: description || property.description,
+      address: address || property.address,
+      city: city || property.city,
+      country: country || property.country,
+      prop_type: prop_type || property.prop_type,
+      bedroom_nums: bedroom_nums || property.bedroom_nums,
+      bathroom_type: bathroom_type || property.bathroom_type,
+      parking_type: parking_type || property.parking_type,
+      size_sqft: size_sqft || property.size_sqft,
+      rent_amount: rent_amount || property.rent_amount,
+      available_date: available_date || property.available_date,
+      is_available: is_available || property.is_available,
+      prop_status: prop_status || property.prop_status,
+      images: JSON.stringify(images),
+    };
 
     // Update property details in the tbl_prop table
     const updateSql =
       'UPDATE tbl_prop SET owner_name=?, owner_contact=?, owner_email=?, title=?, description=?, address=?, city=?, country=?, prop_type=?, bedroom_nums=?, bathroom_type=?, parking_type=?, size_sqft=?, rent_amount=?, available_date=?, is_available=?, prop_status=?, images=? WHERE prop_id=?';
     const updateValues = [
-      owner_name,
-      owner_contact,
-      owner_email,
-      title,
-      description,
-      address,
-      city,
-      country,
-      prop_type,
-      bedroom_nums,
-      bathroom_type,
-      parking_type,
-      size_sqft,
-      rent_amount,
-      available_date,
-      is_available,
-      prop_status,
-      JSON.stringify(images),
+      updatedPropertyDetails.owner_name,
+      updatedPropertyDetails.owner_contact,
+      updatedPropertyDetails.owner_email,
+      updatedPropertyDetails.title,
+      updatedPropertyDetails.description,
+      updatedPropertyDetails.address,
+      updatedPropertyDetails.city,
+      updatedPropertyDetails.country,
+      updatedPropertyDetails.prop_type,
+      updatedPropertyDetails.bedroom_nums,
+      updatedPropertyDetails.bathroom_type,
+      updatedPropertyDetails.parking_type,
+      updatedPropertyDetails.size_sqft,
+      updatedPropertyDetails.rent_amount,
+      updatedPropertyDetails.available_date,
+      updatedPropertyDetails.is_available,
+      updatedPropertyDetails.prop_status,
+      updatedPropertyDetails.images,
       propertyID,
     ];
 
@@ -1074,26 +1103,29 @@ const images = req.files
 
     // Optionally, you can retrieve the updated property details if needed
     const selectUpdatedPropertySql = 'SELECT * FROM `tbl_prop` WHERE prop_id = ?';
-    const [[updatedPropertyDetails]] = await con.query(selectUpdatedPropertySql, [propertyID]);
+    const [[finalUpdatedPropertyDetails]] = await con.query(selectUpdatedPropertySql, [propertyID]);
 
-      
-    updatedPropertyDetails.images = JSON.parse(updatedPropertyDetails.images) 
-    updatedPropertyDetails.available_date = format(new Date(updatedPropertyDetails.available_date), 'yyyy-MM-dd');
+    finalUpdatedPropertyDetails.images = JSON.parse(finalUpdatedPropertyDetails.images);
+    finalUpdatedPropertyDetails.available_date = format(new Date(finalUpdatedPropertyDetails.available_date), 'yyyy-MM-dd');
 
-    console.log("updated Successfully ->> ", updatedPropertyDetails)
+    console.log("updated Successfully ->> ", finalUpdatedPropertyDetails)
+
     await con.commit();
-    res.json({result: 'success', ...updatedPropertyDetails,  });
+    res.json({ result: 'success', ...finalUpdatedPropertyDetails });
 
-
+    
   } catch (error) {
     // Rollback the transaction in case of an error
     await con.rollback();
     console.error('Error in updateProperty API:', error);
     res.status(500).json({ result: 'Internal Server Error' });
-  } finally {   
+  } finally {
+    if (con) {
       con.release();
+    }
   }
 };
+
 
 
 
