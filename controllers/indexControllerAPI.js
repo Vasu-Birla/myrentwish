@@ -855,7 +855,7 @@ const addProperty = async (req, res, next) => {
     const selectPropertySql = 'SELECT * FROM `tbl_prop` WHERE prop_id = ?';
     var [[propertyDetails]] = await con.query(selectPropertySql, [results.insertId]);
 
-
+console.log(propertyDetails)
     propertyDetails.images = JSON.parse(propertyDetails.images) 
     propertyDetails.available_date = format(new Date(propertyDetails.available_date), 'yyyy-MM-dd');
 
