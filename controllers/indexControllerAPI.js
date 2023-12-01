@@ -971,8 +971,7 @@ const myProperties = async (req, res, next) => {
 
         row.images = JSON.parse(row.images) 
         row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
-    }  
-  
+    }    
     
       await con.commit();
       res.json( properties );
@@ -985,10 +984,116 @@ const myProperties = async (req, res, next) => {
         con.release();
     }
   };
-  
 
 
-  
+
+
+
+  //------------- Update Property --------------------- 
+
+
+
+const updateProperty = async (req, res, next) => {
+ const con = await connection();
+  try {
+    
+    await con.beginTransaction();
+
+    const userID = req.body.user_id;
+    const propertyID = req.body.prop_id; // Assuming you have a property ID in the request
+
+    // Validate if the user exists
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+    if (!user) {
+      await con.rollback();
+      return res.json({ result: "User not found" });
+    }
+
+    // Validate if the property exists and is owned by the user
+    const [[property]] = await con.query('SELECT * FROM `tbl_prop` WHERE prop_id = ? AND user_id = ?', [propertyID, userID]);
+    if (!property) {
+      await con.rollback();
+      return res.json({ result: "Property not found or does not belong to the user" });
+    }
+
+    // Extract property details from the request body
+    const {
+      owner_name,
+      owner_contact,
+      owner_email,
+      title,
+      description,
+      address,
+      city,
+      country,
+      prop_type,
+      bedroom_nums,
+      bathroom_type,
+      parking_type,
+      size_sqft,
+      rent_amount,
+      available_date,
+      prop_status, // Assuming this is part of the request body
+    } = req.body;
+
+    // Set is_available based on prop_status
+    const is_available = prop_status === 'available';
+
+// Convert uploaded file data to an array of image paths
+const images = req.files
+? req.files.map(file => ({ path: `http://${process.env.Host1}/uploads/${file.filename}` }))
+: property.images; // Use existing images if no new images are provided
+
+
+    // Update property details in the tbl_prop table
+    const updateSql =
+      'UPDATE tbl_prop SET owner_name=?, owner_contact=?, owner_email=?, title=?, description=?, address=?, city=?, country=?, prop_type=?, bedroom_nums=?, bathroom_type=?, parking_type=?, size_sqft=?, rent_amount=?, available_date=?, is_available=?, prop_status=?, images=? WHERE prop_id=?';
+    const updateValues = [
+      owner_name,
+      owner_contact,
+      owner_email,
+      title,
+      description,
+      address,
+      city,
+      country,
+      prop_type,
+      bedroom_nums,
+      bathroom_type,
+      parking_type,
+      size_sqft,
+      rent_amount,
+      available_date,
+      is_available,
+      prop_status,
+      JSON.stringify(images),
+      propertyID,
+    ];
+
+    await con.query(updateSql, updateValues);
+
+    // Optionally, you can retrieve the updated property details if needed
+    const selectUpdatedPropertySql = 'SELECT * FROM `tbl_prop` WHERE prop_id = ?';
+    const [[updatedPropertyDetails]] = await con.query(selectUpdatedPropertySql, [propertyID]);
+
+    // Optionally, format or process the fetched updated property details here
+
+    await con.commit();
+    res.json({ result: 'success', updatedPropertyDetails });
+  } catch (error) {
+    // Rollback the transaction in case of an error
+    await con.rollback();
+    console.error('Error in updateProperty API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {   
+      con.release();
+  }
+};
+
+
+
+
+
 const profilePost = async(req,res,next)=>{    
     const con = await connection(); 
 
@@ -1467,7 +1572,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
     removeFromCol, updloadBYUser, profile, profilePost, similarColl,
      aboutUs, TC_User, UserPrivacy, contactUS, aboutUs1, createPayment, 
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
-     updatePreference, addProperty, property, Properties , myProperties
+     updatePreference, addProperty, property, Properties , myProperties , updateProperty
 
 }
 
