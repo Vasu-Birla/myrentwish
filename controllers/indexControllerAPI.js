@@ -60,7 +60,7 @@ function setValue()
         return res.status(200).json({ result: 'Email already exists' });
       } else {
         const sql =
-          'INSERT INTO `tbl_users` ( firstname, lastname, user_email,  password, user_mobile, birthday, location, latitude, longitude, address, country, city, gender, image, imagePath) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+          'INSERT INTO `tbl_users` ( firstname, lastname, user_email,  password, user_mobile, birthday, location, latitude, longitude, address, country, city, gender, image, imagePath, prefered_gender, prefered_city, prefered_country, bedroom_nums, bathroom_type, parking_type, prefered_rent, about_me, skill) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   
         const values = [
           req.body.firstname,
@@ -76,6 +76,15 @@ function setValue()
           req.body.country,
           req.body.city,
           req.body.gender,
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
           image,
           imagePath
         ];
@@ -789,8 +798,7 @@ const addProperty = async (req, res, next) => {
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
     if (!user) {
       await con.rollback();
-      res.json({ result: "User not found" });
-      return;
+      return res.json({ result: "User not found" });
     }
 
     // Extract property details from the request body
@@ -889,6 +897,8 @@ const property = async (req, res, next) => {
     } 
 
     property.images = JSON.parse(property.images) 
+    property.available_date = format(new Date(property.available_date), 'yyyy-MM-dd');
+
     res.json(property);
   } catch (error) {
     console.error('Error in profile API:', error);
@@ -901,7 +911,79 @@ const property = async (req, res, next) => {
 
 
 
+//---------- fetch Properties -------
+const Properties = async (req, res, next) => {
+const  con = await connection();
+  try {
+    await con.beginTransaction();
+    const userID = req.body.user_id;
 
+    // Validate if the user exists
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+    if (!user) {
+      await con.rollback();
+      return res.json({ result: "User not found" });
+    }
+    //const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id <> ?';
+    const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ?';
+    const [properties] = await con.query(selectPropertiesSql, [userID]);
+   
+    for (const row of properties) {
+
+      row.images = JSON.parse(row.images) 
+      row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
+  }  
+
+    await con.commit();
+    res.json( properties );
+  } catch (error) {
+    // Rollback the transaction in case of an error
+    await con.rollback();
+    console.error('Error in fetchAllProperties API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {
+      con.release();
+  }
+};
+
+
+
+
+//-------- fetch my properties -------
+
+const myProperties = async (req, res, next) => {
+  const  con = await connection();
+    try {
+      await con.beginTransaction();
+      const userID = req.body.user_id;
+  
+      const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+      if (!user) {
+        await con.rollback();
+        return res.json({ result: "User not found" });
+      }
+  
+      const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id = ?';  
+      const [properties] = await con.query(selectPropertiesSql, [userID]);
+
+      for (const row of properties) {
+
+        row.images = JSON.parse(row.images) 
+        row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
+    }  
+  
+    
+      await con.commit();
+      res.json( properties );
+    } catch (error) {
+      // Rollback the transaction in case of an error
+      await con.rollback();
+      console.error('Error in fetchAllProperties API:', error);
+      res.status(500).json({ result: 'Internal Server Error' });
+    } finally {
+        con.release();
+    }
+  };
   
 
 
@@ -1384,7 +1466,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
     removeFromCol, updloadBYUser, profile, profilePost, similarColl,
      aboutUs, TC_User, UserPrivacy, contactUS, aboutUs1, createPayment, 
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
-     updatePreference, addProperty, property
+     updatePreference, addProperty, property, Properties , myProperties
 
 }
 
