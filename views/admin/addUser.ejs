@@ -1,0 +1,94 @@
+<%- include ("header.ejs") %>
+<%- include ("navbar.ejs") %>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+           <div class="fully-page">
+             <div class="full-headings">
+               <h4>Add User Management</h4>
+             </div>
+             <div class="box-bodys" style="padding: 0px;">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="forms-img">
+                     <img src="../assets/img/login-bg/add-user.jpg" style="width: 100%; height: 420px;">
+                  </div>
+                </div>
+                 <div class="col-md-8">
+                  <div class="full-forms">
+                 <div class="form-group row">
+               
+                <div class="form-group add-admin col-md-12">
+                    <label class="control-label" for="name">First Name</label>
+                    <input type="text" name="name" class="form-control required" placeholder="First Name" required="">
+                </div>
+                 <div class="form-group add-admin col-md-6">
+                    <label class="control-label" for="name">Last Name</label>
+                    <input type="text" name="name" class="form-control required" placeholder="Last Name" required="">
+                </div>
+
+                 <div class="form-group add-admin col-md-6">
+                        <label class="control-label" for="name">Password</label>
+                        <input type="text" name="pass" class="form-control required" placeholder=" Password" required="">
+                    </div>
+
+                   <div class="form-group add-admin col-md-12">
+                        <label class="control-label" for="name">Email</label>
+                        <input type="email" name="email" class="form-control required" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" placeholder=" Email" required="">
+                    </div>
+                    
+                     <div class="form-group add-admin col-md-6">
+                        <label class="control-label" for="name">Mobile no</label>
+                        <input type="number" name="pass" class="form-control required" placeholder=" Mobile no" required="">
+                    </div>
+
+                     <div class="form-group add-admin col-md-6">
+                        <label class="control-label" for="image"> Customer Image</label><br>
+                        <input type="file" name="image" onchange="validateImage(this)" id="image" class="" size="20" required="">
+                        <div id="image_req" style="color: red"></div>
+                    </div>
+
+                      <div class="form-group add-admin col-md-12">
+                        <label class="control-label" for="name">Address</label>
+                        <textarea type="text" name="address" class="form-control required" placeholder=" Address" required=""></textarea>
+                    </div>
+
+                   
+                    <div class="form-group  add-admin mt-3 col-md-12" style="margin-bottom: 0px;">
+                       <input type="submit" name="add" class="btn btn-primary" value="Submit"> 
+                    </div> 
+                  </div>  
+                  </div>
+                 </div>
+             </div>
+           </div>
+          </div>
+        </section>
+
+      </div>
+      <footer class="main-footer">
+        <div class="footer-left">
+          COPYRIGHT MIE RIDE, 2023 Design & Developed by
+          <a href="https://cyberimpulses.com/">CISS</a></a>
+        </div>
+        <div class="footer-right">
+        </div>
+      </footer>
+    </div>
+  </div>
+  <!-- General JS Scripts -->
+  <script src="../assets/js/app.min.js"></script>
+  <!-- JS Libraies -->
+  <script src="../assets/bundles/apexcharts/apexcharts.min.js"></script>
+  <!-- Page Specific JS File -->
+  <script src="../assets/js/page/index.js"></script>
+  <!-- Template JS File -->
+  <script src="../assets/js/scripts.js"></script>
+  <!-- Custom JS File -->
+  <script src="../assets/js/custom.js"></script>
+</body>
+
+
+<!-- index  21 Nov 2019 03:47:04 GMT -->
+</html>

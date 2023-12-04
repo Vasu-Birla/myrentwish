@@ -1,338 +1,349 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-        <title> HOME PAGE  INVOICE MANAGEMENT</title>
-		
-		<!-- Favicon -->
-        <link rel="shortcut icon" type="image/x-icon" href="../assets/img/favicon.png">
-		
-		<!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
-		
-		<!-- Fontawesome CSS -->
-        <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
-		
-		<!-- Feathericon CSS -->
-        <link rel="stylesheet" href="../assets/css/feathericon.min.css">
+  <head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
+    <title>MY RENT WISH HOME PAGE </title>
+    <!-- General CSS Files -->
+    <link rel="stylesheet" href="../assets/css/app.min.css">
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/components.css">
+    <!-- Custom style CSS -->
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel='shortcut icon' type='image/x-icon' href='../assets/img/favicon.png' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- PRoperty page cdn -->
+    <link rel="stylesheet" href="vendors/datatables.net-bs4/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
 
-		
-		<link rel="stylesheet" href="../assets/plugins/morris/morris.css">
-		
-		<!-- Main CSS -->
-        <link rel="stylesheet" href="../assets/css/style.css">
-    </head>
-    <body>
-	
-		<!-- Main Wrapper -->
-        <div class="main-wrapper">
-		
-			<!-- Header -->
-            <div class="header">
-			
-				<!-- Logo -->
-                <div class="header-left">
-                    <a href="/" class="logo">
-						<img src="../assets/img/logo1.png" style="width: 150px; height: 60px;"  alt="Logo">
-					</a>
-					<a href="/" class="logo logo-small">
-						<img src="../assets/img/logo-small1.png"  alt="Logo" width="30" height="30">
-					</a>
-                </div>
-				<!-- /Logo -->
-				
-				<a href="javascript:void(0);" id="toggle_btn">
-					<i class="fe fe-text-align-left"></i>
-				</a>
-				
-				
-				<!-- Mobile Menu Toggle -->
-				<a class="mobile_btn" id="mobile_btn">
-					<i class="fa fa-bars"></i>
-				</a>
-				<!-- /Mobile Menu Toggle -->
-				
-				<!-- Header Right Menu -->
-				<ul class="nav user-menu">
-					
-					<!-- User Menu -->
-					<li class="nav-item dropdown has-arrow">
-						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-							<span class="user-img"><img class="rounded-circle" src="http://<%= host %>/uploads/<%- user.image %>" width="31" alt="Ryan Taylor"></span>
-						</a>
-						<div class="dropdown-menu">
-							<div class="user-header">
-								<div class="avatar avatar-sm">
-									<img src="http://<%= host %>/uploads/<%- user.image %>" alt="User Image" class="avatar-img rounded-circle">
-								</div>
-								<div class="user-text">
-									<h6><%- user.firstname %></h6>
-									<p class="text-muted mb-0">Administrator</p>
-								</div>
-							</div>
-							<a class="dropdown-item" href="/admin/profile">My Profile</a>
-							<a class="dropdown-item" href="/admin/logout">Logout</a>
-						</div>
-					</li>
-					<!-- /User Menu -->
-					
-				</ul>
-				<!-- /Header Right Menu -->
-				
-            </div>
-			<!-- /Header -->
-			
-			<!-- Sidebar -->
-			<div class="sidebar" id="sidebar">
-				<div class="sidebar-inner slimscroll">
-					<div id="sidebar-menu" class="sidebar-menu">
-						<ul>
-							<li class="menu-title"> 
-								<span>Main</span>
-							</li>
-							<li class="active"> 
-								<a href="/admin"><i class="fe fe-home"></i> <span>Dashboard</span></a>
-							</li>
+    <link rel="stylesheet" type="text/css" href="../assets/js/select.dataTables.min.css">
 
-							<li class="submenu">
-								<a href="#"><i class="fe fe-user-plus "></i> <span> Company </span> <span class="menu-arrow"></span></a>
-								<ul style="display: none;">
-									<li><a href="/admin/addCompany"> Add Company </a></li>
-									<li><a href="/admin/viewCompanies"> View Companies </a></li>
-								</ul>
-							</li>
-	
-							<!-- <li class="submenu">
-								<a href="#"><i class="fe fe-user-plus "></i> <span> Customer </span> <span class="menu-arrow"></span></a>
-								<ul style="display: none;">
-									<li><a href="/addCustomer"> Add Customer </a></li>
-									<li><a href="/viewCustomer"> View Customer </a></li>
-								</ul>
-							</li>
-							<li class="submenu">
-								<a href="#"><i class="fe fe-document "></i> <span> Payment </span> <span class="menu-arrow"></span></a>
-								<ul style="display: none;">
-									<li><a href="/addPayment"> Add Payment </a></li>
-									<li><a href="/viewPayments"> View Payment </a></li>
-								</ul>
-							</li>
-							<li class="submenu">
-								<a href="#"><i class="fe fe-users"></i> <span> Sales </span> <span class="menu-arrow"></span></a>
-								<ul style="display: none;">
-									<li><a href="/addSale"> Add Sales </a></li>
-									<li><a href="/viewSales"> View Sales </a></li>
-								</ul>
-							</li>
-							<li class="submenu">
-								<a href="#"><i class="fe fe-file  "></i> <span> Invoices </span> <span class="menu-arrow"></span></a>
-								<ul style="display: none;">
-									<li><a href="/addInvoice"> Add Invoices </a></li>
-									<li><a href="/viewInvoices"> View Invoices </a></li>
-								</ul>
-							</li> -->
-							<li> 
-								<a href="/admin/userPrivacy"><i class="fe fe-user-plus "></i> <span>Privacy Policy</span></a>
-							</li>
-							
-							<li> 
-								<a href="/admin/tandc"><i class="fe fe-document "></i> <span>Terms & Condition</span></a>
-							</li>
-							<!-- <li> 
-								<a href="/notification"><i class="fe fe-users"></i> <span>Notification</span></a>
-							</li> -->
-							<li class="dropdown ">
-								<a href="/admin/logout" class="nav-link"><i  class="fe fe-desktop"></i>
-								 <span>Logout</span></a>
-						   </li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!-- /Sidebar -->
-			
-			<!-- Page Wrapper -->
-            <div class="page-wrapper">
-			
-                <div class="content container-fluid">
-					
-					<!-- Page Header -->
-					<div class="page-header">
-						<div class="row">
-							<div class="col-sm-12">
-								<h3 class="page-title">Welcome To Invoice Management</h3>
-							</div>
-						</div>
-					</div>
-					<!-- /Page Header -->
 
-					<div class="row">
-						<div class="col-xl-3 col-sm-6 col-12">
-							<div class="card bg-hovers" style="border-top: 4px solid #e84646;border-bottom: 4px solid #e84646;">
-								<div class="card-body">
-									<div class="dash-widget-header">
-										<span class="dash-widget-icon">
-											<!-- <i class="fe fe-credit-card"></i> -->
-												<i> <img src="../assets/img/icons/icons-1.png"> </i>
-										</span>
-										<!-- <div class="dash-count">
-											<i class="fa fa-arrow-down text-danger"></i> 12%
-										</div> -->
-										<div class="dash-count">
-											<i><img src="../assets/img/order.png"> </i>
-										</div>
-									</div>
-									<div class="dash-widget-info">
-										<h3>Sales </h3>
-										<h6 class="text-muted">$56485</h6>
-										<div class="progress progress-sm">
-											<div class="progress-bar bg-danger w-50"></div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-							<div class="col-xl-3 col-sm-6 col-12">
-							<div class="card bg-hovers" style="border-top: 4px solid #7bb13c;border-bottom: 4px solid #7bb13c;">
-								<div class="card-body">
-									<div class="dash-widget-header">
-										<span class="dash-widget-icon">
-											<i> <img src="../assets/img/icons/icons-2.png"> </i>
-											<!-- class="fe fe-money" -->
-										</span>
-										<!-- <div class="dash-count">
-											<i class="fa fa-arrow-down text-danger"></i> 12%
-										</div> -->
-											<div class="dash-count">
-											<i><img src="../assets/img/order-2.png"> </i>
-										</div>
-									</div>
-									<div class="dash-widget-info">
-										<h3>Products </h3>
-										<h6 class="text-muted">21587</h6>
-										<div class="progress progress-sm">
-											<div class="progress-bar bg-success w-50"></div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-							<div class="col-xl-3 col-sm-6 col-12">
-							<div class="card bg-hovers" style="border-top: 4px solid #2962ff;border-bottom: 4px solid #2962ff;">
-								<div class="card-body">
-									<div class="dash-widget-header">
-										<span class="dash-widget-icon">
-											<!-- <i class="fe fe-users"></i> -->
-												<i> <img src="../assets/img/icons/icons-3.png"> </i>
-										</span>
-										<!-- <div class="dash-count">
-											<i class="fa fa-arrow-up text-success"></i> 17%
-										</div> -->
-											<div class="dash-count">
-											<i><img src="../assets/img/order-3.png"> </i>
-										</div>
-									</div>
-									<div class="dash-widget-info">
-										<h3>Customers </h3>
-										<h6 class="text-muted">168</h6>
-										<div class="progress progress-sm">
-											<div class="progress-bar bg-primary w-50"></div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-xl-3 col-sm-6 col-12">
-							<div class="card bg-hovers" style="border-top: 4px solid #ffbc34;border-bottom: 4px solid #ffbc34;">
-								<div class="card-body">
-									<div class="dash-widget-header">
-										<span class="dash-widget-icon">
-											<!-- <i class="fe fe-folder"></i> -->
-												<i> <img src="../assets/img/icons/icons-4.png"> </i>
-										</span>
-										<!-- <div class="dash-count">
-											<i class="fa fa-arrow-up text-success"></i> 17%
-										</div> -->
-											<div class="dash-count">
-											<i><img src="../assets/img/order-4.png"> </i>
-										</div>
-									</div>
-									<div class="dash-widget-info">
-										<h3>Revenue</h3>
-										<h6 class="text-muted">$62523</h6>
-										<div class="progress progress-sm">
-											<div class="progress-bar bg-warning w-50"></div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 
-					<div class="row">
-						<div class="col-md-12 col-lg-6">
-						
-							<!-- Sales Chart -->
-							<div class="card card-chart" style="border-top: 4px solid #505050;border-bottom: 4px solid #505050;">
-								<div class="card-header">
-									<h4 class="card-title">Sales Overview</h4>
-								</div>
-								<div class="card-body">
-									<div id="morrisArea"></div>
-								</div>
-							</div>
-							<!-- /Sales Chart -->
-							
-						</div>
-						<div class="col-md-12 col-lg-6">
-						
-							<!-- Invoice Chart -->
-							<div class="card card-chart" style="border-top: 4px solid #505050;border-bottom: 4px solid #505050;">
-								<div class="card-header">
-									<h4 class="card-title">Order Status</h4>
-								</div>
-								<div class="card-body">
-									<div id="morrisLine"></div>
-								</div>
-							</div>
-							<!-- /Invoice Chart -->
-							
-						</div>	
-					</div>
-					
-				</div>			
-			</div>
-			<!-- /Page Wrapper -->
-			<div class="copyright">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="copyright-text">
-								<h3> ©2023 Copyright <b>INVOICE MANAGEMENT</b> All rights reserved | Design & Develop by  by <a href="https://cyberimpulses.com/" target="_blank"> CISS </a></h3>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.2.2/js/dataTables.fixedColumns.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-2.2.4/dt-1.10.13/fc-3.2.2/fh-3.1.2/r-2.1.0/sc-1.4.2/datatables.min.css" />
+  
+  
+
+
+
+
+    <!-- Bootstrap CSS -->
+<!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script> -->
+  
+  </head>
+
+<body>
+  <div class="loader"></div>
+  <div id="app">
+    <div class="main-wrapper main-wrapper-1">
+      <div class="navbar-bg"></div>
+      <nav class="navbar navbar-expand-lg main-navbar sticky">
+        <div class="form-inline mr-auto">
+          <ul class="navbar-nav mr-3">
+            <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg
+									collapse-btn"> <i data-feather="align-justify"></i></a></li>
+          </ul>
         </div>
-		<!-- /Main Wrapper -->
-		
-		<!-- jQuery -->
-        <script src="../assets/js/jquery-3.6.0.min.js"></script>
-		
-		<!-- Bootstrap Core JS -->
-        <script src="../assets/js/bootstrap.bundle.min.js"></script>
-		
-		<!-- Slimscroll JS -->
-        <script src="../assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-		
-		<script src="../assets/plugins/raphael/raphael.min.js"></script>    
-		<script src="../assets/plugins/morris/morris.min.js"></script>  
-		<script src="../assets/js/chart.morris.js"></script>
-		
-		<!-- Custom JS -->
-		<script  src="../assets/js/script.js"></script>
-		
-    </body>
+        <ul class="navbar-nav navbar-right">
+          <li class="dropdown"><a href="#" data-toggle="dropdown"
+              class="nav-link dropdown-toggle nav-link-lg nav-link-user"> <img alt="image" src="http://<%= host %>/uploads/<%- admin.image %>"
+                class="user-img-radious-style"> <span class="d-sm-none d-lg-inline-block"></span></a>
+            <div class="dropdown-menu dropdown-menu-right pullDown">
+               <!-- <div class="dropdown-title">Hello Sarah Smith</div> --> 
+              <a href="/admin/profile" class="dropdown-item has-icon"> <i class="far fa-user"></i> Profile</a>
+              <div class="dropdown-divider"></div>
+              <a href="/admin/logout" class="dropdown-item has-icon text-danger"> <i class="fas fa-sign-out-alt"></i>
+                Logout
+              </a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+
+
+
+
+          <!-- SIDEBAR  -->
+      <div class="main-sidebar sidebar-style-2">
+        <aside id="sidebar-wrapper">
+          <div class="sidebar-brand">
+            <a href="/admin"> <img alt="image" src="../assets/img/punocoin-logo.png" class="header-logo" />
+            </a>
+          </div>
+          <ul class="sidebar-menu">
+            <li class="menu-header">Main</li>
+            <li class="dropdown active">
+              <a href="/admin" class="nav-link"><i data-feather="monitor"></i><span>Dashboard</span></a>
+            </li>
+            <li class="dropdown">
+              <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>
+              User Managemnt </span></a>
+              <ul class="dropdown-menu">
+                <li><a class="nav-link" href="/admin/addUser">Add User</a></li>
+                <li><a class="nav-link" href="/admin/viewUsers">View User</a></li>
+              </ul>
+            </li>
+           <li class="dropdown">
+              <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                  data-feather="shopping-bag"></i><span> Property Management  </span></a>
+               <ul class="dropdown-menu">
+                <li><a class="nav-link" href="/admin/propType"> Property Types </a></li>
+                <li><a class="nav-link" href="/admin/properties"> Views Properties </a></li>
+              </ul>
+            </li>
+             
+           <!--  <li>
+              <a class="nav-link" href="">
+                <i data-feather="image"></i>
+                <span>Views Properties</span>
+              </a>
+            </li> -->
+              <li>
+                <a class="nav-link" href="/admin/notify">
+                  <i data-feather="sliders"></i>
+                  <span>Notification</span>
+                </a>
+                </li>
+
+                <li class="dropdown">
+              <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                  data-feather="file"></i><span> Question</span></a>
+              <ul class="dropdown-menu">
+                <li><a class="nav-link" href="/admin/addQuestion">Add Question</a></li>
+                <li><a class="nav-link" href="/admin/viewQuestions">View Question</a></li>
+              </ul>
+            </li>
+
+
+            <li class="dropdown">
+              <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="command"></i><span>
+                Skills </span></a>
+              <ul class="dropdown-menu">
+                <li><a class="nav-link" href="/admin/addSkills"> Add Skills </a></li>
+                <li><a class="nav-link" href="/admin/viewSkills"> View Skills</a></li>
+              </ul>
+            </li>
+
+                <li class="dropdown">
+                  <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                      data-feather="alert-triangle"></i><span>Help & Support </span></a>
+                  <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="/admin/addInquiryDetails"> Add Inquiry </a></li>
+                    <li><a class="nav-link" href="/admin/queries"> Query Tickets </a></li>
+                  </ul>
+                </li> 
+
+                <li>
+                <a class="nav-link" href="faq">
+                  <i data-feather="flag"></i>
+                  <span> Frequently Asked Question</span>
+                </a>
+                </li>
+
+                 <li>
+                <a class="nav-link" href="/admin/tandc">
+                  <i data-feather="map"></i>
+                  <span> Terms & Conditions</span>
+                </a>
+                </li>
+
+                  <li>
+                <a class="nav-link" href="/admin/userPrivacy">
+                  <i data-feather="user-check"></i>
+                  <span> Privacy & Policy </span>
+                </a>
+                </li>
+          </ul>
+        </aside>
+      </div>
+       <!-- SIDEBAR  -->
+
+
+
+
+
+
+
+
+       
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+          <div class="fully-graph">
+                  <div class="fulls-headings">
+                     <h4> <i class="fa fa-th-large" aria-hidden="true"></i>  Dashboard</h4>
+                   </div>
+          <div class="row ride-boxes">
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <a href="#"><div class="card">
+                <div class="card-statistic-4">
+                  <div class="align-items-center justify-content-between">
+                    <div class="row ">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                        <div class="card-content wow zoomin">
+                          <h5 class="font-13">Total Users</h5>
+                          <h2 class="mb-3 font-14">50</h2>
+                          <p class="mb-0"><span class="col-green"> Read </span> More</p>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                        <div class="banner-img">
+                          <img src="../assets/img/banner/banner-1.png" alt="" style="width: 90%;">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </a>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="card">
+                <div class="card-statistic-4">
+                  <div class="align-items-center justify-content-between">
+                    <div class="row ">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                        <div class="card-content">
+                          <h5 class="font-13">Total Property</h5>
+                          <h2 class="mb-3 font-14">46</h2>
+                          <p class="mb-0"><span class="col-orange">Read </span> More</p>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                        <div class="banner-img">
+                          <img src="../assets/img/banner/banner-2.png" alt="">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="card">
+                <div class="card-statistic-4">
+                  <div class="align-items-center justify-content-between">
+                    <div class="row ">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                        <div class="card-content">
+                          <h5 class="font-13"> Total Rent</h5>
+                          <h2 class="mb-3 font-14">3</h2>
+                          <p class="mb-0"><span class="col-green">Read </span> More</p>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                        <div class="banner-img">
+                          <img src="../assets/img/banner/banner-7.png" alt="" >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+           <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="card">
+                <div class="card-statistic-4">
+                  <div class="align-items-center justify-content-between">
+                    <div class="row ">
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
+                        <div class="card-content">
+                          <h5 class="font-13">Total Earning</h5>
+                          <h2 class="mb-3 font-14">1940.00</h2>
+                          <p class="mb-0"><span class="col-green"> Read </span> More </p>
+                        </div>
+                      </div>
+                      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
+                        <div class="banner-img">
+                          <img src="../assets/img/banner/banner-4.png" alt="">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+          </div>
+        </div>
+
+        <div class="row">
+           <div class="col-md-12">
+               <div class="fully-graph">
+                  <div class="fulls-headings">
+                     <h4><i class="fa fa-th-large" aria-hidden="true"></i>  My Rent Wish Chart</h4>
+                   </div>
+                   <div class="canvas-charts">
+                     <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+                       <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+                   </div>
+                </div>
+            </div>
+        </div>     
+        </section>
+      </div>
+      <footer class="main-footer">
+        <div class="footer-left">
+          COPYRIGHT MIE RIDE, 2023 Design & Developed by
+          <a href="https://cyberimpulses.com/">CISS</a></a>
+        </div>
+        <div class="footer-right">
+        </div>
+      </footer>
+    </div>
+  </div>
+  <!-- General JS Scripts -->
+  <script src="../assets/js/app.min.js"></script>
+  <!-- JS Libraies -->
+  <script src="../assets/bundles/apexcharts/apexcharts.min.js"></script>
+  <!-- Page Specific JS File -->
+  <script src="../assets/js/page/index.js"></script>
+  <!-- Template JS File -->
+  <script src="../assets/js/scripts.js"></script>
+  <!-- Custom JS File -->
+  <script src="../assets/js/custom.js"></script>
+<!-- CANVAS CHART JS  SCRIPT START  CANVAS CHART JS  SCRIPT START  CANVAS CHART JS  SCRIPT START  -->
+<script>
+window.onload = function () {
+
+var chart = new CanvasJS.Chart("chartContainer", {
+  animationEnabled: true,
+  theme: "light2", // "light1", "light2", "dark1", "dark2"
+  title:{
+    text: "Top Oil Reserves"
+  },
+  axisY: {
+    title: "Reserves(MMbbl)"
+  },
+  data: [{        
+    type: "column",  
+    showInLegend: true, 
+    legendMarkerColor: "grey",
+    legendText: "MMbbl = one million barrels",
+    dataPoints: [      
+      { y: 300878, label: "Venezuela" },
+      { y: 266455,  label: "Saudi" },
+      { y: 169709,  label: "Canada" },
+      { y: 158400,  label: "Iran" },
+      { y: 142503,  label: "Iraq" },
+      { y: 101500, label: "Kuwait" },
+      { y: 97800,  label: "UAE" },
+      { y: 80000,  label: "Russia" }
+    ]
+  }]
+});
+chart.render();
+
+}
+</script>
+</body>
+
+
+<!-- index  21 Nov 2019 03:47:04 GMT -->
 </html>

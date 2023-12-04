@@ -40,10 +40,13 @@ const loginPage = async(req,res,next)=>{
         console.log("Admin session exists")
         res.redirect('/admin')
     }
+    //res.render('admin/login',{'output':''}) 
 }
 
 
 const loginAdmin = async (req,res,next)=>{     
+
+  console.log(req.body)
   const con = await connection();  
 
   const {username,password} = req.body; 
@@ -129,8 +132,8 @@ const checkPass = async (req, res, next) => {
 const Profile= async(req,res,next)=>{    
 
   try {
-    var user = req.admin;
-    res.render('admin/profile',{'user':user,"output":""})
+    var admin = req.admin;
+    res.render('admin/profile',{'admin':admin,"output":""})
     
   } catch (error) {
     res.render('admin/kilvish500', {'output':'Internal Server Error'});
@@ -175,8 +178,9 @@ res.render('admin/profile',{'user':user,"output":" Profile Updated Successfully 
 
 
 
-const updateadminpic = async(req,res,next)=>{
-  const con = await connection();    
+const updateadminpic = async(req,res,next)=>{ 
+  const con = await connection();  
+ 
   
   try {
 
@@ -186,11 +190,9 @@ const updateadminpic = async(req,res,next)=>{
    image =  req.file.filename ;
    imagePath=  req.file.path ;   
 }
+ await con.query('UPDATE tbl_admin SET image = ?, imagePath = ? WHERE id = ?', [image, imagePath, req.admin.id]);
 
-    await con.query('UPDATE tbl_admin SET image = ?, imagePath = ? WHERE id = ?', [image, imagePath, req.admin.id]);
-
-    res.json({msg:"success"})
-    
+    res.json({msg:"success"})    
   } catch (error) {
     console.log("failed to update profile pic --> ",error)
     res.json({msg:"failed"})
@@ -238,10 +240,227 @@ const changepass = async (req, res, next) => {
 
 
 
+
+
+//================================== User Section ===============================================
+
+
+//------------- add User --------------------  
+
+const addUser = async(req,res,next)=>{    
+
+  try {
+
+    res.render('admin/addUser')
+
+  } catch (error) {
+    res.render('admin/kilvish500')
+  }
+    
+ 
+}
+
+
+
+const viewUsers = async(req,res,next)=>{    
+
+  try {
+    res.render('admin/viewUsers')
+  } catch (error) {
+    res.render('admin/kilvish500')
+  }
+    
+ 
+}
+
+
+//===================================== Property Section ===========================
+
+
+//------- add/view prop type ---------------
+
+const propType = async(req,res,next)=>{    
+
+  try {
+    res.render('admin/propType')
+  } catch (error) {
+    res.render('admin/kilvish500')
+  }
+    
+ 
+}
+
+
+const properties = async(req,res,next)=>{    
+
+  try {
+    res.render('admin/properties')
+  } catch (error) {
+    res.render('admin/kilvish500')
+  }
+    
+ 
+}
+
+
+
+
+//--Notify user ------------- 
+
+const notification = async(req,res,next)=>{    
+
+  try {
+    res.render('admin/notification') 
+  } catch (error) {
+    res.render('admin/kilvish500')
+  }
+    
+ 
+}
+
+
+//====================================== Question Section  ======================
+
+
+const addQuestion = async(req,res,next)=>{    
+
+  try {
+    res.render('admin/addQuestion') 
+  } catch (error) {
+    res.render('admin/kilvish500')
+  }
+    
+ 
+}
+
+
+
+const viewQuestions = async(req,res,next)=>{    
+
+  try {
+    res.render('admin/viewQuestions') 
+  } catch (error) {
+    res.render('admin/kilvish500')
+  }
+    
+ 
+}
+
+
+
+
+//====================== Skills Section ------------------
+
+const addSkills = async(req,res,next)=>{    
+
+  try {
+    res.render('admin/addSkills') 
+  } catch (error) {
+    res.render('admin/kilvish500')
+  }
+    
+ 
+}
+
+
+const viewSkills = async(req,res,next)=>{    
+
+  try {
+    res.render('admin/viewSkills') 
+  } catch (error) {
+    res.render('admin/kilvish500')
+  }
+    
+ 
+}
+
+
+
+//-----------------------  Privacy Section Start ------------------------------ 
+
+
+const userPrivacy = async(req,res,next)=>{ 
+
+  try {
+    res.render('admin/userPrivacy') 
+  } catch (error) {
+    res.render('admin/kilvish500')
+  }
+
+  }
+
+
+
+
+//--------------------  Terms & Condition Section Start -------------------------------
+
+
+
+
+
+const tandc = async(req,res,next)=>{ 
+    
+  
+      try {
+        res.render('admin/tandc') 
+      } catch (error) {
+        res.render('admin/kilvish500')
+      }
+ 
+  }
+
+
+  
+const faq = async(req,res,next)=>{ 
+
+      try {
+        res.render('admin/faq') 
+      } catch (error) {
+        res.render('admin/kilvish500')
+      }
+  }
+
+
+
+
+  //------------------
+
+
+
+  const addInquiryDetails = async(req,res,next)=>{ 
+
+    try {
+      res.render('admin/addInquiryDetails') 
+    } catch (error) {
+      res.render('admin/kilvish500')
+    }
+  }
+  
+
+
+  const queries = async(req,res,next)=>{ 
+
+    try {
+      res.render('admin/queries') 
+    } catch (error) {
+      res.render('admin/kilvish500')
+    }
+}
+
+
+
+
+
+  
+
+
+
 //--------------------- Export Start ------------------------------------------
 export {homePage,
   loginPage,loginAdmin,logout,Profile,ProfilePost,updateadminpic,
-  checkPass , changepass }
+  checkPass , changepass, addUser , viewUsers ,propType , notification ,
+   addQuestion ,viewQuestions ,addSkills,viewSkills , userPrivacy ,
+    tandc , faq, properties , queries, addInquiryDetails }
 
 
          

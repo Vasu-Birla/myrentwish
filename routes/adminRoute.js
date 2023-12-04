@@ -1,6 +1,6 @@
 import express from 'express'
-import { Profile, ProfilePost, changepass, checkPass, 
-    homePage, loginAdmin, loginPage, logout, updateadminpic } from '../controllers/adminController.js';
+import { Profile, ProfilePost, addInquiryDetails, addQuestion, addSkills, addUser, changepass, checkPass, 
+    homePage, loginAdmin, loginPage, logout, notification, propType, properties, queries, tandc, updateadminpic, userPrivacy, viewQuestions, viewSkills, viewUsers } from '../controllers/adminController.js';
 
 
 import upload from '../middleware/upload.js';
@@ -35,6 +35,75 @@ router.route('/checkPass').post(checkPass)
 
 
 router.route('/logout').get(logout)
+
+
+//------- user section --------- 
+
+router.route('/addUser').get(addUser)
+
+router.route('/viewUsers').get(viewUsers)
+
+
+//------ prop type -------------
+
+router.route('/propType').get(propType)
+
+router.route('/properties').get(properties)
+
+
+
+//--------questions 
+
+
+router.route('/addQuestion').get(addQuestion)
+
+router.route('/viewQuestions').get(viewQuestions)
+
+
+
+//------- Skills --- 
+
+router.route('/addSkills').get(addSkills)
+
+router.route('/viewSkills').get(viewSkills)
+
+
+//------ notification 
+router.route('/notify').get(notification)
+
+
+//--------- Useer Privacy ------------
+
+router.route('/userPrivacy').get(userPrivacy)
+
+
+//------- Terms & Condition -----------
+
+
+router.route('/tandc').get(tandc)
+
+//---------- FAQ ------
+
+router.route('/faq').get(tandc)
+
+
+
+
+//--------------  addInquiryDetails ---------
+
+
+router.route('/addInquiryDetails').get(addInquiryDetails)
+
+
+//---------------- view queries Tickets ------------
+
+
+router.route('/queries').get(queries)
+
+
+
+
+
 
 
 

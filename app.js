@@ -35,7 +35,8 @@ app.use(async (req, res, next) => {
   try {
       const [[user]] = await con.query('SELECT * FROM tbl_admin WHERE id = ?', [1]);
     app.locals.user = user;
-    app.locals.host  =  process.env.Host1;
+    app.locals.admin = user;
+    app.locals.host  =  process.env.Host;
    
     next();
   } catch (error) {

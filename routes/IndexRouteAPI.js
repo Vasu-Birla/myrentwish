@@ -90,13 +90,6 @@ router.route('/updateProperty').post(upload.array('images'),updateProperty)
 
 
 
-
-
-
-
-
-
-
 //------------- Product Secttion -----------------
 
 router.route('/products').post(upload.none(),getProducts);

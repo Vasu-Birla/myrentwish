@@ -1,66 +1,97 @@
-		<!-- Sidebar -->
-		<div class="sidebar" id="sidebar">
-			<div class="sidebar-inner slimscroll">
-				<div id="sidebar-menu" class="sidebar-menu">
-					<ul>
-						<li class="menu-title"> 
-							<span>Main</span>
-						</li>
-						<li class="active"> 
-							<a href="/admin"><i class="fe fe-home"></i> <span>Dashboard</span></a>
-						</li>
-
-						<li class="submenu">
-							<a href="#"><i class="fe fe-user-plus "></i> <span> Company </span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="/admin/addCompany"> Add Company </a></li>
-								<li><a href="/admin/viewCompanies"> View Companies </a></li>
-							</ul>
-						</li>
-						<!-- <li class="submenu">
-							<a href="#"><i class="fe fe-user-plus "></i> <span> Customer </span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="/addCustomer"> Add Customer </a></li>
-								<li><a href="/viewCustomer"> View Customer </a></li>
-							</ul>
-						</li>
-						<li class="submenu">
-							<a href="#"><i class="fe fe-document "></i> <span> Payment </span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="/addPayment"> Add Payment </a></li>
-								<li><a href="/viewPayments"> View Payment </a></li>
-							</ul>
-						</li>
-						<li class="submenu">
-							<a href="#"><i class="fe fe-users"></i> <span> Sales </span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="/addSale"> Add Sales </a></li>
-								<li><a href="/viewSales"> View Sales </a></li>
-							</ul>
-						</li>
-						<li class="submenu">
-							<a href="#"><i class="fe fe-file  "></i> <span> Invoices </span> <span class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a href="/addInvoice"> Add Invoices </a></li>
-								<li><a href="/viewInvoices"> View Invoices </a></li>
-							</ul>
-						</li> -->
-						<li> 
-							<a href="/admin/userPrivacy"><i class="fe fe-user-plus "></i> <span>Privacy Policy</span></a>
-						</li>
-						
-						<li> 
-							<a href="/admin/tandc"><i class="fe fe-document "></i> <span>Terms & Condition</span></a>
-						</li>
-						<!-- <li> 
-							<a href="/notification"><i class="fe fe-users"></i> <span>Notification</span></a>
-						</li> -->
-						<li class="dropdown ">
-							<a href="/admin/logout" class="nav-link"><i  class="fe fe-desktop"></i>
-							 <span>Logout</span></a>
-					   </li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<!-- /Sidebar -->
+          <!-- SIDEBAR  -->
+		  <div class="main-sidebar sidebar-style-2">
+			<aside id="sidebar-wrapper">
+			  <div class="sidebar-brand">
+				<a href="/admin"> <img alt="image" src="../assets/img/punocoin-logo.png" class="header-logo" />
+				</a>
+			  </div>
+			  <ul class="sidebar-menu">
+				<li class="menu-header">Main</li>
+				<li class="dropdown active">
+				  <a href="/admin" class="nav-link"><i data-feather="monitor"></i><span>Dashboard</span></a>
+				</li>
+				<li class="dropdown">
+				  <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="mail"></i><span>
+				  User Managemnt </span></a>
+				  <ul class="dropdown-menu">
+					<li><a class="nav-link" href="/admin/addUser">Add User</a></li>
+					<li><a class="nav-link" href="/admin/viewUsers">View User</a></li>
+				  </ul>
+				</li>
+			   <li class="dropdown">
+				  <a href="#" class="menu-toggle nav-link has-dropdown"><i
+					  data-feather="shopping-bag"></i><span>Property Management </span></a>
+				   <ul class="dropdown-menu">
+					<li><a class="nav-link" href="/admin/propType">  Property Types </a></li>
+					<li><a class="nav-link" href="/admin/properties"> Views Properties </a></li>
+				  </ul>
+				</li>
+				 
+			   <!--  <li>
+				  <a class="nav-link" href="">
+					<i data-feather="image"></i>
+					<span>Views Properties</span>
+				  </a>
+				</li> -->
+				  <li>
+					<a class="nav-link" href="/admin/notify">
+					  <i data-feather="sliders"></i>
+					  <span>Notification</span>
+					</a>
+					</li>
+	
+					<li class="dropdown">
+				  <a href="#" class="menu-toggle nav-link has-dropdown"><i
+					  data-feather="file"></i><span> Question</span></a>
+				  <ul class="dropdown-menu">
+					<li><a class="nav-link" href="/admin/addQuestion">Add Question</a></li>
+					<li><a class="nav-link" href="/admin/viewQuestions">View Question</a></li>
+				  </ul>
+				</li>
+	
+	
+				<li class="dropdown">
+				  <a href="#" class="menu-toggle nav-link has-dropdown"><i data-feather="command"></i><span>
+					Skills </span></a>
+				  <ul class="dropdown-menu">
+					<li><a class="nav-link" href="/admin/addSkills"> Add Skills </a></li>
+					<li><a class="nav-link" href="/admin/viewSkills"> View Skills</a></li>
+				  </ul>
+				</li>
+	
+					<li class="dropdown">
+					  <a href="#" class="menu-toggle nav-link has-dropdown"><i
+						  data-feather="alert-triangle"></i><span>Help & Support </span></a>
+					  <ul class="dropdown-menu">
+						<li><a class="nav-link" href="/admin/addInquiryDetails"> Add Inquiry </a></li>
+					   <li><a class="nav-link" href="/admin/queries"> Query Tickets </a></li>
+					  </ul>
+					</li> 
+	
+					<li>
+					<a class="nav-link" href="faq">
+					  <i data-feather="flag"></i>
+					  <span> Frequently Asked Question</span>
+					</a>
+					</li>
+	
+					 <li>
+					<a class="nav-link" href="/admin/tandc">
+					  <i data-feather="map"></i>
+					  <span> Terms & Conditions</span>
+					</a>
+					</li>
+	
+					  <li>
+					<a class="nav-link" href="/admin/userPrivacy">
+					  <i data-feather="user-check"></i>
+					  <span> Privacy & Policy </span>
+					</a>
+					</li>
+			  </ul>
+			</aside>
+		  </div>
+		   <!-- SIDEBAR  -->
+	
+	
+	
