@@ -1,64 +1,157 @@
 
+
 <%- include ("header.ejs") %>
 <%- include ("navbar.ejs") %>
 
 
       <!-- Main Content -->
       <div class="main-content">
-        <section class="section">
-
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="full-city">
-                    <div class="card-header">
-                  <h4> <i class="fa fa-align-right" aria-hidden="true"></i> Add Porperty Type  </h4>
+       <section class="section">
+           <div class="fully-page">
+             <div class="full-headings">
+               <h4> Profiles</h4>
+             </div>
+             <div class="box-bodys">
+              <div id="successMessage" class="alert alert-success d-none">
+                Profile picture updated successfully!
+              </div>
+                
+                <div id="errorMessage" class="alert alert-danger d-none">
+                Error in updating Type
                 </div>
-                <div class="form-group row">
-                 
-                  <div class="form-group add-admin col-md-12">
-                    <label class="control-label" for="name"> Room </label>
-                    <input type="text" name="name" class="form-control required" placeholder="Enter Room" required="">
-                </div>
+            <div class="row profile-boxes">
+       
+              
+             
+              <div class="col-12 col-md-12 col-lg-4">
 
-                 <div class="form-group add-admin col-md-6">
-                    <label class="control-label" for="name"> Villa </label>
-                    <input type="text" name="name" class="form-control required" placeholder="Enter Villa" required="">
-                </div>
-
-                 <div class="form-group add-admin col-md-6">
-                    <label class="control-label" for="name"> Houses </label>
-                    <input type="text" name="name" class="form-control required" placeholder="Enter Houses" required="">
-                </div>
-
-                <div class="form-group add-cities col-md-12">
-                      <label class="control-label" for="name">Choose Skills Category</label>
-                      <select name="selects" class="form-control" id="selects">
-                        <option value="skills">House work</option>
-                        <option value="skills">Education / Learning</option>
-                        <option value="skills">Physical Assistance</option>
-                        <option value="skills">Transportation</option>
-                        <option value="skills">Pet / Animal Care</option>
-                        <option value="skills">Elder cafe</option>
-                         <option value="skills">Cooking</option>
-                        <option value="skills">Child care</option>
-                        <option value="skills">Ground Work</option>
-                        <option value="skills">Championship </option>
-                        <option value="skills">Other Services</option>
+                <form action="/admin/propType" method="post">    
+                  <div class="form-group row">               
+                   
+                <div class="form-group add-admin col-md-4">
+                      <label class="control-label" for="name"> Property Type </label>
+                     
+                      <input type="text" name="prop_type" id="prop_type" class="form-control required" required>
+                      <select  class="form-control" id="selects">
+                        <option selected disabled >Property Type</option>
+                        <option value="Room">Room</option>
+                        <option value="Home">Home</option>
+                        <option value="Villa">Villa</option>
                       </select>
-                      <!--<input type="number" name="city" class="form-control required" placeholder="Enter City Name">-->
-                  </div>
-                 
-                  <div class="form-group  add-admin col-md-12" style="margin: 10px 0px;">
-                       <input type="submit" name="add" class="btn btn-primary" value="Submit" style="width:20%;"> 
                     </div>
-                </div>
+  
+                   
+                    <div class="form-group  add-admin col-md-12" style="margin: 10px 0px;">
+                         <input type="submit" name="add" class="btn btn-primary" value="Submit" style="width:20%;"> 
+                      </div>
+                  </div>
+  
+              
+                </form>
+               
+              </div>
+
+
+
+
+              
+
+
+              <div class="col-12 col-md-12 col-lg-7">
+                <div class="card-forms profile-widget">
+
+                  <div class="table-reponsive box">
+                    <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                      <div class="row">
+                      <table id="example" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="example_info">
+                    <thead>
+                         <tr role="row">
+                            <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 30.0781px;">Id</th>
+                          <!-- <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Date: activate to sort column descending" style="width: 30.156px;">box</th> -->
+                          <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 80.0781px;">Type</th>
+
+                          <!-- <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Net: activate to sort column ascending" style="width: 75.5625px;">Status</th> -->
+                          <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 110.156px;">Action</th>
+                        </tr>
+                    </thead>
+                       <div class="table-responsive">
+                          </div>
+                          <tbody>
+    
+    
+                            <% for(var i = 0; i < proptypes.length; i++) { %>
+                          <tr>
+                              <td><%= i + 1 %></td>
+                            <!-- <td class="p-0 text-center">
+                              <div class="custom-checkbox custom-control">
+                                <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" id="checkbox-1">
+                                <label for="checkbox-1" class="custom-control-label">&nbsp;</label>
+                              </div>
+                            </td> -->
+                            <td>
+                            
+                              <span class="display-value"><%= proptypes[i].prop_type %></span>
+                              <input type="text" class="edit-input form-control" value="<%= proptypes[i].prop_type %>" style="display:none;">
+                              <button class="btn btn-success save-action" data-index="<%= i %>" data-user-id="<%= proptypes[i].id %>" style="display:none;">Save</button>   
+                        
+    
+                              <td>
+                                <div class="dropdown">
+                                  <button class="btn mt-1 mb-1 btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
+                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item edit-action" data-index="<%= i %>">Edit</a>
+                                    <a class="delete-user-link dropdown-item" data-user-id="<%= proptypes[i].id %>" href="#">Delete</a>
+
+                                  </div>
+                                </div>
+                              </td>
+    
+    
+                          </tr>
+    
+    
+                          <% } %>
+                     
+    
+                          </tbody>
+                        </table>
+                    </div>
+                  </div>
+              </div>
+
+
                 </div>
               </div>
+
+
+
+
+              <!-- Add a modal for editing -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editModalLabel">Edit Property Type</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control" id="editedPropType" placeholder="Edit Property Type">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="updatePropertyType()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
             </div>
-          </div>
-          </div>
-        </section>
+
+
+                   </div>
+                 </div>
+             </section>
 
       </div>
       <footer class="main-footer">
@@ -81,10 +174,128 @@
   <script src="../assets/js/scripts.js"></script>
   <!-- Custom JS File -->
   <script src="../assets/js/custom.js"></script>
-  <!-- DATA TABLES SCRIPT START -->
+    <script src="../assets/js/text-editor.js"></script>
 
+
+
+   
 </body>
 
 
 <!-- index  21 Nov 2019 03:47:04 GMT -->
 </html>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+
+
+$(document).ready(function() {
+    // Add an event listener for the change event on the dropdown
+    $('#selects').on('change', function() {
+        // Get the selected option value
+        var selectedOption = $(this).val();
+        $('#prop_type').val(selectedOption);
+    });
+});
+
+
+
+
+
+$(document).ready(function() {
+  $('.edit-action').on('click', function() {
+    var index = $(this).data('index');
+    var displayValue = $('.display-value:eq(' + index + ')');
+    var editInput = $('.edit-input:eq(' + index + ')');
+    var saveButton = $('.save-action:eq(' + index + ')');
+
+    // Toggle the visibility of display and edit elements
+    displayValue.toggle();
+    editInput.toggle();
+    saveButton.toggle();
+
+    // If the edit input is visible, focus on it
+    if (editInput.is(':visible')) {
+      editInput.focus();
+    }
+  });
+
+  $('.save-action').on('click', function() {
+    var index = $(this).data('index');
+    var editInput = $('.edit-input:eq(' + index + ')');
+    var propType = editInput.val();
+    var proptypeID = $(this).data('user-id'); // Retrieve user ID from data attribute
+
+
+    // Make an AJAX request to update the data in the database
+    $.ajax({
+      type: 'POST',
+      url: '/admin/updatepropType', // Replace with your actual server-side route
+      data: { proptypeID: proptypeID, propType: propType },
+      success: function(response) {
+           if(response.msg == true){
+            window.location.href = '/admin/propType';  
+           }
+      },
+      error: function(error) {
+        $("#errorMessage").removeClass("d-none");
+    $("#successMessage").addClass("d-none");
+        console.error('Error updating data', error);
+        // Handle the error
+      }
+    });
+  });
+});
+
+
+
+
+
+$(document).ready(function() {
+    $('.delete-user-link').on('click', function(e) {
+        e.preventDefault();
+
+        var propTypeID = $(this).data('user-id');
+        var userElement = $(this).closest('.user');
+
+
+        // Use SweetAlert2 for a stylish confirmation
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete User'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Make an AJAX request to delete the user
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/admin/deletepropType',
+                    data: { propTypeID: propTypeID },
+                    success: function(response) {
+                      window.location.href = '/admin/propType';                           
+                        // Handle success, update UI, etc.
+                    },
+                    error: function(error) {
+                        console.error('Error deleting user', error);
+                       
+                        $("#errorMessage").removeClass("d-none");
+                      $("#successMessage").addClass("d-none");
+                    }
+                });
+            }
+        });
+    });
+});
+
+
+
+
+</script>
+  
+
+

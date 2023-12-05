@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 02, 2023 at 08:43 AM
+-- Generation Time: Dec 05, 2023 at 02:52 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -47,7 +47,7 @@ CREATE TABLE `tbl_admin` (
 --
 
 INSERT INTO `tbl_admin` (`id`, `firstname`, `lastname`, `email`, `username`, `password`, `contact`, `about`, `address`, `image`, `imagePath`, `date`) VALUES
-(1, 'Kilvish', 'Ciss', 'vasubirla007@gmail.com', 'admin', '123456', '1234567890', 'CISS Invoice Management System can be a robust and useful addition, allowing administrators to manage users, invoices, and other essential functions. Below are some key features and considerations for your admin panel:', 'Sai Ram Plaza, 210, Mangal Nagar Road', 'img_img_img_tonystark.jpg_1695896636587.jpg_1696068411932.jpg_1696233190364.jpg', 'public\\uploads\\img_img_img_tonystark.jpg_1695896636587.jpg_1696068411932.jpg_1696233190364.jpg', '2023-08-14 12:15:42.000000');
+(1, 'Kilvish', 'Ciss', 'vasubirla007@gmail.com', 'admin', '123456', '1234567890', 'CISS Invoice Management System can be a robust and useful addition, allowing administrators to manage users, invoices, and other essential functions. Below are some key features and considerations for your admin panel:', 'Sai Ram Plaza, 210, Mangal Nagar Road', 'img_thanos.jpg_1701690174272.jpg', 'public\\uploads\\img_thanos.jpg_1701690174272.jpg', '2023-08-14 12:15:42.000000');
 
 -- --------------------------------------------------------
 
@@ -114,6 +114,25 @@ INSERT INTO `tbl_prop` (`prop_id`, `user_id`, `owner_name`, `owner_contact`, `ow
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_proptype`
+--
+
+CREATE TABLE `tbl_proptype` (
+  `id` int(11) NOT NULL,
+  `prop_type` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_proptype`
+--
+
+INSERT INTO `tbl_proptype` (`id`, `prop_type`, `created_at`) VALUES
+(2, 'Home', '2023-12-05 12:17:12');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_users`
 --
 
@@ -152,13 +171,11 @@ CREATE TABLE `tbl_users` (
 --
 
 INSERT INTO `tbl_users` (`user_id`, `firstname`, `lastname`, `user_email`, `password`, `user_mobile`, `birthday`, `location`, `latitude`, `longitude`, `address`, `country`, `city`, `gender`, `prefered_gender`, `prefered_city`, `prefered_country`, `bedroom_nums`, `bathroom_type`, `parking_type`, `prefered_rent`, `about_me`, `skill`, `image`, `imagePath`, `status`, `created_at`) VALUES
-(8, 'Kilvish', 'Birla', 'kilvishbirla@gmail.com', '$2a$10$jv.Gpm1HMKXAzcPOLhVnR.ns5q2/8re7lEimjfOGsFv9PHl.jxlP2', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', 'female', 'newyork', 'USA', '1', 'Shared', 'Shared', '200', 'i am andhera ', 'House Work', 'img_batman.jpg_1701259463709.jpg', 'http://195.35.23.27:3008/uploads/img_batman.jpg_1701259463709.jpg', 'active', '2023-11-29 07:39:02'),
-(9, 'Vasu', 'Birla', 'vasubirla@gmail.com', '$2a$10$LIWBfxIho8ZodGzPqrfKC.a4mxqpz392NPsl5ETI/p8tJ6Zy/Kw7i', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-11-29 12:21:41'),
-(10, 'aaa', 'Birla', 'aaaa@gmail.com', '$2a$10$8Nm3cjZtKyB0i4rLe9d2q.sXaa2ZQmMT27hboI36nyrOdh1VcSYo.', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-11-30 06:28:29'),
+(8, 'Kilvish', 'Birla', 'kilvishbirla@gmail.com', '$2a$10$jv.Gpm1HMKXAzcPOLhVnR.ns5q2/8re7lEimjfOGsFv9PHl.jxlP2', '9039568219', '25-03-1970', '', '', '', '          Sai ram plaza      ', 'India', 'Indore', 'male', 'female', 'newyork', 'USA', '1', 'Shared', 'Shared', '200', 'i am andhera ', 'House Work', 'img_batman.jpg_1701259463709.jpg', 'http://195.35.23.27:3008/uploads/img_batman.jpg_1701259463709.jpg', 'active', '2023-11-29 07:39:02'),
+(9, 'Vasu', 'Birla', 'vasubirla@gmail.com', '$2a$10$LIWBfxIho8ZodGzPqrfKC.a4mxqpz392NPsl5ETI/p8tJ6Zy/Kw7i', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', '', ' ', ' ', 'inactive', '2023-11-29 12:21:41'),
 (12, 'vishnu', 'prajapati', 'vishnuprajapati1@gmail.com', '$2a$10$u9O5qoBN/DfTFPRuOFsaOOqTxTG/Qzsxcpjpb/OQovJT8r/AFU00q', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', 'female', 'indore', 'India', '1', 'Shared', 'Shared', '500', 'vishnu', '', 'img_scaled_Snapchat-181536531.jpg_1701342334363.jpg', 'http://195.35.23.27:3008/uploads/img_scaled_Snapchat-181536531.jpg_1701342334363.jpg', 'active', '2023-11-30 06:49:19'),
-(16, 'vishnu', 'prajapati', 'vishnuprajapati2@gmail.com', '$2a$10$Xssq1UKg11c6Os.ZRj8XZ.nxoWz7IgBCDPoU0TZmLtkMU6q8jHEj6', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-12-01 06:01:24'),
-(17, 'vishnu', 'prajapati', 'vishnuprajapati3@gmail.com', '$2a$10$tKef6ypmAvLDshoKWLdaJ.H4ZoKMGNkqm7F8xB9VlA6iX2MHDCTMa', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-12-01 10:41:31'),
-(18, 'afadf', 'sfsdf', 'ssdfsdfsdf@gmail.com', '$2a$10$j0A0Jx5Jv6bwNWHXkggo/unBxHzyX.oFO3xMJ7agwCslLAQ7BwGAe', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', ' ', ' ', '', '', 'active', '2023-12-01 10:52:20');
+(16, 'vishnu', 'prajapati', 'vishnuprajapati2@gmail.com', '$2a$10$Xssq1UKg11c6Os.ZRj8XZ.nxoWz7IgBCDPoU0TZmLtkMU6q8jHEj6', '1234567899', '24/06/2003', '', '', '', '  Sairam ram plaza  ', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-12-01 06:01:24'),
+(17, 'vishnu', 'prajapati', 'vishnuprajapati3@gmail.com', '$2a$10$tKef6ypmAvLDshoKWLdaJ.H4ZoKMGNkqm7F8xB9VlA6iX2MHDCTMa', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-12-01 10:41:31');
 
 --
 -- Indexes for dumped tables
@@ -181,6 +198,12 @@ ALTER TABLE `tbl_prefer`
 --
 ALTER TABLE `tbl_prop`
   ADD PRIMARY KEY (`prop_id`);
+
+--
+-- Indexes for table `tbl_proptype`
+--
+ALTER TABLE `tbl_proptype`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbl_users`
@@ -211,10 +234,16 @@ ALTER TABLE `tbl_prop`
   MODIFY `prop_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `tbl_proptype`
+--
+ALTER TABLE `tbl_proptype`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `tbl_users`
 --
 ALTER TABLE `tbl_users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,6 +1,9 @@
 import express from 'express'
 import { Profile, ProfilePost, addInquiryDetails, addQuestion, addSkills, addUser, changepass, checkPass, 
-    homePage, loginAdmin, loginPage, logout, notification, propType, properties, queries, tandc, updateadminpic, userPrivacy, viewQuestions, viewSkills, viewUsers } from '../controllers/adminController.js';
+    deleteUser, 
+    deleteUser1, 
+    deletepropType, 
+    homePage, loginAdmin, loginPage, logout, notification, propType, propTypePost, properties, queries, tandc, updateUserStatus, updateadminpic, updatepropType, userPrivacy, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
 
 
 import upload from '../middleware/upload.js';
@@ -43,10 +46,39 @@ router.route('/addUser').get(addUser)
 
 router.route('/viewUsers').get(viewUsers)
 
+router.route('/viewUser').get(viewUser)
+
+router.route('/viewUser').post(viewUserPost)
+
+router.route('/updateUserStatus').post(updateUserStatus)
+
+
+router.route('/deleteUser').get(deleteUser)
+
+router.route('/deleteUser').delete(deleteUser1)
+
+
+
+
+
+
+
+
 
 //------ prop type -------------
 
 router.route('/propType').get(propType)
+
+router.route('/propType').post(propTypePost)
+
+router.route('/updatepropType').post(updatepropType)
+
+router.route('/deletepropType').delete(deletepropType)
+
+
+
+
+
 
 router.route('/properties').get(properties)
 

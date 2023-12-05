@@ -14,6 +14,16 @@
                   </div>
                 </div>
 
+               
+
+                <div id="successMessage" class="alert alert-success d-none">
+                
+                </div>
+                  
+                  <div id="errorMessage" class="alert alert-danger d-none">
+                        Failed to Delete User
+                  </div>
+
           <div class="table-reponsive box">
                 <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                   <div class="row">
@@ -21,209 +31,74 @@
                 <thead>
                      <tr role="row">
                         <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 30.0781px;">Id</th>
-                      <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Date: activate to sort column descending" style="width: 30.156px;">box</th>
-                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 80.0781px;">Day</th>
-                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Dc Id: activate to sort column ascending" style="width: 167.953px;">Profile</th>
-                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Gross: activate to sort column ascending" style="width: 100.922px;">Gross</th>
-                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Gross: activate to sort column ascending" style="width: 100.922px;">Gross</th>
-                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="5%: activate to sort column ascending" style="width: 73.1719px;">5%</th>
-                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Net: activate to sort column ascending" style="width: 75.5625px;">Net</th>
+                      <!-- <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Date: activate to sort column descending" style="width: 30.156px;">box</th> -->
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 80.0781px;">Name</th>
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Dc Id: activate to sort column ascending" style="width: 167.953px;">Email</th>
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Gross: activate to sort column ascending" style="width: 100.922px;">Mobile</th>
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Gross: activate to sort column ascending" style="width: 100.922px;">Adress</th>
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="5%: activate to sort column ascending" style="width: 73.1719px;">Gender</th>
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Net: activate to sort column ascending" style="width: 75.5625px;">Status</th>
                       <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 110.156px;">Action</th>
                     </tr>
                 </thead>
                    <div class="table-responsive">
                       </div>
                       <tbody>
+
+
+                        <% for(var i = 0; i < users.length; i++) { %>
                       <tr>
-                          <td>1</td>
-                        <td class="p-0 text-center">
+                          <td><%= i + 1 %></td>
+                        <!-- <td class="p-0 text-center">
                           <div class="custom-checkbox custom-control">
                             <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" id="checkbox-1">
                             <label for="checkbox-1" class="custom-control-label">&nbsp;</label>
                           </div>
-                        </td>
-                        <td>Create a mobile app</td>
-                        <td class="text-truncate">
-                          <ul class="list-unstyled order-list m-b-0 m-b-0">
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian"></li>
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-9.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-10.png" alt="user" data-toggle="tooltip" title="" data-original-title="Sarah Smith"></li>
-                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                          </ul>
-                        </td>
-                        <td class="align-middle">
-                          <div class="progress-text">50%</div>
-                          <div class="progress" data-height="6" style="height: 6px;">
-                            <div class="progress-bar bg-success" data-width="50%" style="width: 50%;"></div>
-                          </div>
-                        </td>
-                        <td>2018-01-20</td>
-                        <td>2019-05-28</td>
-                        <td>
-                          <div class="badge badge-success">Low</div>
-                        </td>
-                        <td> <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Edit </a>
-                            <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Delete</a>
-                       </td>
+                        </td> -->
+                        <td><%- users[i].firstname %> <%- users[i].lastname %> </td>
+                        
+                        <td><%- users[i].user_email %> </td>
+
+                        <td><%- users[i].user_mobile %> </td>
+                     
+                        <td><%- users[i].address %> ,<%- users[i].city %> , <%- users[i].country %> </td>
+                        
+                        <td><%- users[i].gender  %></td>
+                       
+                   <td>
+        
+                        <div id="refreshDiv" class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                          <!-- Append the company's ID as data attribute -->
+                          <input type="checkbox" onchange="updateStatus('<%= users[i].user_id %>','<%= users[i].status %>')" class="custom-control-input" id="customSwitch<%= i %>"  data-company-id="<%= users[i].user_id %>" <% if (users[i].status === 'active') { %>checked<% } %>>
+
+                          
+                          <label style="color: black;" id="<%= users[i].user_id %>" class="custom-control-label" for="customSwitch<%= i %>"><%= users[i].status %></label>
+                          
+                      </div>                 
+                                                 
+                    </td>
+
+                    
+
+                  <td><div class="dropdown">
+                        <button class="btn mt-1 mb-1 btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Action</button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item"  href="/admin/viewUser?userID=<%= users[i].user_id %>">Edit</a>
+                          <!-- <a class="dropdown-item"  href="/admin/deleteUser?userID=<%= users[i].user_id %>" >Delete</a> -->
+                
+                          <a class="delete-user-link dropdown-item " data-user-id="<%= users[i].user_id %>" href="#">Delete</a>
+                    
+                        </div>
+                      </div>
+                    </td>
+
+
                       </tr>
-                      <tr>
-                          <td>2</td>
-                        <td class="p-0 text-center">
-                          <div class="custom-checkbox custom-control">
-                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" id="checkbox-2">
-                            <label for="checkbox-2" class="custom-control-label">&nbsp;</label>
-                          </div>
-                        </td>
-                        <td>Redesign homepage</td>
-                        <td class="text-truncate">
-                          <ul class="list-unstyled order-list m-b-0 m-b-0">
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-1.png" alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian"></li>
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-2.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                            <li class="avatar avatar-sm"><span class="badge badge-primary">+2</span></li>
-                          </ul>
-                        </td>
-                        <td class="align-middle">
-                          <div class="progress-text">40%</div>
-                          <div class="progress" data-height="6" style="height: 6px;">
-                            <div class="progress-bar bg-danger" data-width="40%" style="width: 40%;"></div>
-                          </div>
-                        </td>
-                        <td>2017-07-14</td>
-                        <td>2018-07-21</td>
-                        <td>
-                          <div class="badge badge-danger">High</div>
-                        </td>
-                        <td> <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Edit </a>
-                            <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Delete</a>
-                       </td>
-                      </tr>
-                      <tr>
-                          <td>3</td>
-                        <td class="p-0 text-center">
-                          <div class="custom-checkbox custom-control">
-                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" id="checkbox-3">
-                            <label for="checkbox-3" class="custom-control-label">&nbsp;</label>
-                          </div>
-                        </td>
-                        <td>Backup database</td>
-                        <td class="text-truncate">
-                          <ul class="list-unstyled order-list m-b-0 m-b-0">
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-3.png" alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian"></li>
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-4.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-5.png" alt="user" data-toggle="tooltip" title="" data-original-title="Sarah Smith"></li>
-                            <li class="avatar avatar-sm"><span class="badge badge-primary">+3</span></li>
-                          </ul>
-                        </td>
-                        <td class="align-middle">
-                          <div class="progress-text">55%</div>
-                          <div class="progress" data-height="6" style="height: 6px;">
-                            <div class="progress-bar bg-purple" data-width="55%" style="width: 55%;"></div>
-                          </div>
-                        </td>
-                        <td>2019-07-25</td>
-                        <td>2019-08-17</td>
-                        <td>
-                          <div class="badge badge-info">Average</div>
-                        </td>
-                        <td> <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Edit </a>
-                            <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Delete</a>
-                       </td>
-                      </tr>
-                      <tr>
-                          <td>4</td>
-                        <td class="p-0 text-center">
-                          <div class="custom-checkbox custom-control">
-                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" id="checkbox-4">
-                            <label for="checkbox-4" class="custom-control-label">&nbsp;</label>
-                          </div>
-                        </td>
-                        <td>Android App</td>
-                        <td class="text-truncate">
-                          <ul class="list-unstyled order-list m-b-0 m-b-0">
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-7.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title="" data-original-title="Sarah Smith"></li>
-                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                          </ul>
-                        </td>
-                        <td class="align-middle">
-                          <div class="progress-text">70%</div>
-                          <div class="progress" data-height="6" style="height: 6px;">
-                            <div class="progress-bar" data-width="70%" style="width: 70%;"></div>
-                          </div>
-                        </td>
-                        <td>2018-04-15</td>
-                        <td>2019-07-19</td>
-                        <td>
-                          <div class="badge badge-success">Low</div>
-                        </td>
-                        <td> <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Edit </a>
-                            <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Delete</a>
-                       </td>
-                      </tr>
-                      <tr>
-                          <td>5</td>
-                        <td class="p-0 text-center">
-                          <div class="custom-checkbox custom-control">
-                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" id="checkbox-5">
-                            <label for="checkbox-5" class="custom-control-label">&nbsp;</label>
-                          </div>
-                        </td>
-                        <td>Logo Design</td>
-                        <td class="text-truncate">
-                          <ul class="list-unstyled order-list m-b-0 m-b-0">
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-9.png" alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian"></li>
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-10.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-2.png" alt="user" data-toggle="tooltip" title="" data-original-title="Sarah Smith"></li>
-                            <li class="avatar avatar-sm"><span class="badge badge-primary">+2</span></li>
-                          </ul>
-                        </td>
-                        <td class="align-middle">
-                          <div class="progress-text">45%</div>
-                          <div class="progress" data-height="6" style="height: 6px;">
-                            <div class="progress-bar bg-cyan" data-width="45%" style="width: 45%;"></div>
-                          </div>
-                        </td>
-                        <td>2017-02-24</td>
-                        <td>2018-09-06</td>
-                        <td>
-                          <div class="badge badge-danger">High</div>
-                        </td>
-                        <td> <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Edit </a>
-                            <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Delete</a>
-                       </td>
-                      </tr>
-                      <tr>
-                          <td>6</td>
-                        <td class="p-0 text-center">
-                          <div class="custom-checkbox custom-control">
-                            <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input" id="checkbox-6">
-                            <label for="checkbox-6" class="custom-control-label">&nbsp;</label>
-                          </div>
-                        </td>
-                        <td>Ecommerce website</td>
-                        <td class="text-truncate">
-                          <ul class="list-unstyled order-list m-b-0 m-b-0">
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title="" data-original-title="Wildan Ahdian"></li>
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-9.png" alt="user" data-toggle="tooltip" title="" data-original-title="John Deo"></li>
-                            <li class="team-member team-member-sm"><img class="rounded-circle" src="../assets/img/users/user-10.png" alt="user" data-toggle="tooltip" title="" data-original-title="Sarah Smith"></li>
-                            <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                          </ul>
-                        </td>
-                        <td class="align-middle">
-                          <div class="progress-text">30%</div>
-                          <div class="progress" data-height="6" style="height: 6px;">
-                            <div class="progress-bar bg-orange" data-width="30%" style="width: 30%;"></div>
-                          </div>
-                        </td>
-                        <td>2018-01-20</td>
-                        <td>2019-05-28</td>
-                        <td>
-                          <div class="badge badge-info">Average</div>
-                        </td>
-                        <td> <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Edit </a>
-                            <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Delete</a>
-                       </td>
-                      </tr>
+
+
+                      <% } %>
+                 
+
                       </tbody>
                     </table>
                 </div>
@@ -269,3 +144,125 @@ $(document).ready(function() {
 
 </body>
 </html>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+<script>
+  async function updateStatus(userID,status){
+          var newStatus ;
+
+          if(status=='active'){
+            newStatus = 'inactive';
+          }else{
+              newStatus = 'active';
+          }
+
+              try {
+                  const response = await fetch('/admin/updateUserStatus', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ userID, status: newStatus }),
+                  });
+
+                  if (response.ok) {          
+                  
+                    const data = await response.json(); 
+                    const message = data.message;           
+                    //  window.location.href = '/viewCustomers';         
+
+                    $("#successMessage").html(message);
+                    $("#successMessage").removeClass("d-none");           
+                      $("#errorMessage").addClass("d-none");
+                      window.location.href = '/admin/viewUsers';  
+
+                    //   setTimeout(() => {
+                      
+                    //   }, 1000);
+
+                        
+                  } else {
+                      // Handle errors
+                      console.error('database Error:', error);
+
+                      $("#errorMessage").removeClass("d-none");
+                      $("#successMessage").addClass("d-none");
+                  }
+              } catch (error) {
+                  console.error('Error:', error);
+              }
+
+}
+
+
+
+
+
+
+$(document).ready(function() {
+    $('.delete-user-link').on('click', function(e) {
+        e.preventDefault();
+
+        var userId = $(this).data('user-id');
+        var userElement = $(this).closest('.user');
+
+
+        // Use SweetAlert2 for a stylish confirmation
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete User'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Make an AJAX request to delete the user
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/admin/deleteUser',
+                    data: { userID: userId },
+                    success: function(response) {
+
+                        console.log('User deleted successfully');
+                        var message = 'User Deleted Successfully !!'
+                        if(response.msg == true){
+
+                          $("#successMessage").html(message);
+                    $("#successMessage").removeClass("d-none");           
+                      $("#errorMessage").addClass("d-none");
+                      window.location.href = '/admin/viewUsers';  
+                        }else{
+
+                          $("#errorMessage").removeClass("d-none");
+                      $("#successMessage").addClass("d-none");
+                     
+
+                        }
+
+                         
+                        // Handle success, update UI, etc.
+                    },
+                    error: function(error) {
+                        console.error('Error deleting user', error);
+                        // Handle error
+                    }
+                });
+            }
+        });
+    });
+});
+
+
+
+
+
+
+
+
+
+
+</script>
