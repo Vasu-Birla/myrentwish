@@ -588,6 +588,72 @@ const properties = async(req,res,next)=>{
 
 
 
+// Delete Property -------- 
+
+
+const deleteProperty = async (req, res, next) => {
+  const con = await connection();
+  try {
+    await con.beginTransaction();
+
+    const propertyID = req.body.prop_id;
+
+    // Delete the property from the tbl_prop table
+    const deleteSql = 'DELETE FROM tbl_prop WHERE prop_id = ?';
+    const [result] = await con.query(deleteSql, [propertyID]);
+
+    await con.commit();
+    console.log("Property Deleted Successfully ")
+    res.json({ result: "success", msg: true });
+
+  } catch (error) {
+    // Rollback the transaction in case of an error
+    await con.rollback();
+    console.error('Error in delete Property API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
+//----------------- update propety status ----------
+
+
+
+
+const updatePropertyStatus = async(req,res,next)=>{ 
+
+
+  const con = await connection(); 
+  try {
+
+    await con.beginTransaction();
+    
+    const { prop_id, status } = req.body;
+    const [result] = await con.query('UPDATE tbl_prop SET prop_status = ? WHERE prop_id = ?', [status, prop_id]);
+  
+      await con.commit();
+    res.status(200).json({ msg:true,message: `Status Updated'}`});
+  } catch (error) {
+    await con.rollback();
+    console.error("Database error:", error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }finally {
+    con.release(); 
+  }
+  
+
+
+}
+
+
+
+
 //--Notify user ------------- 
 
 const notification = async(req,res,next)=>{    
@@ -744,7 +810,8 @@ export {homePage,
   checkPass , changepass, addUser , viewUsers ,propType , notification ,
    addQuestion ,viewQuestions ,addSkills,viewSkills , userPrivacy ,
     tandc , faq, properties , queries, addInquiryDetails , 
-    viewUser, updateUserStatus, viewUserPost, deleteUser, deleteUser1 , propTypePost , updatepropType, deletepropType }
+    viewUser, updateUserStatus, viewUserPost, deleteUser, deleteUser1 ,
+     propTypePost , updatepropType, deletepropType , deleteProperty , updatePropertyStatus }
 
 
          

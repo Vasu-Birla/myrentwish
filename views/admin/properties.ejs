@@ -21,7 +21,7 @@
                 </div>
                   
                   <div id="errorMessage" class="alert alert-danger d-none">
-                        Failed to Delete User
+                        Failed to Delete Property
                   </div>
 
           <div class="table-reponsive box">
@@ -38,6 +38,10 @@
                       <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Gross: activate to sort column ascending" style="width: 100.922px;">Mobile</th>
                       <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Gross: activate to sort column ascending" style="width: 100.922px;">Adress</th>
                       <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="5%: activate to sort column ascending" style="width: 73.1719px;">Description</th>
+
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="5%: activate to sort column ascending" style="width: 73.1719px;">Bedrooms </th>
+
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="5%: activate to sort column ascending" style="width: 73.1719px;">Parking </th>
                       <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Net: activate to sort column ascending" style="width: 75.5625px;">Status</th>
                       <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 110.156px;">Action</th>
                     </tr>
@@ -58,7 +62,7 @@
                         </td> -->
                         <td><%- props[i].title %>  </td>
 
-                        <td><%- props[i].prop_type %>  </td>
+                        <td><%- props[i].prop_type %> ,Price : CAD <%- props[i].rent_amount %>   </td>
                         
                         <td><%- props[i].owner_name %> </td>
 
@@ -67,15 +71,23 @@
                         <td><%- props[i].address %> ,<%- props[i].city %> , <%- props[i].country %> </td>
                         
                         <td><%- props[i].description  %></td>
+
+                        <td><%- props[i].bedroom_nums  %> , <%- props[i].bathroom_type  %></td>
+
+                        <td><%- props[i].parking_type  %> </td>
+
+                        
+
+                        
                        
                    <td>
         
                         <div id="refreshDiv" class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                           <!-- Append the company's ID as data attribute -->
-                          <input type="checkbox" onchange="updateStatus('<%= props[i].user_id %>','<%= props[i].status %>')" class="custom-control-input" id="customSwitch<%= i %>"  data-company-id="<%= props[i].user_id %>" <% if (props[i].status === 'active') { %>checked<% } %>>
+                          <input type="checkbox" onchange="updateStatus('<%= props[i].prop_id %>','<%= props[i].prop_status %>')" class="custom-control-input" id="customSwitch<%= i %>"  data-company-id="<%= props[i].prop_id %>" <% if (props[i].prop_status === 'available') { %>checked<% } %>>
 
                           
-                          <label style="color: black;" id="<%= props[i].user_id %>" class="custom-control-label" for="customSwitch<%= i %>"><%= props[i].status %></label>
+                          <label style="color: black;" id="<%= props[i].prop_id %>" class="custom-control-label" for="customSwitch<%= i %>"><%= props[i].prop_status %></label>
                           
                       </div>                 
                                                  
@@ -86,10 +98,10 @@
                   <td><div class="dropdown">
                         <button class="btn mt-1 mb-1 btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Action</button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <a class="dropdown-item"  href="/admin/viewUser?userID=<%= props[i].user_id %>">Edit</a>
+                          <!-- <a class="dropdown-item"  href="/admin/viewUser?userID=<%= props[i].prop_id %>">Edit</a> -->
                           <!-- <a class="dropdown-item"  href="/admin/deleteUser?userID=<%= props[i].user_id %>" >Delete</a> -->
                 
-                          <a class="delete-user-link dropdown-item " data-user-id="<%= props[i].user_id %>" href="#">Delete</a>
+                          <a class="delete-user-link dropdown-item " data-user-id="<%= props[i].prop_id %>" href="#">Delete</a>
                     
                         </div>
                       </div>
@@ -152,39 +164,27 @@ $(document).ready(function() {
 
 
 <script>
-  async function updateStatus(userID,status){
+  async function updateStatus(prop_id,status){
           var newStatus ;
 
-          if(status=='active'){
-            newStatus = 'inactive';
+          if(status=='available'){
+            newStatus = 'rented';
           }else{
-              newStatus = 'active';
+              newStatus = 'available';
           }
 
               try {
-                  const response = await fetch('/admin/updatepropstatus', {
+                  const response = await fetch('/admin/updatePropertyStatus', {
                       method: 'POST',
                       headers: {
                           'Content-Type': 'application/json',
                       },
-                      body: JSON.stringify({ userID, status: newStatus }),
+                      body: JSON.stringify({ prop_id, status: newStatus }),
                   });
 
                   if (response.ok) {          
                   
-                    const data = await response.json(); 
-                    const message = data.message;           
-                    //  window.location.href = '/viewCustomers';         
-
-                    $("#successMessage").html(message);
-                    $("#successMessage").removeClass("d-none");           
-                      $("#errorMessage").addClass("d-none");
-                      window.location.href = '/admin/viewprops';  
-
-                    //   setTimeout(() => {
-                      
-                    //   }, 1000);
-
+                     window.location.href = '/admin/properties';  
                         
                   } else {
                       // Handle errors
@@ -208,7 +208,8 @@ $(document).ready(function() {
     $('.delete-user-link').on('click', function(e) {
         e.preventDefault();
 
-        var userId = $(this).data('user-id');
+        var prop_id = $(this).data('user-id');
+        alert(prop_id)
         var userElement = $(this).closest('.user');
 
 
@@ -220,29 +221,25 @@ $(document).ready(function() {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete User'
+            confirmButtonText: 'Yes, delete Property'
         }).then((result) => {
             if (result.isConfirmed) {
                 // Make an AJAX request to delete the user
                 $.ajax({
                     type: 'DELETE',
-                    url: '/admin/deleteUser',
-                    data: { userID: userId },
+                    url: '/admin/deleteProperty',
+                    data: { prop_id: prop_id },
                     success: function(response) {
 
                         console.log('User deleted successfully');
                         var message = 'User Deleted Successfully !!'
                         if(response.msg == true){
-
-                          $("#successMessage").html(message);
-                    $("#successMessage").removeClass("d-none");           
-                      $("#errorMessage").addClass("d-none");
-                      window.location.href = '/admin/viewprops';  
+                  
+                      window.location.href = '/admin/properties';  
                         }else{
 
                           $("#errorMessage").removeClass("d-none");
                       $("#successMessage").addClass("d-none");
-                     
 
                         }
 
@@ -251,6 +248,9 @@ $(document).ready(function() {
                     },
                     error: function(error) {
                         console.error('Error deleting user', error);
+                        $("#errorMessage").removeClass("d-none");
+                      $("#successMessage").addClass("d-none");
+                     
                         // Handle error
                     }
                 });
