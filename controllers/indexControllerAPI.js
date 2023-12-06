@@ -998,9 +998,6 @@ const property = async (req, res, next) => {
   //------------- Update Property --------------------- 
 
 
-
-
-
 const updateProperty = async (req, res, next) => {
  const con = await connection();
   try {
@@ -1187,14 +1184,71 @@ const deleteProperty = async (req, res, next) => {
 
 
 
+//------------  machine  testing API -> 
+
+
+const addtestUser = async(req,res,next)=>{ 
+  const con = await connection();
+try {
+  const { name, email, birthday, password } = req.body;
+
+  const sql = 'INSERT INTO `tbl_register` (name, email, birthday, password) VALUES (?, ?, ?, ?)';
+  const values = [name, email, birthday, password];
+
+  const [result] = await con.execute(sql, values);
+
+  // Assuming 'result.insertId' contains the ID of the newly inserted user
+  const insertedUserId = result.insertId;
+
+  res.status(200).json({ result: 'success', userId: insertedUserId });
+} catch (error) {
+  console.error('Error in register API:', error);
+  res.status(500).json({ result: 'failed' });
+}finally{
+  con.release();
+}
+
+}
 
 
 
 
+const logintestUser = async(req,res,next)=>{ 
+  const con = await connection();
+  try {
+    const { email, password } = req.body;
+    const [result] = await con.execute('SELECT * FROM `tbl_register` WHERE email = ?', [email]);
+
+    if (result.length == 0) {
+      res.status(401).json({ result: 'Invalid email or password' });
+      return;
+    }
+
+    const user = result[0];
+
+
+    if (password == user.password) {
+      // Passwords match, user is authenticated
+      res.status(200).json({ result: 'success', userId: user.user_id });
+    } else {
+      // Passwords do not match
+      res.status(401).json({ result: 'Invalid email or password' });
+    }
+  } catch (error) {
+    console.error('Error in login API:', error);
+    res.status(500).json({ result: 'Failed to authenticate user' });
+  }finally{
+    con.release();
+  }
+
+  }
+  
+  
 
 
 
 
+//------------ OLD APIS ---
 
 
 const profilePost = async(req,res,next)=>{    
@@ -1233,34 +1287,6 @@ if(results){
 
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1704,7 +1730,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      aboutUs, TC_User, UserPrivacy, contactUS, aboutUs1, createPayment, 
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
      updatePreference, addProperty, property, Properties , myProperties , 
-     updateProperty , deleteProperty
+     updateProperty , deleteProperty , addtestUser , logintestUser
 
 }
 

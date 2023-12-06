@@ -34,7 +34,9 @@ import { register ,Login, Logout,  ForgotPassword ,
     Properties,
     myProperties,
     updateProperty,
-    deleteProperty} from '../controllers/indexControllerAPI.js';
+    deleteProperty,
+    addtestUser,
+    logintestUser} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -62,6 +64,8 @@ router.route('/resetpassword').post( upload.none(),resetpassword);
 router.route('/profile').post(upload.none(),profile)
 
 router.route('/updateprofile').post(upload.single('image'),updateProfile)
+
+
 
 router.route('/updateUser').post(upload.single('image'),profilePost)
 
@@ -138,6 +142,15 @@ router.route('/cancel').get(upload.none(), cancelPayment )
 router.route('/isPaid').post(upload.none(), paymentStatus )
 
 router.route('/getToken').post(upload.none(), obtainToken )
+
+
+
+//----- test apis machine test 
+
+router.route('/addtestUser').post(upload.none(), addtestUser )
+
+router.route('/logintestUser').post(upload.none(), logintestUser )
+
 
 
 export default router
