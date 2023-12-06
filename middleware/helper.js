@@ -266,77 +266,47 @@ const sendNotification = async function (recipients, message, subject) {
 //----------------------- Send Push Notification ------------------------- 
 
 
-const sendPushNotification1 = function (recipientId,message) {   
-  
-  // Retrieve the recipient's FCM token(s) from your database
-  // (Assuming you have a function to do this)
-  const recipientTokens = retrieveFCMTokensForUser(recipientId);
 
-  if (recipientTokens && recipientTokens.length > 0) {
-    const notificationMessage = {
-      notification: {
-        title: 'New Message',
-        body: message,
-      },
-      tokens: recipientTokens, // Send to multiple recipients if needed
-    };
-
-    admin.messaging().sendMulticast(notificationMessage)
-      .then((response) => {
-        console.log('Successfully sent message:', response);
-      })
-      .catch((error) => {
-        console.error('Error sending message:', error);
-      });
-  } else {
-    console.log('Recipient has no FCM tokens (offline or not registered for push notifications).');
-  }
-
-
-}
-
-const sendPushNotification = async function (targetID,message, sourceId) {  
+const sendPushNotification = async (ownerID, deviceToken, fromUser_id) => {
   const con = await connection();
 
-  // const deviceIDs = retrieveDeviceIDsForUser(deviceID);
+  try {
+    // Retrieve FCM tokens associated with the owner from tbl_fcm
+    const [ownerFCMTokens] = await con.query('SELECT device_token FROM tbl_fcm WHERE user_id = ?', [ownerID]);
 
-  const [rows] = await con.query('SELECT device_token FROM fcm_tokens WHERE user_id = ?', [targetID]);
+    if (!ownerFCMTokens || ownerFCMTokens.length === 0) {
+      console.log("Owner FCM tokens not found");
+      return;
+    }
 
-  const [[user]] = await con.query('SELECT * FROM tbl_user WHERE id = ?', [sourceId]);
+    // Sending push notifications to ownerFCMTokens
+    const title = 'New Property Interest';
+    const body = `User with ID ${fromUser_id} is interested in your property!`;
 
+    // Simulate sending push notifications to ownerFCMTokens
+    console.log("Sending push notifications to ownerFCMTokens:", ownerFCMTokens);
 
-  const deviceIDs= rows.map(row => row.device_token);
-  
-
-  if (deviceIDs && deviceIDs.length > 0) {
-    const notificationMessage = {
+    // Replace the following with your actual push notification logic using Firebase Admin SDK
+    const notificationPayload = {
       notification: {
-        title: 'New Message From '+user.firstname,
-        body: message,
+        title: title,
+        body: body,
       },
-      tokens: deviceIDs, // Send to multiple recipients if needed
     };
 
-    // user sendEachForMulticast  if sendMulticast not working
-    admin.messaging().sendMulticast(notificationMessage)
-      .then((response) => {
-        console.log('Push Notification Sent...');
-      })
-      .catch((error) => {
-                console.error('Error sending message:', error);
-                if (error.code === 'messaging/invalid-registration-token') {
-                  console.log('Invalid FCM token. Check and update the token in your database.');
-                } else if (error.code === 'messaging/registration-token-not-registered') {
-                  console.log('FCM token is not registered for receiving notifications.');
-                } else {
-                  console.log('Unknown error:', error.code);
-                }
-      });
-  } else {
-    console.log('User has no associated device IDs (offline or not registered for push notifications).');
-  }
-}
+    const tokens = ownerFCMTokens.map(token => token.device_token);
+    const response = await admin.messaging().sendToDevice(tokens, notificationPayload);
 
+    console.log('Successfully sent push notification:', response);
+
+  } catch (error) {
+    console.error('Error in sendPushNotification:', error);
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
 
 //------------------------------------------------------------------------------------------
 
@@ -573,5 +543,5 @@ const sendOTPFornewPass = async function (email,otp) {
 
 export { hashPassword , comparePassword ,sendWelcomeMsg, sendMailOTP , 
   responsetoQuery, sendNotification , sendPushNotification, 
-  sendPushNotification1, sendInvoice , sendOTPFornewPass};
+ sendInvoice , sendOTPFornewPass};
 

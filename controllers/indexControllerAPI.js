@@ -8,6 +8,9 @@ import upload from '../middleware/upload.js';
 import paypal from 'paypal-rest-sdk';
 import { parse, format } from 'date-fns';
 
+import { sendPushNotification } from '../middleware/helper.js';
+
+
 
 paypal.configure({
     mode: 'sandbox', // Replace with 'live' for production
@@ -1179,6 +1182,64 @@ const deleteProperty = async (req, res, next) => {
 
 
 
+//----------- add to interest ------------- 
+
+const addToInterest = async (req, res, next) => {
+  const con = await connection();
+  try {
+    await con.beginTransaction();
+
+    const userID = req.body.user_id;
+    const propertyID = req.body.prop_id;
+
+    // Check if the user and property exist
+    const [userResult] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+    const [propertyResult] = await con.query('SELECT * FROM tbl_prop WHERE prop_id = ?', [propertyID]);
+
+    if (!userResult[0] || !propertyResult[0]) {
+      await con.rollback();
+      return res.json({ result: "User or Property not found" });
+    }
+
+    // Check if the user is already interested in the property
+    const [existingInterest] = await con.query('SELECT * FROM tbl_interest WHERE user_id = ? AND prop_id = ?', [userID, propertyID]);
+
+    if (existingInterest.length > 0) {
+      await con.rollback();
+      return res.json({ result: "User is already interested in this property" });
+    }
+
+    // Retrieve the owner's user_id from the tbl_prop table
+    const [ownerResult] = await con.query('SELECT user_id FROM tbl_prop WHERE prop_id = ?', [propertyID]);
+
+    if (!ownerResult[0]) {
+      await con.rollback();
+      return res.json({ result: "Owner not found for this property" });
+    }
+
+    const ownerID = ownerResult[0].user_id;
+  
+
+    // Add the interest to tbl_interest table
+    const insertSql = 'INSERT INTO tbl_interest (user_id, prop_id) VALUES (?, ?)';
+    await con.query(insertSql, [userID, propertyID]);
+
+    await con.commit();
+    //await sendPushNotification(ownerID, userID);
+    res.json({ result: "success", message: "Added to interest list successfully" });
+
+  } catch (error) {
+    // Rollback the transaction in case of an error
+    await con.rollback();
+    console.error('Error in addToInterest API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
 
 
 
@@ -1730,7 +1791,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      aboutUs, TC_User, UserPrivacy, contactUS, aboutUs1, createPayment, 
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
      updatePreference, addProperty, property, Properties , myProperties , 
-     updateProperty , deleteProperty , addtestUser , logintestUser
+     updateProperty , deleteProperty , addtestUser , logintestUser , addToInterest
 
 }
 

@@ -530,8 +530,6 @@ const updatepropType = async (req, res, next) => {
 
 
 
-
-
 const  deletepropType = async(req,res,next)=>{ 
 
   
@@ -564,17 +562,27 @@ try {
 
 
 
-
+//------------- view all properties -------
 
 const properties = async(req,res,next)=>{    
-
-  try {
-    res.render('admin/properties')
-  } catch (error) {
-    res.render('admin/kilvish500')
-  }
     
+  const con = await connection();
+  try {   
+
+    var [props] =  await con.query('SELECT * FROM tbl_prop');
+    
+    res.render('admin/properties', {'props':props,'output':'Your properties Fetched'});
+
+  } catch (error) {
+    console.error('Error retrieving Companies:', error);
+    res.render('admin/kilvish500', {'output':'Internal Server Error'});
+  }finally {
+    con.release(); 
+  }
  
+
+
+
 }
 
 

@@ -36,7 +36,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     updateProperty,
     deleteProperty,
     addtestUser,
-    logintestUser} from '../controllers/indexControllerAPI.js';
+    logintestUser,
+    addToInterest} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -88,6 +89,9 @@ router.route('/updateProperty').post(upload.array('images'),updateProperty)
 
 
 router.route('/deleteProperty').post(upload.none(),deleteProperty)
+
+
+router.route('/addToInterest').post(upload.none(),addToInterest)
 
 
 
