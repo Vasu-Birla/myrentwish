@@ -1131,6 +1131,72 @@ const updateProperty = async (req, res, next) => {
 
 
 
+//--------  Delete Property ---------------
+
+
+const deleteProperty = async (req, res, next) => {
+  const con = await connection();
+  try {
+    await con.beginTransaction();
+
+    const userID = req.body.user_id;
+    const propertyID = req.body.prop_id;
+
+    // Validate if the user exists
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+    if (!user) {
+      await con.rollback();
+      return res.json({ result: "User not found" });
+    }
+
+    // Validate if the property exists and is owned by the user
+    const [[property]] = await con.query('SELECT * FROM `tbl_prop` WHERE prop_id = ? AND user_id = ?', [propertyID, userID]);
+    if (!property) {
+      await con.rollback();
+      return res.json({ result: "Property not found or does not belong to the user" });
+    }
+
+    // Delete the property from the tbl_prop table
+    const deleteSql = 'DELETE FROM tbl_prop WHERE prop_id = ?';
+    const [result] = await con.query(deleteSql, [propertyID]);
+
+    await con.commit();
+    console.log("Property Deleted Successfully ")
+    res.json({ result: "success", message: "Property deleted successfully" });
+
+  } catch (error) {
+    // Rollback the transaction in case of an error
+    await con.rollback();
+    console.error('Error in delete Property API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const profilePost = async(req,res,next)=>{    
     const con = await connection(); 
 
@@ -1169,7 +1235,35 @@ if(results){
 }
 
 
-//------------------------ veiw/edit Single User End -------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1609,7 +1703,8 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
     removeFromCol, updloadBYUser, profile, profilePost, similarColl,
      aboutUs, TC_User, UserPrivacy, contactUS, aboutUs1, createPayment, 
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
-     updatePreference, addProperty, property, Properties , myProperties , updateProperty
+     updatePreference, addProperty, property, Properties , myProperties , 
+     updateProperty , deleteProperty
 
 }
 
