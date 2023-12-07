@@ -264,6 +264,41 @@ const resetpassword = async (req, res, next) => {
 
 
 
+//------------ delete User -------------- 
+
+
+const  removeAccount = async(req,res,next)=>{ 
+
+  const con = await connection();
+  const userID = req.body.user_id; 
+
+  try {  
+
+    await con.beginTransaction();
+
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+  
+    if ( user.status == "inactive") {
+      return res.json({ result: "failed", message:"Deactivated Profile Cannot be deleted" });
+    } 
+    await con.query('DELETE FROM tbl_users WHERE user_id = ?', [userID]);
+   
+
+    await con.commit();
+    res.json({ result: "success", message:"Your Account has been deleted !" });
+    
+  } catch (error) {
+    await con.rollback();
+   
+    res.json({ result: "failed", message:" Unable to delete Your Account  !" });
+    
+  }finally{
+    con.release();
+  }
+  }
+
+
+
 
 
 //-------------------- Product details ------------ 
@@ -1881,7 +1916,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
      updatePreference, addProperty, property, Properties , myProperties , 
      updateProperty , deleteProperty , addtestUser , logintestUser , addToInterest , getQuestions,
-     addAnswer
+     addAnswer , removeAccount
 
 }
 

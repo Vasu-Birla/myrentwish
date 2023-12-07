@@ -12,43 +12,78 @@
             </div>
 
             <div id="successMessage" class="alert alert-success d-none">
-                  Question Added Successfully ! 
+              Question Updated Successfully!
             </div>
-              
-              <div id="errorMessage" class="alert alert-danger d-none">
-                    Failed to add Question 
+
+            <div id="errorMessage" class="alert alert-danger d-none">
+              Failed to Update Question
+            </div>
+
+            <!-- alert msgs  -->
+            <% if (output === 'Error in fetching user' || output === 'Failed to Update') { %>
+              <div class="alert alert-danger">
+                <%= output %>
               </div>
+
+            <% } else { %>
+              <div class="alert alert-success">
+                <%= output %>
+              </div>
+            <% } %>
+            <!-- /alert msgs  -->
 
             <!-- Form Start -->
             <form id="questionForm">
               <!-- Question Input -->
               <div class="form-group">
                 <label for="question">Question</label>
-                <input type="text" name="question_text" class="form-control" placeholder="Enter your question" required>
+                <input type="text" name="question_text" class="form-control" value="<%- question.question_text %>" required>
               </div>
+
+              <input type="hidden" name="question_id" class="form-control" value="<%- question.question_id %>" required>
 
               <!-- Question Type Selection -->
               <div class="form-group">
                 <label for="question_type">Question Type</label>
                 <select name="question_type" class="form-control" required>
-                  <option selected > Question Type ? </option>
-                  <option value="options_2">2 Options</option>
-                  <option value="options_3">3 Options</option>
-                  <option value="dropdown">Dropdown</option>
+                  <option value="options_2" <%=(question.question_type === 'options_2') ? 'selected' : '' %>>2 Options</option>
+                  <option value="options_3" <%=(question.question_type === 'options_3') ? 'selected' : '' %>>3 Options</option>
+                  <option value="dropdown" <%=(question.question_type === 'dropdown') ? 'selected' : '' %>>Dropdown</option>
                 </select>
               </div>
 
+              <input type="hidden" id="kilvish" value="<%= JSON.stringify(question.answer_options) %>" >
               <!-- Answer Options -->
-              <div class="form-group" id="answerOptionsContainer">
-                <label for="answerOptions">Answer Options</label>
-                <!-- Dynamic options for the dropdown -->
-                <div class="input-group mb-3">
-                  <!-- <input type="text" name="answerOptions[]" class="form-control" placeholder="Option 1" required>
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="addOption">Add Option</button>
-                  </div> -->
-                </div>
-              </div>
+            <!-- Answer Options -->
+<div class="form-group" id="answerOptionsContainer">
+  <label for="answerOptions">Answer Options</label>
+
+  <% if (question.question_type === 'dropdown') { %>
+    <% const answerOptions = JSON.parse(question.answer_options); %>
+    <% for (const option of answerOptions) { %>
+      <div class="input-group mb-3">
+        <input type="text" name="answerOptions[]" class="form-control" value="<%= option %>" required>
+        <div class="input-group-append">
+          <button class="btn btn-success" type="button" id="addOption">Add Option</button>
+          <button class="btn btn-danger" type="button" id="removeOption">Remove Option</button>
+        </div>
+      </div>
+    <% } %>
+  <% } else { %>
+    <% const answerOptions = JSON.parse(question.answer_options); %>
+    <% for (let i = 1; i <= parseInt(question.question_type.split('_')[1]); i++) { %>
+      <div class="input-group mb-3">
+        <input type="text" name="answerOptions[]" class="form-control" placeholder="Option <%= i %>" value="<%= answerOptions[i - 1] || '' %>" required>
+        <div class="input-group-append">
+
+         
+        </div>
+        </div>
+      </div>
+    <% } %>
+  <% } %>
+</div>
+
 
               <!-- Submit Button -->
               <div class="form-group add-admin col-md-12" style="margin: 10px 0px;">
@@ -84,15 +119,20 @@
 <script src="../assets/js/scripts.js"></script>
 <!-- Custom JS File -->
 <script src="../assets/js/custom.js"></script>
+
 <!-- DATA TABLES SCRIPT START -->
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
 
 </body>
 
-
-<!-- index  21 Nov 2019 03:47:04 GMT -->
 </html>
 
-<!-- Your Other Script Tags -->
 
 <script>
   $(document).ready(function () {
@@ -102,15 +142,14 @@
 
       // Your AJAX Code to Send Data to addQuestions API
       $.ajax({
-        url: '/admin/addQuestion', // Replace with your actual API endpoint URL
+        url: '/admin/viewQuestion', // Replace with your actual API endpoint URL
         type: 'POST',
         data: $(this).serialize(),
         success: function (response) {
           console.log(response);
-         // window.location.href = '/admin/addQuestion';  
+         window.location.href = '/admin/viewQuestions';  
           $("#successMessage").removeClass("d-none");           
          $("#errorMessage").addClass("d-none");
-         $('#questionForm')[0].reset();
         },
         error: function (error) {
           console.error(error);
@@ -151,8 +190,7 @@
     $('#answerOptionsContainer').on('click', '#addOption', function () {
       const inputGroup = $('<div class="input-group mb-3"> </div>');
       const inputField = $('<input type="text" name="answerOptions[]" class="form-control" placeholder="New Option" required>');
-      const appendButton = $('<div class="input-group-append"><button class="btn btn-success" type="button" id="addOption">Add Option</button>    <button class="btn btn-danger" type="button" id="removeOption">Remove Option</button></div>');
-   
+      const appendButton = $('<div class="input-group-append"><button class="btn btn-success" type="button" id="addOption">Add Option</button></div>');
 
       inputGroup.append(inputField);
       inputGroup.append(appendButton);
@@ -161,14 +199,10 @@
   });
 
 
-
-    // Handle Removing Options Dynamically
+  // Handle Removing Options Dynamically
 $('#answerOptionsContainer').on('click', '#removeOption', function () {
   const inputGroup = $(this).closest('.input-group');
   inputGroup.remove();
 });
 
 </script>
-
-
-

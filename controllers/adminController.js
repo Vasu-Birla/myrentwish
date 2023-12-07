@@ -395,7 +395,7 @@ const  deleteUser = async(req,res,next)=>{
 
     await con.beginTransaction();
 
-    await con.query('DELETE FROM tbl_users WHERE userID = ?', [userID]);
+    await con.query('DELETE FROM tbl_users WHERE user_id = ?', [userID]);
     var [users] =  await con.query('SELECT * FROM tbl_users');
 
     await con.commit();
@@ -727,16 +727,90 @@ const addQuestionPost = async (req, res, next) => {
 
 
 
-const viewQuestions = async(req,res,next)=>{    
+const viewQuestions = async (req, res, next) => {
+  const con = await connection();
 
   try {
-    res.render('admin/viewQuestions') 
-  } catch (error) {
-    res.render('admin/kilvish500')
-  }
+    // Fetch questions from the tbl_questions table
+    const [questions] = await con.query('SELECT * FROM tbl_questions');
     
- 
+    // Render the viewQuestions page and pass the questions data to the template
+    res.render('admin/viewQuestions', { questions });
+  } catch (error) {
+    console.error('Error in viewQuestions API:', error);
+    // Render an error page if there's an issue
+    res.render('admin/kilvish500');
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
+const viewQuestion = async(req,res,next)=>{ 
+
+  const con = await connection();
+  try{
+   
+    var quesID = req.query.quesID; 
+    var [[question]] = await con.query('SELECT * FROM tbl_questions WHERE question_id = ?', [quesID ]);   
+  
+    res.render('admin/viewQuestion',{'question':question,"output":"fetched "+question.question_id+"'s Details"})
+  
+  }catch(error){
+    res.render('admin/kilvish500', {'output':'Internal Server Error'});
+  }finally {
+    con.release(); 
+  }
 }
+
+const viewQuestionPost = async (req, res, next) => {  console.log("start updating..... .... ")
+  const con = await connection();
+
+  try {
+    await con.beginTransaction();
+
+    const { question_id, question_text, question_type, answerOptions } = req.body;
+
+    // Validate if the question exists
+    const [[existingQuestion]] = await con.query('SELECT * FROM tbl_questions WHERE question_id = ?', [question_id]);
+
+    if (!existingQuestion) {
+      await con.rollback();
+      return res.json({ result: "Question not found" });
+    }
+
+    if (!['options_2', 'options_3', 'dropdown'].includes(question_type)) {
+      await con.rollback();
+      return res.json({ result: "Invalid question type" });
+    }
+
+    // Update the question details in the tbl_questions table
+    const updateSql = 'UPDATE tbl_questions SET question_text = ?, question_type = ?, answer_options = ? WHERE question_id = ?';
+    const updateValues = [question_text, question_type, JSON.stringify(answerOptions), question_id];
+    await con.query(updateSql, updateValues);
+
+    await con.commit();
+    res.json({ result: "success" });
+
+  } catch (error) {
+    // Rollback the transaction in case of an error
+    await con.rollback();
+    console.error('Error in viewQuestionPost API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
+
 
 
 
@@ -855,7 +929,7 @@ export {homePage,
     tandc , faq, properties , queries, addInquiryDetails , 
     viewUser, updateUserStatus, viewUserPost, deleteUser, deleteUser1 ,
      propTypePost , updatepropType, deletepropType , deleteProperty ,
-      updatePropertyStatus, addQuestionPost }
+      updatePropertyStatus, addQuestionPost , viewQuestion, viewQuestionPost}
 
 
          

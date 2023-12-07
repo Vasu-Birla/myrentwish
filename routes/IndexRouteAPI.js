@@ -39,7 +39,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     logintestUser,
     addToInterest,
     getQuestions,
-    addAnswer} from '../controllers/indexControllerAPI.js';
+    addAnswer,
+    removeAccount} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -71,6 +72,10 @@ router.route('/updateprofile').post(upload.single('image'),updateProfile)
 
 
 router.route('/updateUser').post(upload.single('image'),profilePost)
+
+
+router.route('/removeAccount').post(upload.none(),removeAccount)
+
 
 
 router.route('/updatePreference').post(upload.none(),updatePreference)

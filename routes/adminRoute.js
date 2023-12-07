@@ -7,7 +7,7 @@ import { Profile, ProfilePost, addInquiryDetails, addQuestion, addQuestionPost, 
     homePage, loginAdmin, loginPage, logout, notification,
      propType, propTypePost, properties, queries, tandc, 
      updatePropertyStatus, updateUserStatus, updateadminpic,
-      updatepropType, userPrivacy, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
+      updatepropType, userPrivacy, viewQuestion, viewQuestionPost, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
 
 
 import upload from '../middleware/upload.js';
@@ -103,9 +103,14 @@ router.route('/addQuestion').get(addQuestion)
 router.route('/addQuestion').post(addQuestionPost)
 
 
-
-
 router.route('/viewQuestions').get(viewQuestions)
+
+router.route('/viewQuestion').get(viewQuestion)
+
+
+router.route('/viewQuestion').post(viewQuestionPost)
+
+
 
 
 
