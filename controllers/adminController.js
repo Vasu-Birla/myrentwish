@@ -469,7 +469,7 @@ const propType = async(req,res,next)=>{
   try {
 
     const [proptypes] = await con.query('SELECT * FROM tbl_proptype');
-    res.render('admin/propType', { 'proptypes': proptypes, 'output': 'Property Type Fetched!!' });
+    res.render('admin/propType', { 'proptypes': proptypes, 'output': 'Property Types Fetched!!' });
   } catch (error) {
     res.render('admin/kilvish500')
   }finally{
@@ -480,28 +480,42 @@ const propType = async(req,res,next)=>{
 }
 
 
+
+
 const propTypePost = async (req, res, next) => {
   const con = await connection();
 
   try {
-      const { prop_type } = req.body;
-      await con.beginTransaction();
+    const { prop_type } = req.body;
 
-      // Insert the prop_type value into tbl_proptype
-      await con.query('INSERT INTO tbl_proptype (prop_type) VALUES (?)', [prop_type]);
+    // Check if the prop_type already exists
+    const [existingPropType] = await con.query('SELECT * FROM tbl_proptype WHERE prop_type = ?', [prop_type]);
 
-      // Retrieve updated proptypes after insertion
+    if (existingPropType.length > 0) {
+      // Return an error if the prop_type already exists
       const [proptypes] = await con.query('SELECT * FROM tbl_proptype');
+      return res.render('admin/propType', { 'proptypes': proptypes, 'output': 'Error: Duplicate Property Type' });
+    }
+      
 
-      await con.commit();
-      res.render('admin/propType', { 'proptypes': proptypes, 'output': 'Property Type Added ' });
+    await con.beginTransaction();
+
+    // Insert the prop_type value into tbl_proptype
+    await con.query('INSERT INTO tbl_proptype (prop_type) VALUES (?)', [prop_type]);
+
+    // Retrieve updated proptypes after insertion
+    const [proptypes] = await con.query('SELECT * FROM tbl_proptype');
+
+    await con.commit();
+    res.render('admin/propType', { 'proptypes': proptypes, 'output': 'Property Type Added' });
   } catch (error) {
-      await con.rollback();
-      res.render('admin/kilvish500');
-  }finally{
+    await con.rollback();
+    console.error('Error in propTypePost API:', error);
+    res.render('admin/kilvish500');
+  } finally {
     con.release();
   }
-}
+};
 
 
 const updatepropType = async (req, res, next) => { 

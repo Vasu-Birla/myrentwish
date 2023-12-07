@@ -1213,6 +1213,30 @@ const deleteProperty = async (req, res, next) => {
 };
 
 
+//-------------------- get property types ---------- 
+
+// fetch all question ------- 
+
+const propTypes = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    // Fetch all questions from the tbl_questions table
+    const selectSql = 'SELECT * FROM tbl_proptype';
+    const [propTypes] = await con.query(selectSql);  
+
+    res.json( propTypes );
+
+  } catch (error) {
+    console.error('Error in getQuestions API:', error);
+    res.status(500).json({ result: 'failed' , message:'Internal Server Error' });
+
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
 
 
 
@@ -1916,7 +1940,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
      updatePreference, addProperty, property, Properties , myProperties , 
      updateProperty , deleteProperty , addtestUser , logintestUser , addToInterest , getQuestions,
-     addAnswer , removeAccount
+     addAnswer , removeAccount , propTypes
 
 }
 

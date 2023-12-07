@@ -40,7 +40,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     addToInterest,
     getQuestions,
     addAnswer,
-    removeAccount} from '../controllers/indexControllerAPI.js';
+    removeAccount,
+    propTypes} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -99,6 +100,9 @@ router.route('/deleteProperty').post(upload.none(),deleteProperty)
 
 
 router.route('/addToInterest').post(upload.none(),addToInterest)
+
+router.route('/propTypes').get(upload.none(),propTypes)
+
 
 
 

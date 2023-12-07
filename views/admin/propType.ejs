@@ -9,7 +9,7 @@
        <section class="section">
            <div class="fully-page">
              <div class="full-headings">
-               <h4> Profiles</h4>
+               <h4> Property Type Management </h4>
              </div>
              <div class="box-bodys">
               <div id="successMessage" class="alert alert-success d-none">
@@ -24,6 +24,19 @@
               
              
               <div class="col-12 col-md-12 col-lg-4">
+
+                 <!-- alert msgs  -->
+            <% if (output === 'Error: Duplicate Property Type' || output === 'Failed to Update') { %>
+              <div class="alert alert-danger">
+                <%= output %>
+              </div>
+
+            <% } else { %>
+              <div class="alert alert-success">
+                <%= output %>
+              </div>
+            <% } %>
+            <!-- /alert msgs  -->
 
                 <form action="/admin/propType" method="post">    
                   <div class="form-group row">               
@@ -268,7 +281,7 @@ $(document).ready(function() {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete User'
+            confirmButtonText: 'Yes, delete'
         }).then((result) => {
             if (result.isConfirmed) {
                 // Make an AJAX request to delete the user
