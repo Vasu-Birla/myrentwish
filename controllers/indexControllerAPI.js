@@ -1243,6 +1243,95 @@ const addToInterest = async (req, res, next) => {
 
 
 
+//=================================== Questions  section ====================================== 
+
+
+
+// fetch all question ------- 
+
+const getQuestions = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    // Fetch all questions from the tbl_questions table
+    const selectSql = 'SELECT * FROM tbl_questions';
+    const [questions] = await con.query(selectSql);
+
+    // Parse JSON strings in answer_options column
+    const formattedQuestions = questions.map(question => {
+      question.answer_options = JSON.parse(question.answer_options);
+      return question;
+    });
+
+    res.json( formattedQuestions );
+
+  } catch (error) {
+    console.error('Error in getQuestions API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
+//---------------  insert User's Answer 
+
+
+const addAnswer = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    await con.beginTransaction();
+
+    const { user_id, question_id, answer } = req.body;
+
+    // Validate if the user and question exist
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
+    const [[question]] = await con.query('SELECT * FROM tbl_questions WHERE question_id = ?', [question_id]);
+
+    if (!user || !question) {
+      await con.rollback();
+      return res.json({ result: "User or question not found" });
+    }
+
+    if (!question.answer_options.includes(answer)) {
+      await con.rollback();
+      return res.json({ result: "failed", message: "Incorrect answer" });
+    }
+
+    const insertSql = `
+  INSERT INTO tbl_user_answers (user_id, question_id, question, answer)
+  VALUES (?, ?, ?, ?)
+  ON DUPLICATE KEY UPDATE
+    answer = VALUES(answer),
+    updated_at = CURRENT_TIMESTAMP
+`;
+    const [results] = await con.query(insertSql, [user_id, question_id, question.question_text, answer]);
+
+    await con.commit();
+    res.json({ result: "success", answer_id: results.insertId });
+
+  } catch (error) {
+    // Rollback the transaction in case of an error
+    await con.rollback();
+    console.error('Error in answerQuestion API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
+
+
 
 
 //------------  machine  testing API -> 
@@ -1791,7 +1880,8 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      aboutUs, TC_User, UserPrivacy, contactUS, aboutUs1, createPayment, 
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
      updatePreference, addProperty, property, Properties , myProperties , 
-     updateProperty , deleteProperty , addtestUser , logintestUser , addToInterest
+     updateProperty , deleteProperty , addtestUser , logintestUser , addToInterest , getQuestions,
+     addAnswer
 
 }
 

@@ -1,10 +1,13 @@
 import express from 'express'
-import { Profile, ProfilePost, addInquiryDetails, addQuestion, addSkills, addUser, changepass, checkPass, 
+import { Profile, ProfilePost, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, changepass, checkPass, 
     deleteProperty, 
     deleteUser, 
     deleteUser1, 
     deletepropType, 
-    homePage, loginAdmin, loginPage, logout, notification, propType, propTypePost, properties, queries, tandc, updatePropertyStatus, updateUserStatus, updateadminpic, updatepropType, userPrivacy, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
+    homePage, loginAdmin, loginPage, logout, notification,
+     propType, propTypePost, properties, queries, tandc, 
+     updatePropertyStatus, updateUserStatus, updateadminpic,
+      updatepropType, userPrivacy, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
 
 
 import upload from '../middleware/upload.js';
@@ -96,6 +99,11 @@ router.route('/updatePropertyStatus').post(updatePropertyStatus)
 
 
 router.route('/addQuestion').get(addQuestion)
+
+router.route('/addQuestion').post(addQuestionPost)
+
+
+
 
 router.route('/viewQuestions').get(viewQuestions)
 

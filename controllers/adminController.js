@@ -684,6 +684,49 @@ const addQuestion = async(req,res,next)=>{
 
 
 
+
+
+
+const addQuestionPost = async (req, res, next) => { 
+  const con = await connection();
+
+  try {
+    await con.beginTransaction();
+
+    const { question_text, question_type, answerOptions } = req.body;
+
+    console.log("answer_options -> ",answerOptions)
+    
+
+    if (!['options_2', 'options_3', 'dropdown'].includes(question_type)) {
+      await con.rollback();
+      return res.json({ result: "Invalid question type" });
+    }
+
+
+    // Insert the question into the tbl_questions table
+    const insertSql = 'INSERT INTO tbl_questions (question_text, question_type, answer_options) VALUES (?, ?, ?)';
+    const insertValues = [question_text, question_type, JSON.stringify(answerOptions)];
+    const [results] = await con.query(insertSql, insertValues);
+
+    await con.commit();
+    res.json({ result: "success", question_id: results.insertId });
+
+  } catch (error) {
+    // Rollback the transaction in case of an error
+    await con.rollback();
+    console.error('Error in addQuestions API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
 const viewQuestions = async(req,res,next)=>{    
 
   try {
@@ -811,7 +854,8 @@ export {homePage,
    addQuestion ,viewQuestions ,addSkills,viewSkills , userPrivacy ,
     tandc , faq, properties , queries, addInquiryDetails , 
     viewUser, updateUserStatus, viewUserPost, deleteUser, deleteUser1 ,
-     propTypePost , updatepropType, deletepropType , deleteProperty , updatePropertyStatus }
+     propTypePost , updatepropType, deletepropType , deleteProperty ,
+      updatePropertyStatus, addQuestionPost }
 
 
          

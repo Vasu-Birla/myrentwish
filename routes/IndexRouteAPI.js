@@ -37,7 +37,9 @@ import { register ,Login, Logout,  ForgotPassword ,
     deleteProperty,
     addtestUser,
     logintestUser,
-    addToInterest} from '../controllers/indexControllerAPI.js';
+    addToInterest,
+    getQuestions,
+    addAnswer} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -95,6 +97,11 @@ router.route('/addToInterest').post(upload.none(),addToInterest)
 
 
 
+//------- question section ---------  
+
+router.route('/getQuestions').get(upload.none(),getQuestions)
+
+router.route('/addAnswer').post(upload.none(),addAnswer)
 
 
 
