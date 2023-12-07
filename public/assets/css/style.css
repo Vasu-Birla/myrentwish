@@ -819,6 +819,28 @@ option {
     background-color: #d9ebdd;
 }
 
+.alert.alert-danger {
+    position: relative;
+    background-color: white;
+    color: #d70000;
+    padding-left: 40px;
+    border: none;
+    font-size: larger;
+}
+
+.alert.alert-danger::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -10px; /* Adjust this value based on the desired spacing */
+    transform: translateY(-50%);
+    width: 50px; /* Adjust this value based on the width of your GIF */
+    height: 50px; /* Adjust this value based on the height of your GIF */
+    background-image: url('../img/warning.gif');
+    background-size: cover; /* Adjust this property based on your needs */
+}
+
+
 
   /*  profile picture admin section */ 
 

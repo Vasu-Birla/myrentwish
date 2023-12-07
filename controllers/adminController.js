@@ -823,13 +823,98 @@ const viewQuestionPost = async (req, res, next) => {  console.log("start updatin
 };
 
 
+//--------- delete Question ----------- 
+
+
+const  deletepQues = async(req,res,next)=>{ 
+
+const con = await connection();
+const question_id = req.body.question_id; 
+
+try {  
+  await con.beginTransaction();
+
+  await con.query('DELETE FROM tbl_questions WHERE question_id = ?', [question_id]);
+
+  await con.commit();
+  res.status(200).json({ msg:true });
+  
+} catch (error) {
+
+  await con.rollback();
+  res.status(200).json({ msg:false });
+
+  
+}finally{
+
+  con.release();
+}
+}
 
 
 
 
 
 
-//====================== Skills Section ------------------
+
+
+//====================== Skills Section ======================================================
+
+
+
+
+const skills = async(req,res,next)=>{    
+
+  const con = await connection();
+
+  try {
+
+    const [skills] = await con.query('SELECT * FROM tbl_skillss');
+    res.render('admin/skills', { 'skills': skills, 'output': 'skills Fetched!!' });
+  } catch (error) {
+    res.render('admin/kilvish500')
+  }finally{
+    con.release();
+  }
+    
+ 
+}
+
+
+const skillsPost = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    const { skill } = req.body;
+
+    // Check if the prop_type already exists
+    const [existingSkill] = await con.query('SELECT * FROM tbl_skills WHERE skill = ?', [skill]);
+
+    if (existingSkill.length > 0) {
+      // Return an error if the prop_type already exists
+      const [skills] = await con.query('SELECT * FROM tbl_skills');
+      return res.render('admin/skills', { 'skills': skills, 'output': 'Error: Can not add Duplicate Skill' });
+    }
+      
+
+    await con.beginTransaction();
+
+    // Insert the prop_type value into tbl_proptype
+    await con.query('INSERT INTO tbl_skills (skill) VALUES (?)', [skill]);
+
+    // Retrieve updated proptypes after insertion
+    const [skills] = await con.query('SELECT * FROM tbl_skills');
+
+    await con.commit();
+    res.render('admin/skills', { 'skills': skills, 'output': 'Skill Added' });
+  } catch (error) {
+    await con.rollback();
+    console.error('Error in propTypePost API:', error);
+    res.render('admin/kilvish500');
+  } finally {
+    con.release();
+  }
+};
 
 const addSkills = async(req,res,next)=>{    
 
@@ -943,7 +1028,8 @@ export {homePage,
     tandc , faq, properties , queries, addInquiryDetails , 
     viewUser, updateUserStatus, viewUserPost, deleteUser, deleteUser1 ,
      propTypePost , updatepropType, deletepropType , deleteProperty ,
-      updatePropertyStatus, addQuestionPost , viewQuestion, viewQuestionPost}
+      updatePropertyStatus, addQuestionPost , viewQuestion, viewQuestionPost , skills , skillsPost , 
+      deletepQues }
 
 
          

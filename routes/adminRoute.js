@@ -3,9 +3,10 @@ import { Profile, ProfilePost, addInquiryDetails, addQuestion, addQuestionPost, 
     deleteProperty, 
     deleteUser, 
     deleteUser1, 
+    deletepQues, 
     deletepropType, 
     homePage, loginAdmin, loginPage, logout, notification,
-     propType, propTypePost, properties, queries, tandc, 
+     propType, propTypePost, properties, queries, skills, skillsPost, tandc, 
      updatePropertyStatus, updateUserStatus, updateadminpic,
       updatepropType, userPrivacy, viewQuestion, viewQuestionPost, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
 
@@ -110,11 +111,21 @@ router.route('/viewQuestion').get(viewQuestion)
 
 router.route('/viewQuestion').post(viewQuestionPost)
 
+router.route('/deletepQues').delete(deletepQues)
+
+
+
 
 
 
 
 //------- Skills --- 
+
+
+
+router.route('/skills').get(skills)
+
+router.route('/skills').post(skillsPost)
 
 router.route('/addSkills').get(addSkills)
 

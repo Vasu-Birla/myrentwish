@@ -26,7 +26,7 @@
               <div class="col-12 col-md-12 col-lg-4">
 
                  <!-- alert msgs  -->
-            <% if (output === 'Error: Duplicate Property Type' || output === 'Failed to Update') { %>
+            <% if (output === 'Error: Can not add Duplicate Skill' || output === 'Failed to Update') { %>
               <div class="alert alert-danger">
                 <%= output %>
               </div>
@@ -38,18 +38,27 @@
             <% } %>
             <!-- /alert msgs  -->
 
-                <form action="/admin/propType" method="post">    
+                <form action="/admin/skills" method="post">    
                   <div class="form-group row">               
                    
                 <div class="form-group add-admin col-md-12">
                       <label class="control-label" for="name"> Property Type </label>
                      
-                      <input type="text" name="prop_type" id="prop_type" class="form-control required" required>
+                      <input type="text" name="skill" id="prop_type" class="form-control required"  required>
                       <select  class="form-control" id="selects">
-                        <option selected disabled >Property Type</option>
-                        <option value="Room">Room</option>
-                        <option value="Home">Home</option>
-                        <option value="Villa">Villa</option>
+                        <option selected disabled >Select Skill</option>
+
+                        <option value="House work">House work</option>
+                        <option value="Education / Learning">Education / Learning</option>
+                        <option value="Physical Assistance">Physical Assistance</option>
+                        <option value="Transportation">Transportation</option>
+                        <option value="Pet / Animal Care">Pet / Animal Care</option>
+                        <option value="Elder cafe">Elder cafe</option>
+                         <option value="Cooking">Cooking</option>
+                        <option value="Child care">Child care</option>
+                        <option value="Ground Work">Ground Work</option>
+                        <option value="Championship">Championship </option>
+                       
                       </select>
                     </div>
   
@@ -92,7 +101,7 @@
                           <tbody>
     
     
-                            <% for(var i = 0; i < proptypes.length; i++) { %>
+                            <% for(var i = 0; i < skills.length; i++) { %>
                           <tr>
                               <td><%= i + 1 %></td>
                             <!-- <td class="p-0 text-center">
@@ -103,9 +112,9 @@
                             </td> -->
                             <td>
                             
-                              <span class="display-value"><%= proptypes[i].prop_type %></span>
-                              <input type="text" class="edit-input form-control" value="<%= proptypes[i].prop_type %>" style="display:none;">
-                              <button class="btn btn-success save-action" data-index="<%= i %>" data-user-id="<%= proptypes[i].id %>" style="display:none;">Save</button>   
+                              <span class="display-value"><%= skills[i].skill %></span>
+                              <input type="text" class="edit-input form-control" value="<%= skills[i].prop_type %>" style="display:none;">
+                              <button class="btn btn-success save-action" data-index="<%= i %>" data-user-id="<%= skills[i].id %>" style="display:none;">Save</button>   
                         
     
                               <td>
@@ -113,7 +122,7 @@
                                   <button class="btn mt-1 mb-1 btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
                                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item edit-action" data-index="<%= i %>">Edit</a>
-                                    <a class="delete-user-link dropdown-item" data-user-id="<%= proptypes[i].id %>" href="#">Delete</a>
+                                    <a class="delete-user-link dropdown-item" data-user-id="<%= skills[i].id %>" href="#">Delete</a>
 
                                   </div>
                                 </div>

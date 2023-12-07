@@ -21,7 +21,7 @@
                 </div>
                   
                   <div id="errorMessage" class="alert alert-danger d-none">
-                        Failed to Delete Property
+                        Failed to Delete Question
                   </div>
 
           <div class="table-reponsive box">
@@ -169,8 +169,8 @@ $(document).ready(function() {
     $('.delete-user-link').on('click', function(e) {
         e.preventDefault();
 
-        var prop_id = $(this).data('user-id');
-        alert(prop_id)
+        var question_id = $(this).data('user-id');
+        alert(question_id)
         var userElement = $(this).closest('.user');
 
 
@@ -182,21 +182,21 @@ $(document).ready(function() {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete Property'
+            confirmButtonText: 'Yes, delete Question'
         }).then((result) => {
             if (result.isConfirmed) {
                 // Make an AJAX request to delete the user
                 $.ajax({
                     type: 'DELETE',
-                    url: '/admin/deleteProperty',
-                    data: { prop_id: prop_id },
+                    url: '/admin/deletepQues',
+                    data: { question_id: question_id },
                     success: function(response) {
 
                         console.log('User deleted successfully');
                         var message = 'User Deleted Successfully !!'
                         if(response.msg == true){
                   
-                      window.location.href = '/admin/properties';  
+                      window.location.href = '/admin/viewQuestions';  
                         }else{
 
                           $("#errorMessage").removeClass("d-none");
