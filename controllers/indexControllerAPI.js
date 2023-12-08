@@ -1416,15 +1416,28 @@ const getQuestions = async (req, res, next) => {
     const selectSql = 'SELECT * FROM tbl_questions LIMIT ? OFFSET ?';
     const [questions] = await con.query(selectSql, [resultsPerPage, offset]);
 
+
+
+     // Fetch answers from tbl_user_answers
+     const questionIds = questions.map(question => question.question_id);
+     const [userAnswers] = await con.query('SELECT question_id, answer FROM tbl_user_answers WHERE user_id = ? AND question_id IN (?)', [req.body.user_id, questionIds]);
+ 
+     // Map user answers to questions
+     const userAnswersMap = {};
+     userAnswers.forEach(answer => {
+       userAnswersMap[answer.question_id] = answer.answer;
+     });
+
     
 
     // Parse JSON strings in answer_options column
     var formattedQuestions =  questions.map(question => {
       question.answer_options = JSON.parse(question.answer_options);
-      question = {"answer":"",...question }
-
-
+     // question = {"answer":"",...question }
+      question.answer = userAnswersMap[question.question_id] || ''; // Set user answer or empty string
       return question;
+
+      
     });
 
 
