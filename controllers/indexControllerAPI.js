@@ -933,41 +933,95 @@ console.log(propertyDetails)
 
 
 //---------- fetch Properties -------
-const Properties = async (req, res, next) => {
-const  con = await connection();
-  try {
+// const Properties = async (req, res, next) => {
+// const  con = await connection();
+//   try {
   
-    await con.beginTransaction();
+//     await con.beginTransaction();
+//     const userID = req.body.user_id;
+
+//     // Validate if the user exists
+//     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+//     if (!user) {
+//       await con.rollback();
+//       return res.json({ result: "User not found" });
+//     }
+//     //const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id <> ?';
+//     const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ?';
+//     const [properties] = await con.query(selectPropertiesSql, [userID]);
+   
+//     for (const row of properties) {
+
+//       row.images = JSON.parse(row.images) 
+//       row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
+//   }  
+
+//     await con.commit();
+//     res.json( properties );
+//   } catch (error) {
+//     // Rollback the transaction in case of an error
+//     await con.rollback();
+//     console.error('Error in fetchAllProperties API:', error);
+//     res.status(500).json({ result: 'Internal Server Error' });
+//   } finally {
+//       con.release();
+//   }
+// };
+
+
+
+const Properties = async (req, res, next) => {
+  const con = await connection();
+
+  try {
     const userID = req.body.user_id;
 
     // Validate if the user exists
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
     if (!user) {
-      await con.rollback();
       return res.json({ result: "User not found" });
     }
-    //const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id <> ?';
-    const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ?';
-    const [properties] = await con.query(selectPropertiesSql, [userID]);
-   
+
+    const page = req.body.page_number || 1; // Default to page 1 if not provided
+    const resultsPerPage = 5;
+    const offset = (page - 1) * resultsPerPage;
+
+
+
+    
+    // Fetch total number of questions for pagination calculation
+    const [totalQuestionsResult] = await con.query('SELECT COUNT(*) as total FROM tbl_prop');
+    const totalQuestions = totalQuestionsResult[0].total;
+
+    
+
+    // Calculate total number of pages
+    const totalPages = Math.ceil(totalQuestions / resultsPerPage);
+
+  
+
+
+
+    const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ? LIMIT ? OFFSET ?';
+    const [properties] = await con.query(selectPropertiesSql, [userID, resultsPerPage, offset]);
+
     for (const row of properties) {
-
-      row.images = JSON.parse(row.images) 
+      row.images = JSON.parse(row.images);
       row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
-  }  
+    }
 
-    await con.commit();
-    res.json( properties );
+
+    //var props ={"totalPages":totalPages,...properties }  ; 
+    res.json(properties);
   } catch (error) {
-    // Rollback the transaction in case of an error
-    await con.rollback();
     console.error('Error in fetchAllProperties API:', error);
     res.status(500).json({ result: 'Internal Server Error' });
   } finally {
+    if (con) {
       con.release();
+    }
   }
 };
-
 
 
 
@@ -1216,14 +1270,13 @@ const deleteProperty = async (req, res, next) => {
 
 //-------------------- get property types ---------- 
 
-// fetch all question ------- 
+
 
 const propTypes = async (req, res, next) => {
   const con = await connection();
 
   try {
-    
-    // Fetch all questions from the tbl_questions table
+
     const selectSql = 'SELECT * FROM tbl_proptype';
     const [propTypes] = await con.query(selectSql);  
 
@@ -1342,20 +1395,44 @@ const addToInterest = async (req, res, next) => {
 const getQuestions = async (req, res, next) => {
   const con = await connection();
 
+  
+
   try {
     const page = req.body.page_number || 1; // Default to page 1 if not provided
     const resultsPerPage = 10;
     const offset = (page - 1) * resultsPerPage;
 
+
+
+    // Fetch total number of questions for pagination calculation
+    const [totalQuestionsResult] = await con.query('SELECT COUNT(*) as total FROM tbl_questions');
+    const totalQuestions = totalQuestionsResult[0].total;
+
+    // Calculate total number of pages
+    const totalPages = Math.ceil(totalQuestions / resultsPerPage);
+
+
     // Fetch 10 questions based on the page and resultsPerPage
     const selectSql = 'SELECT * FROM tbl_questions LIMIT ? OFFSET ?';
     const [questions] = await con.query(selectSql, [resultsPerPage, offset]);
 
+    
+
     // Parse JSON strings in answer_options column
-    const formattedQuestions = questions.map(question => {
+    var formattedQuestions = questions.map(question => {
       question.answer_options = JSON.parse(question.answer_options);
+      question = {"SelectedOption":2,...question }
       return question;
     });
+
+    // for (const row of properties) {
+    //   row.images = JSON.parse(row.images);
+    //   row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
+    // }
+
+
+
+    //formattedQuestions={"totalPages":totalPages,...formattedQuestions }  ; 
 
     res.json(formattedQuestions);
   } catch (error) {
