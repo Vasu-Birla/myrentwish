@@ -1442,7 +1442,9 @@ const getQuestions = async (req, res, next) => {
 
 
 
-    //formattedQuestions={"totalPages":totalPages,...formattedQuestions }  ; 
+    formattedQuestions={"totalPages":totalPages,...formattedQuestions }  ; 
+
+    console.log("total number of pages ", totalPages)
 
     res.json(formattedQuestions);
   } catch (error) {
