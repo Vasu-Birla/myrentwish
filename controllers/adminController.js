@@ -869,7 +869,7 @@ const skills = async(req,res,next)=>{
 
   try {
 
-    const [skills] = await con.query('SELECT * FROM tbl_skillss');
+    const [skills] = await con.query('SELECT * FROM tbl_skills');
     res.render('admin/skills', { 'skills': skills, 'output': 'skills Fetched!!' });
   } catch (error) {
     res.render('admin/kilvish500')

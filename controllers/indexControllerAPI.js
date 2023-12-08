@@ -990,13 +990,12 @@ const Properties = async (req, res, next) => {
 
     
     // Fetch total number of questions for pagination calculation
-    const [totalQuestionsResult] = await con.query('SELECT COUNT(*) as total FROM tbl_prop');
-    const totalQuestions = totalQuestionsResult[0].total;
-
-    
+    const [totalPropsResult] = await con.query('SELECT COUNT(*) as total FROM tbl_prop');
+    const totalProperties = totalPropsResult[0].total;
 
     // Calculate total number of pages
-    const totalPages = Math.ceil(totalQuestions / resultsPerPage);
+    var totalPages = Math.ceil(totalProperties / resultsPerPage);
+    totalPages = totalPages.toString();
 
   
 
@@ -1010,9 +1009,13 @@ const Properties = async (req, res, next) => {
       row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
     }
 
+    const formattedproperties = Object.values(properties);
+
+    const result = {  totalPages,  properties: formattedproperties };
 
     //var props ={"totalPages":totalPages,...properties }  ; 
-    res.json(properties);
+    res.json(result);
+
   } catch (error) {
     console.error('Error in fetchAllProperties API:', error);
     res.status(500).json({ result: 'Internal Server Error' });
@@ -1361,36 +1364,6 @@ const addToInterest = async (req, res, next) => {
 
 
 
-// fetch all question ------- 
-
-// const getQuestions = async (req, res, next) => {
-//   const con = await connection();
-
-//   try {
-//     // Fetch all questions from the tbl_questions table
-//     const selectSql = 'SELECT * FROM tbl_questions';
-//     const [questions] = await con.query(selectSql);
-
-//     // Parse JSON strings in answer_options column
-//     const formattedQuestions = questions.map(question => {
-//       question.answer_options = JSON.parse(question.answer_options);
-//       return question;
-//     });
-
-//     res.json( formattedQuestions );
-
-//   } catch (error) {
-//     console.error('Error in getQuestions API:', error);
-//     res.status(500).json({ result: 'Internal Server Error' });
-
-//   } finally {
-//     if (con) {
-//       con.release();
-//     }
-//   }
-// };
-
-
 
 const getQuestions = async (req, res, next) => {
   const con = await connection();
@@ -1441,29 +1414,22 @@ const getQuestions = async (req, res, next) => {
     });
 
 
-    totalPages = totalPages.toString();
+              totalPages = totalPages.toString();
 
 
-  //   formattedQuestions = { totalPages, ...formattedQuestions };
+              //   formattedQuestions = { totalPages, ...formattedQuestions };
 
-  // //formattedQuestions = [...formattedQuestions, { totalPages }]
-  //   const formattedQuestionsArray = Object.values(formattedQuestions);
+              // //formattedQuestions = [...formattedQuestions, { totalPages }]
+              //   const formattedQuestionsArray = Object.values(formattedQuestions);
+                // formattedQuestions = { totalPages, ...formattedQuestions };
 
+            const formattedQuestionsArray = Object.values(formattedQuestions);
 
-
-
-
-    // formattedQuestions = { totalPages, ...formattedQuestions };
-const formattedQuestionsArray = Object.values(formattedQuestions);
-
-const result = {  totalPages,  questions: formattedQuestionsArray };
-
-console.log(result);
-       
-
-
+            const result = {  totalPages,  questions: formattedQuestionsArray };
 
     res.json(result);
+
+
   } catch (error) {
     console.error('Error in getQuestions API:', error);
     res.status(500).json({ result: 'Internal Server Error' });
@@ -1702,10 +1668,15 @@ const obtainToken = async (req, res, next) => {
 
 
 
+
+
+
 //------------  machine  testing API -> 
 
 
 const addtestUser = async(req,res,next)=>{ 
+
+
   const con = await connection();
 try {
   const { name, email, birthday, password } = req.body;
