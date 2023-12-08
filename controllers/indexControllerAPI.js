@@ -1409,7 +1409,7 @@ const getQuestions = async (req, res, next) => {
     const totalQuestions = totalQuestionsResult[0].total;
 
     // Calculate total number of pages
-    const totalPages = Math.ceil(totalQuestions / resultsPerPage);
+    var totalPages = Math.ceil(totalQuestions / resultsPerPage);
 
 
     // Fetch 10 questions based on the page and resultsPerPage
@@ -1441,12 +1441,20 @@ const getQuestions = async (req, res, next) => {
     });
 
 
+    totalPages = totalPages.toString();
 
-    formattedQuestions={"totalPages":totalPages,...formattedQuestions }  ; 
 
-    console.log("total number of pages ", totalPages)
+    formattedQuestions = { totalPages, ...formattedQuestions };
 
-    res.json(formattedQuestions);
+  //formattedQuestions = [...formattedQuestions, { totalPages }]
+    const formattedQuestionsArray = Object.values(formattedQuestions);
+    
+
+    
+
+
+
+    res.json(formattedQuestionsArray);
   } catch (error) {
     console.error('Error in getQuestions API:', error);
     res.status(500).json({ result: 'Internal Server Error' });
