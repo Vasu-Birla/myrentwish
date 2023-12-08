@@ -1444,17 +1444,26 @@ const getQuestions = async (req, res, next) => {
     totalPages = totalPages.toString();
 
 
-    formattedQuestions = { totalPages, ...formattedQuestions };
+  //   formattedQuestions = { totalPages, ...formattedQuestions };
 
-  //formattedQuestions = [...formattedQuestions, { totalPages }]
-    const formattedQuestionsArray = Object.values(formattedQuestions);
-    
-
-    
+  // //formattedQuestions = [...formattedQuestions, { totalPages }]
+  //   const formattedQuestionsArray = Object.values(formattedQuestions);
 
 
 
-    res.json(formattedQuestionsArray);
+
+
+    // formattedQuestions = { totalPages, ...formattedQuestions };
+const formattedQuestionsArray = Object.values(formattedQuestions);
+
+const result = {  totalPages,  questions: formattedQuestionsArray };
+
+console.log(result);
+       
+
+
+
+    res.json(result);
   } catch (error) {
     console.error('Error in getQuestions API:', error);
     res.status(500).json({ result: 'Internal Server Error' });
