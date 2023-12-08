@@ -1421,7 +1421,7 @@ const getQuestions = async (req, res, next) => {
     // Parse JSON strings in answer_options column
     var formattedQuestions = questions.map(question => {
       question.answer_options = JSON.parse(question.answer_options);
-      question = {"SelectedOption":2,...question }
+      question = {"SelectedOption":"",...question }
       return question;
     });
 
