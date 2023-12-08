@@ -1494,44 +1494,118 @@ const getQuestions = async (req, res, next) => {
 //---------------  insert User's Answer 
 
 
+// const addAnswer = async (req, res, next) => {
+//   const con = await connection();
+
+//   try {
+//     await con.beginTransaction();
+
+//     const { user_id, question_id, answer } = req.body;
+
+//     // Validate if the user and question exist
+//     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
+//     const [[question]] = await con.query('SELECT * FROM tbl_questions WHERE question_id = ?', [question_id]);
+
+//     if (!user || !question) {
+//       await con.rollback();
+//       return res.json({ result: "User or question not found" });
+//     }
+
+//     if (!question.answer_options.includes(answer)) {
+//       await con.rollback();
+//       return res.json({ result: "failed", message: "Incorrect answer" });
+//     }
+
+//     const insertSql = `
+//   INSERT INTO tbl_user_answers (user_id, question_id, question, answer)
+//   VALUES (?, ?, ?, ?)
+//   ON DUPLICATE KEY UPDATE
+//     answer = VALUES(answer),
+//     updated_at = CURRENT_TIMESTAMP
+// `;
+//     const [results] = await con.query(insertSql, [user_id, question_id, question.question_text, answer]);
+
+//     await con.commit();
+//     res.json({ result: "success", answer_id: results.insertId });
+
+//   } catch (error) {
+//     // Rollback the transaction in case of an error
+//     await con.rollback();
+//     console.error('Error in answerQuestion API:', error);
+//     res.status(500).json({ result: 'Internal Server Error' });
+
+//   } finally {
+//     if (con) {
+//       con.release();
+//     }
+//   }
+// };
+
+
+
+
+//--------- for multipule answer -----------------------  
+
+
 const addAnswer = async (req, res, next) => {
+  console.log("req.body -->>>", req.body)
   const con = await connection();
 
   try {
     await con.beginTransaction();
 
-    const { user_id, question_id, answer } = req.body;
+    var { user_id, answers } = req.body;
 
-    // Validate if the user and question exist
+     answers = JSON.parse(answers);
+
+    console.log(answers)
+
+    // Validate if the user exists
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
-    const [[question]] = await con.query('SELECT * FROM tbl_questions WHERE question_id = ?', [question_id]);
-
-    if (!user || !question) {
+    if (!user) {
       await con.rollback();
-      return res.json({ result: "User or question not found" });
+      return res.json({ result: "User not found" });
     }
 
-    if (!question.answer_options.includes(answer)) {
+    // Fetch all questions to validate answers
+    const questionIds = answers.map(answer => answer.question_id);
+    const [questions] = await con.query('SELECT * FROM tbl_questions WHERE question_id IN (?)', [questionIds]);
+
+    const questionMap = new Map(questions.map(question => [question.question_id, question]));
+
+    // Validate answers
+    const invalidAnswers = answers.filter(answer => {
+      const question = questionMap.get(answer.question_id);
+      return !question || !question.answer_options.includes(answer.answer);
+    });
+
+    if (invalidAnswers.length > 0) {
       await con.rollback();
-      return res.json({ result: "failed", message: "Incorrect answer" });
+      return res.json({ result: "failed", message: "Invalid question or answer", invalidAnswers });
     }
 
+    // Insert or update answers
     const insertSql = `
-  INSERT INTO tbl_user_answers (user_id, question_id, question, answer)
-  VALUES (?, ?, ?, ?)
-  ON DUPLICATE KEY UPDATE
-    answer = VALUES(answer),
-    updated_at = CURRENT_TIMESTAMP
-`;
-    const [results] = await con.query(insertSql, [user_id, question_id, question.question_text, answer]);
+      INSERT INTO tbl_user_answers (user_id, question_id, question, answer)
+      VALUES (?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        answer = VALUES(answer),
+        updated_at = CURRENT_TIMESTAMP
+    `;
+
+    const insertPromises = answers.map(answer =>
+      con.query(insertSql, [user_id, answer.question_id, questionMap.get(answer.question_id).question_text, answer.answer])
+    );
+
+    await Promise.all(insertPromises);
 
     await con.commit();
-    res.json({ result: "success", answer_id: results.insertId });
+    res.json({ result: "success" });
 
   } catch (error) {
     // Rollback the transaction in case of an error
     await con.rollback();
-    console.error('Error in answerQuestion API:', error);
+    console.error('Error in addAnswer API:', error);
     res.status(500).json({ result: 'Internal Server Error' });
 
   } finally {
