@@ -1419,16 +1419,13 @@ const getQuestions = async (req, res, next) => {
     
 
     // Parse JSON strings in answer_options column
-    var formattedQuestions = questions.map(question => {
+    var formattedQuestions =  questions.map(question => {
       question.answer_options = JSON.parse(question.answer_options);
-      question = {"SelectedOption":"",...question }
+      question = {"answer":"",...question }
+
+
       return question;
     });
-
-    // for (const row of properties) {
-    //   row.images = JSON.parse(row.images);
-    //   row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
-    // }
 
 
 
