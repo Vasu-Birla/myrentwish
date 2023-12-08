@@ -108,7 +108,7 @@ router.route('/propTypes').get(upload.none(),propTypes)
 
 //------- question section ---------  
 
-router.route('/getQuestions').get(upload.none(),getQuestions)
+router.route('/getQuestions').post(upload.none(),getQuestions)
 
 router.route('/addAnswer').post(upload.none(),addAnswer)
 
@@ -161,6 +161,14 @@ router.route('/cancel').get(upload.none(), cancelPayment )
 
 router.route('/isPaid').post(upload.none(), paymentStatus )
 
+
+
+
+
+
+//----------------- Push Notification Section ------------------- 
+
+
 router.route('/getToken').post(upload.none(), obtainToken )
 
 
@@ -170,6 +178,8 @@ router.route('/getToken').post(upload.none(), obtainToken )
 router.route('/addtestUser').post(upload.none(), addtestUser )
 
 router.route('/logintestUser').post(upload.none(), logintestUser )
+
+
 
 
 

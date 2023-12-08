@@ -936,6 +936,7 @@ console.log(propertyDetails)
 const Properties = async (req, res, next) => {
 const  con = await connection();
   try {
+  
     await con.beginTransaction();
     const userID = req.body.user_id;
 
@@ -1221,6 +1222,7 @@ const propTypes = async (req, res, next) => {
   const con = await connection();
 
   try {
+    
     // Fetch all questions from the tbl_questions table
     const selectSql = 'SELECT * FROM tbl_proptype';
     const [propTypes] = await con.query(selectSql);  
@@ -1308,13 +1310,46 @@ const addToInterest = async (req, res, next) => {
 
 // fetch all question ------- 
 
+// const getQuestions = async (req, res, next) => {
+//   const con = await connection();
+
+//   try {
+//     // Fetch all questions from the tbl_questions table
+//     const selectSql = 'SELECT * FROM tbl_questions';
+//     const [questions] = await con.query(selectSql);
+
+//     // Parse JSON strings in answer_options column
+//     const formattedQuestions = questions.map(question => {
+//       question.answer_options = JSON.parse(question.answer_options);
+//       return question;
+//     });
+
+//     res.json( formattedQuestions );
+
+//   } catch (error) {
+//     console.error('Error in getQuestions API:', error);
+//     res.status(500).json({ result: 'Internal Server Error' });
+
+//   } finally {
+//     if (con) {
+//       con.release();
+//     }
+//   }
+// };
+
+
+
 const getQuestions = async (req, res, next) => {
   const con = await connection();
 
   try {
-    // Fetch all questions from the tbl_questions table
-    const selectSql = 'SELECT * FROM tbl_questions';
-    const [questions] = await con.query(selectSql);
+    const page = req.body.page_number || 1; // Default to page 1 if not provided
+    const resultsPerPage = 10;
+    const offset = (page - 1) * resultsPerPage;
+
+    // Fetch 10 questions based on the page and resultsPerPage
+    const selectSql = 'SELECT * FROM tbl_questions LIMIT ? OFFSET ?';
+    const [questions] = await con.query(selectSql, [resultsPerPage, offset]);
 
     // Parse JSON strings in answer_options column
     const formattedQuestions = questions.map(question => {
@@ -1322,18 +1357,50 @@ const getQuestions = async (req, res, next) => {
       return question;
     });
 
-    res.json( formattedQuestions );
-
+    res.json(formattedQuestions);
   } catch (error) {
     console.error('Error in getQuestions API:', error);
     res.status(500).json({ result: 'Internal Server Error' });
-
   } finally {
     if (con) {
       con.release();
     }
   }
 };
+
+
+
+// const getQuestions = async (req, res, next) => {
+//   const con = await connection();
+
+//   try {
+//     const resultsPerPage = 10;
+//     const currentPage = req.headers['x-page'] || 1; // Default to page 1 if not provided
+
+//     const offset = (currentPage - 1) * resultsPerPage;
+
+//     // Fetch 10 questions based on the currentPage and resultsPerPage
+//     const selectSql = 'SELECT * FROM tbl_questions LIMIT ? OFFSET ?';
+//     const [questions] = await con.query(selectSql, [resultsPerPage, offset]);
+
+//     // Parse JSON strings in answer_options column
+//     const formattedQuestions = questions.map(question => {
+//       question.answer_options = JSON.parse(question.answer_options);
+//       return question;
+//     });
+
+//     res.json(formattedQuestions);
+//   } catch (error) {
+//     console.error('Error in getQuestions API:', error);
+//     res.status(500).json({ result: 'Internal Server Error' });
+//   } finally {
+//     if (con) {
+//       con.release();
+//     }
+//   }
+// };
+
+
 
 
 
@@ -1387,6 +1454,68 @@ const addAnswer = async (req, res, next) => {
   }
 };
 
+
+
+
+
+//==============================================  NOTIFICATION SECTOIN =========================
+
+const obtainToken = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    await con.beginTransaction();
+
+    const userID = req.body.user_id;
+    const device_token = req.body.device_token;
+    const device_status = req.body.device_status;
+    const created_at = Date.now();
+    const updated_at = Date.now();
+
+    // Check if a record already exists for this user and device token
+    const [existingRecords] = await con.query('SELECT * FROM tbl_fcm WHERE user_id = ? AND device_token = ?', [userID, device_token]);
+
+    const [[existingDeviceID]] = await con.query('SELECT * FROM tbl_fcm WHERE device_token = ?', [device_token]);
+
+    if (existingRecords.length > 0) {
+      console.log("Existing DeviceID");
+
+      const [result] = await con.query('UPDATE tbl_fcm SET device_status = ?, updated_at = ? WHERE user_id = ? AND device_token = ?', [device_status, updated_at, userID, device_token]);
+
+      if (result) {
+        res.json({ "result": "success" });
+      } else {
+        res.json({ "result": "failed" });
+      }
+    } else {
+      console.log("New DeviceID");
+
+      if (existingDeviceID) {
+        console.log("Duplicate Device Found & Set for Current User Successfully");
+
+        await con.query('DELETE FROM tbl_fcm WHERE user_id = ? AND device_token = ?', [existingDeviceID.user_id, device_token]);
+      }
+
+      const [result] = await con.query('INSERT INTO tbl_fcm (user_id, device_token, device_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?)', [userID, device_token, device_status, created_at, updated_at]);
+
+      if (result) {
+        res.json({ "result": "success" });
+      } else {
+        res.json({ "result": "failed" });
+      }
+    }
+
+    await con.commit();
+  } catch (error) {
+    await con.rollback();
+    console.error('Error in obtainToken API:', error);
+    res.status(500).json({ "result": "Internal Server Error" });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
 
 
 
@@ -1843,83 +1972,9 @@ const paymentStatus = async(req,res,next)=>{
 }
 
 
-const obtainToken1 = async(req,res,next)=>{   
-
-    const con = await connection(); 
-
-    var userID = req.body.user_id;
-    var device_token = req.body.device_token;
-    var device_status = req.body.device_status;
-    var created_at = Date.now();
-    var updated_at = Date.now();
-    
-    const [result] =  await con.query('INSERT INTO fcm_tokens (user_id, device_token, device_status, created_at, updated_at ) VALUES (?, ?, ?, ?, ?)', [userID, device_token, device_status, created_at, updated_at]);  
- 
-
-
-    if(result){ 
-        res.json({"result":"success"})
-    }else{
-        res.json({"result":"failed"})
-    }
-}
-
-
-const obtainToken = async(req,res,next)=>{   
-
-    const con = await connection(); 
-
-    var userID = req.body.user_id;
-    var device_token = req.body.device_token;
-    var device_status = req.body.device_status;
-    var created_at = Date.now();
-    var updated_at = Date.now();
-
-    // Check if a record already exists for this user and device token
- const [existingRecords] = await con.query('SELECT * FROM fcm_tokens WHERE user_id = ? AND device_token = ?', [userID, device_token]);
-
- 
- const [[existingDeviceID]] = await con.query('SELECT * FROM fcm_tokens WHERE device_token = ?', [ device_token]);
 
 
 
-
-      //&& existingDeviceID.user_id != userID  
-
- if (existingRecords.length > 0) {
-        console.log("existing DeviceID")
-    const [result] =  await con.query('UPDATE fcm_tokens SET device_status = ?, updated_at = ? WHERE user_id = ? AND device_token = ?', [device_status, updated_at, userID, device_token]);
-            if(result){ 
-                res.json({"result":"success"})
-            }else{
-                res.json({"result":"failed"})
-            }
-
-} else {
-    console.log("New DeviceID")
-    if(existingDeviceID){
-        console.log("Duplicate Device Found & Set for Current User Successfully")
- 
-    await con.query('DELETE FROM fcm_tokens WHERE user_id = ? AND device_token = ?', [ existingDeviceID.user_id, device_token]);
-}
-
-    const [result] =  await con.query('INSERT INTO fcm_tokens (user_id, device_token, device_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?)', [userID, device_token, device_status, created_at, updated_at]);
-
-            if(result){ 
-             
-                res.json({"result":"success"})
-            }else{
-                res.json({"result":"failed"})
-            }
-
-    }
-   // await con.query('INSERT INTO fcm_tokens (user_id, device_token, device_status, created_at, updated_at ) VALUES (?, ?, ?, ?, ?)', [userID, device_token, device_status, created_at, updated_at]);  
- 
-
-
-  
-}
- 
 
     
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 07, 2023 at 08:56 AM
+-- Generation Time: Dec 08, 2023 at 08:42 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -69,7 +69,8 @@ CREATE TABLE `tbl_fcm` (
 --
 
 INSERT INTO `tbl_fcm` (`id`, `user_id`, `device_token`, `device_status`, `created_at`, `updated_at`) VALUES
-(1, 8, 'f0CYFFO1Q7yM7-odkColEz:APA91bHefpuwb-YK0rUXOIxf0H_rQta6sEkNv1ja1XCnKw5MSTbbGw4vKOlWzB1samIyQuzpTtpLayfeIry6W3rNhKI20jwDnvrwN3dN57-OhvWvX7Nkoc_Bn5B1yQxwp7UZr-h-txjW', 'Android', '2023-12-06 07:23:51', '2023-12-06 07:23:51');
+(1, 8, 'f0CYFFO1Q7yM7-odkColEz:APA91bHefpuwb-YK0rUXOIxf0H_rQta6sEkNv1ja1XCnKw5MSTbbGw4vKOlWzB1samIyQuzpTtpLayfeIry6W3rNhKI20jwDnvrwN3dN57-OhvWvX7Nkoc_Bn5B1yQxwp7UZr-h-txjW', 'Android', '2023-12-06 07:23:51', '2023-12-06 07:23:51'),
+(2, 12, 'vvv', 'android', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -163,7 +164,8 @@ CREATE TABLE `tbl_proptype` (
 
 INSERT INTO `tbl_proptype` (`id`, `prop_type`, `created_at`) VALUES
 (2, 'Home', '2023-12-05 12:17:12'),
-(4, 'Room', '2023-12-06 06:21:59');
+(4, 'Room', '2023-12-06 06:21:59'),
+(7, 'Villa', '2023-12-07 11:31:29');
 
 -- --------------------------------------------------------
 
@@ -183,10 +185,26 @@ CREATE TABLE `tbl_questions` (
 --
 
 INSERT INTO `tbl_questions` (`question_id`, `question_text`, `question_type`, `answer_options`) VALUES
-(1, 'what is your fvt color ?', 'options_2', '[\"red\",\"green\"]'),
+(1, 'what is your fvt color ?', 'options_2', '[\"yellow\",\"green\"]'),
 (2, 'which is your fvt Game?', 'options_3', '[\"Cricket\",\"Football\",\"Hockey\"]'),
-(3, 'which is your places ?', 'dropdown', '[\"Indore\",\"Bhopal\",\"Goa\",\"USA\",\"England\",\"Itly\"]'),
-(4, 'which is your fvt Game?', 'options_2', '[\"chess\",\"ludo\"]');
+(3, 'which is your places ?', 'dropdown', '[\"Indore\",\"Bhopal\",\"Goa\",\"USA\",\"England\",\"Itly\",\"Mumbai\"]'),
+(5, 'What is your Prefered Gender ? ', 'options_2', '[\"male\",\"female\"]'),
+(6, 'With whom do you want to Live ? ', 'options_2', '[\"male \",\"female\"]'),
+(7, 'jsdkfjsdf', 'options_2', '[\"sfd\",\"sdfd\"]'),
+(8, 'sdfsdfsd', 'options_2', '[\"sfsdf\",\"sdfsdfsd\"]'),
+(9, ' Quest 8', 'options_2', '[\"sfsd\",\"sfsdf\"]'),
+(10, ' Quest 9 ', 'options_3', '[\"sfsdf\",\"sdfsdf\",\"sfdf\"]'),
+(11, ' Quest 11', 'dropdown', '[\"sfd\",\"sfdsfsd\",\"ssdfsfd\",\"sfsfd\",\"sfsdf\"]'),
+(12, ' Quest 13', 'options_2', '[\"sfsdf\",\"sdfsdf\"]'),
+(13, ' Quest 14', 'options_2', '[\"ssd\",\"sfsdf\"]'),
+(14, ' Quest 15', 'options_2', '[\"sfsdf\",\"ssdf\"]'),
+(15, ' Quest 16', 'options_2', '[\"sdfds\",\"sfsdf\"]'),
+(16, ' Quest 17', 'options_2', '[\"sdfsd\",\"ssfd\"]'),
+(17, ' Quest 18', 'options_2', '[\"sdfsd\",\"sdfsdf\"]'),
+(18, ' Quest 19', 'dropdown', '[\"sfsdf\",\"sdfsd\",\"sfsdf\",\"sfsdf\"]'),
+(19, ' Quest 20', 'options_3', '[\"sdfds\",\"sfsd\",\"sfsd\"]'),
+(20, ' Quest 21', 'options_2', '[\"sdfsdf\",\"sdfsdfds\"]'),
+(21, 'Question 21 ', 'options_2', '[\"mahen\",\"netaji\"]');
 
 -- --------------------------------------------------------
 
@@ -208,6 +226,34 @@ CREATE TABLE `tbl_register` (
 
 INSERT INTO `tbl_register` (`user_id`, `name`, `email`, `birthday`, `password`) VALUES
 (1, 'kilvish', 'kil@gmail.com', '25-03-1991', '123456');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_skills`
+--
+
+CREATE TABLE `tbl_skills` (
+  `id` int(11) NOT NULL,
+  `skill` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_skills`
+--
+
+INSERT INTO `tbl_skills` (`id`, `skill`, `created_at`) VALUES
+(1, 'House work', '2023-12-07 12:29:29'),
+(2, 'Education / Learning', '2023-12-07 13:06:25'),
+(3, 'Physical Assistance', '2023-12-07 13:06:33'),
+(4, 'Transportation', '2023-12-07 13:06:55'),
+(5, 'Pet / Animal Care', '2023-12-07 13:06:58'),
+(6, 'Elder cafe', '2023-12-07 13:07:09'),
+(7, 'Cooking', '2023-12-07 13:07:18'),
+(8, 'Child care', '2023-12-07 13:07:21'),
+(9, 'Ground Work', '2023-12-07 13:07:25'),
+(10, 'Championship', '2023-12-07 13:07:36');
 
 -- --------------------------------------------------------
 
@@ -336,6 +382,12 @@ ALTER TABLE `tbl_register`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Indexes for table `tbl_skills`
+--
+ALTER TABLE `tbl_skills`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_users`
 --
 ALTER TABLE `tbl_users`
@@ -362,7 +414,7 @@ ALTER TABLE `tbl_admin`
 -- AUTO_INCREMENT for table `tbl_fcm`
 --
 ALTER TABLE `tbl_fcm`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tbl_interest`
@@ -386,13 +438,13 @@ ALTER TABLE `tbl_prop`
 -- AUTO_INCREMENT for table `tbl_proptype`
 --
 ALTER TABLE `tbl_proptype`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tbl_questions`
 --
 ALTER TABLE `tbl_questions`
-  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `tbl_register`
@@ -401,10 +453,16 @@ ALTER TABLE `tbl_register`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `tbl_skills`
+--
+ALTER TABLE `tbl_skills`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `tbl_users`
 --
 ALTER TABLE `tbl_users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `tbl_user_answers`
