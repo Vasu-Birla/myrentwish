@@ -415,7 +415,9 @@ const  deleteUser = async(req,res,next)=>{
 
 
 
+
   
+
 const  deleteUser1 = async(req,res,next)=>{ 
 
     console.log("ddelete added ")
@@ -975,11 +977,17 @@ const tandc = async(req,res,next)=>{
   }
 
 
+
+
+
+  //====================  Faq Section ===================================== 
+
   
 const faq = async(req,res,next)=>{ 
-
+  const con = await connection(); 
       try {
-        res.render('admin/faq') 
+    const [faqs] = await con.query('SELECT * FROM tbl_faqs'); 
+        res.render('admin/faq',{'output':'ALL FAQs Fetched','faqs':faqs})
       } catch (error) {
         res.render('admin/kilvish500')
       }
@@ -988,7 +996,97 @@ const faq = async(req,res,next)=>{
 
 
 
-  //------------------
+
+const addFAQ = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    await con.beginTransaction();
+
+    // Extracting data from the request body
+    const { faq, answer } = req.body;
+
+    // Insert the new FAQ into the tbl_faqs table
+    await con.query('INSERT INTO tbl_faq (faq, answer) VALUES (?, ?)', [faq, answer]);
+
+    // Retrieve updated FAQs after insertion
+    const [faqs] = await con.query('SELECT * FROM tbl_faq');
+
+    await con.commit();
+    res.render('admin/faq', { 'faqs': faqs, 'output': 'FAQ Added Successfully' });
+  } catch (error) {
+    await con.rollback();
+    console.error('Error in addFAQ API:', error);
+    res.render('admin/kilvish500');
+  } finally {
+    con.release();
+  }
+};
+
+const deleteFAQ = async(req,res,next)=>{
+
+  const con = await connection();
+  const faqID = req.query.faqID; 
+
+  try {
+    await con.beginTransaction();
+   
+    await con.query('DELETE FROM tbl_faq WHERE faq_id = ?', [faqID]);
+
+    const [faqs] = await con.query('SELECT * FROM tbl_faq');
+    await con.commit();
+    res.render('faq', {'faqs':faqs,'output':'FAQ Deleted'});
+    
+  } catch (error) {
+
+    await con.rollback();
+    console.log(error)
+    const [faqs] = await con.query('SELECT * FROM tbl_faq'); 
+    res.render('faq', {'faqs':faqs,'output':'Failed to Delete'});
+    
+  }
+
+
+  }
+
+  const editFAQ = async (req, res, next) => {
+    const con = await connection();
+  
+    try {
+      await con.beginTransaction();
+  
+      const { faq_id, faq, answer } = req.body;
+  
+      // Check if the FAQ with given ID exists
+      const [[existingFAQ]] = await con.query('SELECT * FROM tbl_faq WHERE faq_id = ?', [faq_id]);
+      if (!existingFAQ) {
+        await con.rollback();
+        return res.json({ result: 'failed', message: 'FAQ not found' });
+      }
+  
+      // Update the FAQ
+      await con.query('UPDATE tbl_faq SET faq = ?, answer = ? WHERE faq_id = ?', [faq, answer, faq_id]);
+  
+      await con.commit();
+      res.json({ result: 'success', message: 'FAQ updated successfully', faq_id:faq_id , faq:faq, answer:answer });
+    } catch (error) {
+      await con.rollback();
+      console.error('Error in editFAQ API:', error);
+      res.status(500).json({ result: 'failed', message: 'Internal Server Error' });
+    } finally {
+      con.release();
+    }
+  };
+  
+  
+
+  
+//--------------------------- FAQ -------------------------- 
+
+
+
+
+  //------------------  Help & inqueriy 
 
 
 
@@ -1029,7 +1127,7 @@ export {homePage,
     viewUser, updateUserStatus, viewUserPost, deleteUser, deleteUser1 ,
      propTypePost , updatepropType, deletepropType , deleteProperty ,
       updatePropertyStatus, addQuestionPost , viewQuestion, viewQuestionPost , skills , skillsPost , 
-      deletepQues }
+      deletepQues , editFAQ , deleteFAQ , addFAQ}
 
 
          

@@ -1,101 +1,234 @@
-
 <%- include ("header.ejs") %>
-<%- include ("navbar.ejs") %>
+  <%- include ("navbar.ejs") %>
 
 
-      <!-- Main Content -->
-      <div class="main-content">
-        <section class="section">
-          <div class="row">
-            <div class="fully-tables">
-               <div class="cards-headers">
-                  <h4><i class="fa fa-align-right" aria-hidden="true"></i> Add Frequently Asked Question</h4>
-                </div>
-                <div class="faq-alls">
-                 <div class="textareass">
-                   <textarea id="myeditor" name="about"  class="form-control" rows="10" cols="80" Required></textarea>
-                 </div>
-                    <div class="add-admin" style="margin-bottom: 0px;">
-                       <input type="submit" name="add" class="btn btn-primary" value="Submit" style="width:20%;margin-left: 10px;"> 
-                    </div>
-                  </div>
-                    <div class="fulls-headings mt-4">
-                     <h4> <i class="fa fa-align-right" aria-hidden="true"></i> View Frequently Asked Question</h4>
-                   </div>
-                   <table id="example" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="example_info" style="margin: 20px 00px;">
-                    <thead>
-                         <tr role="row">
-                          <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Id: activate to sort column descending" style="width: 10%;" aria-sort="ascending">s.no</th>
-                            <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Id: activate to sort column descending" style="width: 15%;" aria-sort="ascending">Question</th>
-                          <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="box: activate to sort column ascending" style="width: 60%;">faq Question</th>
-                          <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 15%;">Action</th></tr>
-                      </thead>
-                      <tbody>
-                      <tr role="row" class="odd">
-                          <td class="sorting_1">1</td>
-                             <td>Decide how you'll organize the FAQ pages</td>
-                           <td><p style="margin-bottom: 0rem;">A Terms and Conditions agreement acts as legal contracts between you (the company) who has the website or mobile app, and the user who accesses your website/app.</p>
-                           <p style="margin-bottom: 0rem;">A Terms and Conditions agreement acts as legal contracts between you (the company) who has the website or mobile app, and the user who accesses your website/app.</p></td>
-                      <td> <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Edit </a>
-                            <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Delete</a>
-                       </td>
-                       
-                      </tr>
-                       <tr role="row" class="even">
-                          <td class="sorting_1">2</td>
-                             <td>Decide how you'll organize the FAQ pages</td>
-                           <td><p style="margin-bottom: 0rem;">A Terms and Conditions agreement acts as legal contracts between you (the company) who has the website or mobile app, and the user who accesses your website/app.</p>
-                           <p style="margin-bottom: 0rem;">A Terms and Conditions agreement acts as legal contracts between you (the company) who has the website or mobile app, and the user who accesses your website/app.</p></td>
-                      <td> <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Edit </a>
-                            <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Delete</a>
-                       </td>
-                       
-                      </tr>
-                    </tbody>
-                    </table>
+    <!-- Main Content -->
+    <div class="main-content">
+      <section class="section">
+        <div class="row">
+          <div class="fully-tables">
+            <div class="cards-headers">
+              <h4><i class="fa fa-align-right" aria-hidden="true"></i> Add Frequently Asked Question</h4>
+            </div>
+            <!--  Text Editor Start  -->
 
-                      </div>
-                     </div>
-                 </section>
+
+
+
+
+            <!-- Form Start -->
+            <form method="post" action="/admin/faq" class="needs-validation" novalidate="">
+              <!-- Question Input -->
+              <div class="form-group">
+                <label for="question">Question</label>
+                <input type="text" id="faq" name="faq" class="form-control" placeholder="Enter your question" required>
+              </div>
+
+              <!-- Question Type Selection -->
+              <!-- <div class="form-group">
+                <label for="faq_type">Question Type</label>
+                <select name="faq_type" class="form-control" required>
+                  <option selected disabled > FAQ Type ? </option>
+                  <option value="landlord">For landlord</option>
+                  <option value="tenant">For Tenant</option>
+                 
+                </select>
+              </div> -->
+
+
+              <div class="form-group"></div>
+              <label for="exampleInputPassword1">Address</label>
+              <textarea name="answer" type="text" class="form-control  user-fill" id="answer"
+                placeholder="Enter Your Answer" required></textarea>
+          </div>
+          <!-- Submit Button -->
+          <div class="form-group add-admin col-md-12" style="margin: 10px 0px;">
+            <input type="submit" class="btn btn-primary" value="Submit" style="width:20%;">
+          </div>
+          </form>
+          <!-- Form End -->
+
+          
+         
+
+          <div class="fulls-headings col-12 col-md-12 col-lg-4">
+            <h4> <i class="fa fa-align-right" aria-hidden="true"></i> View Frequently Asked Question</h4> 
+          </div>
+
+          <div class="col-12 col-md-12 col-lg-4">
+
+           <!-- alert msgs  -->
+           <% if (output==='Failed to add  Customer FAQ ' || output==='Failed to Update Customer FAQ ' ||
+           output==='Failed to Delete' ) { %>
+           <div class="alert alert-danger">
+             <%= output %>
            </div>
-      <footer class="main-footer">
-        <div class="footer-left">
-          COPYRIGHT MIE RIDE, 2023 Design & Developed by
-          <a href="https://cyberimpulses.com/">CISS</a></a>
-        </div>
-        <div class="footer-right">
-        </div>
-      </footer>
-    </div>
+
+           <% } else { %>
+             <div class="alert alert-success">
+               <%= output %>
+             </div>
+             <% } %>
+               <!-- /alert msgs  -->
+
+
+          </div>
+
+
+
+
+                <table id="example" class="display dataTable no-footer"
+                  style="width:100%;    border: 2px solid #20214f;" aria-describedby="example_info">
+                  <thead>
+                    <tr>
+                      <th class="sorting sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1"
+                        aria-sort="ascending" aria-label="S no: activate to sort column descending"
+                        style="width: 25.375px !important;">S no</th>
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"
+                        aria-label="Product Quantity: activate to sort column ascending" style="width: 404.812px;"> FAQs
+                      </th>
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1"
+                        aria-label="Action: activate to sort column ascending" style="width: 40.453px;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    <% for(var i=0; i < faqs.length; i++) { %>
+                      <tr class="odd">
+                        <td class="sorting_1"><%- i+1 %></td>
+
+                        <td>
+                          <strong>Q:  </strong> <span id="faqText_<%- faqs[i].faq_id %>"> <%= faqs[i].faq %></span><br>
+                            <strong>A:  </strong> <%= faqs[i].answer %>
+                                      <!-- Edit Form (hidden by default) -->
+                                      <div id="successMessage<%- faqs[i].faq_id %>" class="alert alert-success d-none">
+                                          FAQ Updated successfully !!
+                                      </div>
+                                        
+                                        <div id="errorMessage<%- faqs[i].faq_id %>" class="alert alert-danger d-none">
+                                            Internal Server Error (Unable to Update FAQ)
+                                        </div>
+<form id="editForm_<%- faqs[i].faq_id %>" class="edit-form" style="display: none; margin-top: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+  <input type="hidden" name="faq_id" value="<%- faqs[i].faq_id %>">
+  <div class="form-group">
+    <label for="faq">Question</label>
+    <input type="text" class="form-control" name="faq" value="<%= faqs[i].faq %>" required>
   </div>
-  <!-- General JS Scripts -->
-  <script src="../assets/js/app.min.js"></script>
-  <!-- JS Libraies -->
-  <script src="../assets/bundles/apexcharts/apexcharts.min.js"></script>
-  <!-- Page Specific JS File -->
-  <script src="../assets/js/page/index.js"></script>
-  <!-- Template JS File -->
-  <script src="../assets/js/scripts.js"></script>
-  <!-- Custom JS File -->
-  <script src="../assets/js/custom.js"></script>
-  <script src="../assets/js/text-editor.js"></script>
-  
-<!-- TEXT EDITOR CSS SCRIPT START  TEXT EDITOR CSS SCRIPT START  TEXT EDITOR CSS SCRIPT START  -->
- <script type="text/javascript" src="https://cdn.ckeditor.com/4.5.1/standard/ckeditor.js"></script>
-  <script type="text/javascript">
-        //resize CKEditor with customised height and width
-     CKEDITOR.editorConfig = function (config) {
-        config.language = 'es';
-        config.uiColor = '#F7B42C';
-        config.height = 300;
-        config.toolbarCanCollapse = true;
-    
-    };
-    CKEDITOR.replace('myeditor');
+  <div class="form-group">
+    <label for="answer">Answer</label>
+    <textarea class="form-control" name="answer" required><%= faqs[i].answer %></textarea>
+  </div>
+  <div class="form-group">
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-secondary" onclick="cancelEdit('<%- faqs[i].faq_id %>')">Cancel</button>
+  </div>
+</form>
+
+
+
+                        </td>
+                        <td>
+                          <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Action</button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" onclick="toggleEditForm('<%- faqs[i].faq_id %>')">Edit</a>
+                              <a class="dropdown-item" href="/admin/deleteFAQ?faqID=<%= faqs[i].faq_id %>">Delete</a>
+                              
+                          </div>
+                        </td>
+                      </tr>
+
+                      <% } %>
+
+                  </tbody>
+                </table>
+
+
+        </div>
+    </div>
+
+
+
+
+    </section>
+    </div>
+    <footer class="main-footer">
+      <div class="footer-left">
+        COPYRIGHT MIE RIDE, 2023 Design & Developed by
+        <a href="https://cyberimpulses.com/">CISS</a></a>
+      </div>
+      <div class="footer-right">
+      </div>
+    </footer>
+    </div>
+    </div>
+    <!-- General JS Scripts -->
+    <script src="../assets/js/app.min.js"></script>
+    <!-- JS Libraies -->
+    <script src="../assets/bundles/apexcharts/apexcharts.min.js"></script>
+    <!-- Page Specific JS File -->
+    <script src="../assets/js/page/index.js"></script>
+    <!-- Template JS File -->
+    <script src="../assets/js/scripts.js"></script>
+    <!-- Custom JS File -->
+    <script src="../assets/js/custom.js"></script>
+
+      
+  <script src="../assets/js/popper.min.js"></script>
+
+
+    </body>
+
+
+    <!-- index  21 Nov 2019 03:47:04 GMT -->
+
+    </html>
+
+
+    <script>
+
+       faqIDD = 0;
+
+
+function toggleEditForm(faqId) {
+  faqIDD = faqId
+  $('.edit-form').hide();
+  // Toggle the visibility of the clicked edit form
+  $(`#editForm_${faqId}`).toggle();
+}
+
+function cancelEdit(faqId) {
+
+  // Hide the edit form
+  $(`#editForm_${faqId}`).hide();
+}
+
+$(document).ready(function () {
+  // Handle Form Submission for Edit FAQ
+  $('form.edit-form').submit(function (e) {
+    e.preventDefault();
+
+    // Your AJAX Code to Send Data to editFAQ API
+    $.ajax({
+      url: '/admin/editFAQ', // Replace with your actual API endpoint URL
+      type: 'POST',
+      data: $(this).serialize(),
+      success: function (response) {
+        const faqId = response.faq_id;
+        $(`#faqText_${faqIDD}`).text(response.faq);
+        $(`#answerText_${faqIDD}`).text(response.answer);
+        $(`#editForm_${faqIDD}`).hide();
+        $(`#successMessage${faqIDD}`).removeClass("d-none");
+      $(`#errorMessage${faqIDD}`).addClass("d-none");
+      },
+      error: function (error) {    
+        console.error(error);
+        $(`#errorMessage${faqIDD}`).removeClass("d-none");
+      $(`#successMessage${faqIDD}`).addClass("d-none");
+      },
+    });
+  });
+});
+
 </script>
-
-</body>
-
-
-<!-- index  21 Nov 2019 03:47:04 GMT -->
-</html>

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 08, 2023 at 08:42 AM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Generation Time: Dec 10, 2023 at 12:55 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -48,6 +48,27 @@ CREATE TABLE `tbl_admin` (
 
 INSERT INTO `tbl_admin` (`id`, `firstname`, `lastname`, `email`, `username`, `password`, `contact`, `about`, `address`, `image`, `imagePath`, `date`) VALUES
 (1, 'Kilvish', 'Ciss', 'vasubirla007@gmail.com', 'admin', '123456', '1234567890', 'CISS Invoice Management System can be a robust and useful addition, allowing administrators to manage users, invoices, and other essential functions. Below are some key features and considerations for your admin panel:', 'Sai Ram Plaza, 210, Mangal Nagar Road', 'img_tonystark.jpg_1701862871820.jpg', 'public\\uploads\\img_tonystark.jpg_1701862871820.jpg', '2023-08-14 12:15:42.000000');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_faq`
+--
+
+CREATE TABLE `tbl_faq` (
+  `faq_id` int(11) NOT NULL,
+  `faq` text NOT NULL,
+  `answer` text NOT NULL,
+  `faq_type` enum('landlord','tenant') NOT NULL DEFAULT 'tenant',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `tbl_faq`
+--
+
+INSERT INTO `tbl_faq` (`faq_id`, `faq`, `answer`, `faq_type`, `created_at`) VALUES
+(62, 'How to rent my room ? ', 'sfdsdffs', 'tenant', '2023-12-10 11:48:10');
 
 -- --------------------------------------------------------
 
@@ -338,6 +359,12 @@ ALTER TABLE `tbl_admin`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_faq`
+--
+ALTER TABLE `tbl_faq`
+  ADD PRIMARY KEY (`faq_id`);
+
+--
 -- Indexes for table `tbl_fcm`
 --
 ALTER TABLE `tbl_fcm`
@@ -409,6 +436,12 @@ ALTER TABLE `tbl_user_answers`
 --
 ALTER TABLE `tbl_admin`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `tbl_faq`
+--
+ALTER TABLE `tbl_faq`
+  MODIFY `faq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `tbl_fcm`

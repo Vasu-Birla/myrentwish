@@ -1,10 +1,13 @@
 import express from 'express'
-import { Profile, ProfilePost, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, changepass, checkPass, 
+import { Profile, ProfilePost, addFAQ, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, changepass, checkPass, 
+    deleteFAQ, 
     deleteProperty, 
     deleteUser, 
     deleteUser1, 
     deletepQues, 
     deletepropType, 
+    editFAQ, 
+    faq,  
     homePage, loginAdmin, loginPage, logout, notification,
      propType, propTypePost, properties, queries, skills, skillsPost, tandc, 
      updatePropertyStatus, updateUserStatus, updateadminpic,
@@ -148,7 +151,17 @@ router.route('/tandc').get(tandc)
 
 //---------- FAQ ------
 
-router.route('/faq').get(tandc)
+router.route('/faq').get(faq)
+
+
+router.route('/faq').post(addFAQ)
+
+router.route('/deleteFAQ').get(deleteFAQ)
+
+router.route('/editFAQ').post(editFAQ)
+
+
+
 
 
 
