@@ -1096,7 +1096,7 @@ const deleteFAQ = async(req,res,next)=>{
 
     try {
       const [[support]] = await con.query('SELECT * FROM tbl_support');
-      res.render('admin/addInquiryDetails',{'output':'','support':support});
+      res.render('admin/addInquiryDetails',{'output':'Support Details fetched','support':support});
     } catch (error) {
       res.render('admin/kilvish500')
     }

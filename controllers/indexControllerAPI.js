@@ -20,6 +20,7 @@ paypal.configure({
   
 
 import {hashPassword, comparePassword, sendMailOTP} from '../middleware/helper.js'
+import { type } from 'os';
 
 //-------------------- Register API Start  ------------------------------ 
 
@@ -1538,7 +1539,10 @@ const addAnswer = async (req, res, next) => {
 
      answers = JSON.parse(answers);
      answers.forEach(answer => {
-      answer.question_id = parseInt(answer.question_id, 10);
+      const parsedQuestionId = parseInt(answer.question_id, 10);
+      console.log(`Original question_id: ${answer.question_id}, Parsed question_id: ${parsedQuestionId}`);
+     return answer.question_id = parsedQuestionId;
+    
     });
 
     console.log(answers)
@@ -1554,6 +1558,7 @@ const addAnswer = async (req, res, next) => {
 
     // Fetch all questions to validate answers
     const questionIds = answers.map(answer => answer.question_id);
+ 
     const [questions] = await con.query('SELECT * FROM tbl_questions WHERE question_id IN (?)', [questionIds]);
 
     const questionMap = new Map(questions.map(question => [question.question_id, question]));
@@ -1561,9 +1566,6 @@ const addAnswer = async (req, res, next) => {
     // Validate answers
     const invalidAnswers = answers.filter(answer => {
       const question = questionMap.get(answer.question_id);
-
-      console.log("question id ->> ", question)
-      console.log("answer  ->> ", answer.answer)
       return !question || !question.answer_options.includes(answer.answer);
     });
 
