@@ -1,5 +1,5 @@
 import express from 'express'
-import { Profile, ProfilePost, addFAQ, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, changepass, checkPass, 
+import { Profile, ProfilePost, SupportPost, addFAQ, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, changepass, checkPass, 
     deleteFAQ, 
     deleteProperty, 
     deleteUser, 
@@ -170,6 +170,8 @@ router.route('/editFAQ').post(editFAQ)
 
 
 router.route('/addInquiryDetails').get(addInquiryDetails)
+
+router.route('/addInquiryDetails').post(SupportPost)
 
 
 //---------------- view queries Tickets ------------

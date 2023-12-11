@@ -1556,7 +1556,12 @@ const addAnswer = async (req, res, next) => {
     // Validate answers
     const invalidAnswers = answers.filter(answer => {
       const question = questionMap.get(answer.question_id);
+
+      console.log("question id ->> ", question)
+      console.log("answer  ->> ", answer.answer)
+      
       return !question || !question.answer_options.includes(answer.answer);
+
     });
 
     if (invalidAnswers.length > 0) {

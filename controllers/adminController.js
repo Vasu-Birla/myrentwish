@@ -1092,12 +1092,55 @@ const deleteFAQ = async(req,res,next)=>{
 
   const addInquiryDetails = async(req,res,next)=>{ 
 
+    const con = await connection();   
+
     try {
-      res.render('admin/addInquiryDetails') 
+      const [[support]] = await con.query('SELECT * FROM tbl_support');
+      res.render('admin/addInquiryDetails',{'output':'','support':support});
     } catch (error) {
       res.render('admin/kilvish500')
     }
   }
+
+
+
+
+
+  const SupportPost = async (req, res, next) => {
+    const con = await connection();
+  
+    try {
+      await con.beginTransaction();
+  
+      const [results] = await con.query(
+        'INSERT INTO tbl_support (id, support_email, support_contact) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE support_email = VALUES(support_email), support_contact = VALUES(support_contact)',
+        [1, req.body.support_email, req.body.support_contact]
+      );
+  
+      const [[support]] = await con.query('SELECT * FROM tbl_support WHERE id = ?', [1]);
+  
+      await con.commit();
+  
+      if (results) {
+        res.render('admin/addInquiryDetails', { output: 'Support Details Added Successfully !!', support: support });
+      } else {
+        res.render('admin/addInquiryDetails', { output: 'Failed to Add Support !! ', support: support });
+      }
+    } catch (error) {
+      await con.rollback();
+      console.error('Error in SupportPost API:', error);
+      res.status(500).json({ result: 'Internal Server Error' });
+    } finally {
+      con.release();
+    }
+  };
+  
+
+
+
+
+
+  //================================= Query Tickets ========================================= 
   
 
 
@@ -1127,7 +1170,7 @@ export {homePage,
     viewUser, updateUserStatus, viewUserPost, deleteUser, deleteUser1 ,
      propTypePost , updatepropType, deletepropType , deleteProperty ,
       updatePropertyStatus, addQuestionPost , viewQuestion, viewQuestionPost , skills , skillsPost , 
-      deletepQues , editFAQ , deleteFAQ , addFAQ}
+      deletepQues , editFAQ , deleteFAQ , addFAQ , SupportPost}
 
 
          
