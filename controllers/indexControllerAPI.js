@@ -1557,17 +1557,22 @@ const addAnswer = async (req, res, next) => {
     }
 
     // Fetch all questions to validate answers
-    const questionIds = answers.map(answer => answer.question_id);
+    // const questionIds = answers.map(answer => answer.question_id);
+
+    const questionIds = answers.map(answer => parseInt(answer.question_id, 10));
  
     const [questions] = await con.query('SELECT * FROM tbl_questions WHERE question_id IN (?)', [questionIds]);
 
     const questionMap = new Map(questions.map(question => [question.question_id, question]));
 
     // Validate answers
-    const invalidAnswers = answers.filter(answer => {
-      const question = questionMap.get(answer.question_id);
-      return !question || !question.answer_options.includes(answer.answer);
-    });
+const invalidAnswers = answers.filter(answer => {
+  const question = questionMap.get(parseInt(answer.question_id, 10));
+
+  console.log("question id ->> ", question);
+  console.log("answer  ->> ", answer.answer);
+  return !question || !question.answer_options.includes(answer.answer);
+});
 
     if (invalidAnswers.length > 0) {
       await con.rollback();
@@ -1590,6 +1595,7 @@ const addAnswer = async (req, res, next) => {
     await Promise.all(insertPromises);
 
     await con.commit();
+    console.log("ans added successfully ")
     res.json({ result: "success" });
 
   } catch (error) {
