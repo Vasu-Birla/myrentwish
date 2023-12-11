@@ -121,7 +121,7 @@
                                 <div class="dropdown">
                                   <button class="btn mt-1 mb-1 btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
                                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item edit-action" data-index="<%= i %>">Edit</a>
+                                    <!-- <a class="dropdown-item edit-action" data-index="<%= i %>">Edit</a> -->
                                     <a class="delete-user-link dropdown-item" data-user-id="<%= skills[i].id %>" href="#">Delete</a>
 
                                   </div>
@@ -278,7 +278,7 @@ $(document).ready(function() {
     $('.delete-user-link').on('click', function(e) {
         e.preventDefault();
 
-        var propTypeID = $(this).data('user-id');
+        var skillID = $(this).data('user-id');
         var userElement = $(this).closest('.user');
 
 
@@ -296,10 +296,10 @@ $(document).ready(function() {
                 // Make an AJAX request to delete the user
                 $.ajax({
                     type: 'DELETE',
-                    url: '/admin/deletepropType',
-                    data: { propTypeID: propTypeID },
+                    url: '/admin/deleteSkill',
+                    data: { skillID: skillID },
                     success: function(response) {
-                      window.location.href = '/admin/propType';                           
+                      window.location.href = '/admin/delskills';                           
                         // Handle success, update UI, etc.
                     },
                     error: function(error) {

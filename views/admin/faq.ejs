@@ -59,7 +59,7 @@
 
            <!-- alert msgs  -->
            <% if (output==='Failed to add  Customer FAQ ' || output==='Failed to Update Customer FAQ ' ||
-           output==='Failed to Delete' ) { %>
+           output==='Failed to Delete' || output==='No FAQ found'  ) { %>
            <div class="alert alert-danger">
              <%= output %>
            </div>
@@ -129,8 +129,7 @@
                         </td>
                         <td>
                           <div class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Action</button>
+                            <button class="btn mt-1 mb-1 btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                               <a class="dropdown-item" onclick="toggleEditForm('<%- faqs[i].faq_id %>')">Edit</a>
                               <a class="dropdown-item" href="/admin/deleteFAQ?faqID=<%= faqs[i].faq_id %>">Delete</a>

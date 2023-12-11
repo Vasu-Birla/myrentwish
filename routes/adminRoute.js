@@ -1,17 +1,20 @@
 import express from 'express'
-import { Profile, ProfilePost, SupportPost, addFAQ, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, changepass, checkPass, 
+import { Deleteskill, Profile, ProfilePost, QueriesPost, SupportPost, addFAQ, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, changepass, checkPass, 
     deleteFAQ, 
     deleteProperty, 
+    deleteSkill, 
     deleteUser, 
     deleteUser1, 
     deletepQues, 
     deletepropType, 
+    deleteuserPrivacy, 
     editFAQ, 
     faq,  
     homePage, loginAdmin, loginPage, logout, notification,
-     propType, propTypePost, properties, queries, skills, skillsPost, tandc, 
+     propType, propTypePost, properties, queries, sendMailtoUser, skills, skillsPost, tandc, 
+     tandcPost, 
      updatePropertyStatus, updateUserStatus, updateadminpic,
-      updatepropType, userPrivacy, viewQuestion, viewQuestionPost, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
+      updatepropType, userPrivacy, userPrivacyPost, viewQuestion, viewQuestionPost, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
 
 
 import upload from '../middleware/upload.js';
@@ -135,6 +138,16 @@ router.route('/addSkills').get(addSkills)
 router.route('/viewSkills').get(viewSkills)
 
 
+router.route('/deleteSkill').delete(deleteSkill)
+
+
+router.route('/delskills').get(Deleteskill)
+
+
+
+
+
+
 //------ notification 
 router.route('/notify').get(notification)
 
@@ -143,11 +156,24 @@ router.route('/notify').get(notification)
 
 router.route('/userPrivacy').get(userPrivacy)
 
+router.route('/userPrivacy').post(userPrivacyPost)
+
+
+router.route('/deleteuserPrivacy').get(deleteuserPrivacy)
+
+
+
 
 //------- Terms & Condition -----------
 
 
 router.route('/tandc').get(tandc)
+
+router.route('/tandc').post(tandcPost)
+
+
+
+
 
 //---------- FAQ ------
 
@@ -179,7 +205,9 @@ router.route('/addInquiryDetails').post(SupportPost)
 
 router.route('/queries').get(queries)
 
+router.route('/queries').post( QueriesPost)
 
+router.route('/sendemail').post( sendMailtoUser)
 
 
 

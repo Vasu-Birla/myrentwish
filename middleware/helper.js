@@ -161,43 +161,74 @@ const sendMailOTP = function (email,otp,user) {
  //------------------- response to query ------------------ 
 
  
-const responsetoQuery = function (email,message,subject) {
-  //process.env.NODE_TLS_REJECT_UNAUTHORIZED='0'
+ const responsetoQuery = function (email, message, subject) {
+  const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: 'vasubirla@gmail.com',
+          pass: 'phjwptaxdnaunqol'
+      }
+  });
 
+  const mailOptions = {
+      from: 'vasubirla@gmail.com',
+      to: email,
+      subject: subject,
+      html: `
+          <html>
+          <head>
+              <style>
+                  body {
+                      font-family: 'Arial', sans-serif;
+                  }
+                  .container {
+                      max-width: 600px;
+                      margin: 0 auto;
+                      padding: 20px;
+                      border: 1px solid #ddd;
+                      border-radius: 5px;
+                  }
+                  .header {
+                      text-align: center;
+                      background-color: #f5f5f5;
+                      padding: 10px;
+                      border-radius: 5px 5px 0 0;
+                  }
+                  .content {
+                      padding: 20px;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <div class="header">
+                      <h2>myrentwish Customer Support</h2>
+                  </div>
+                  <div class="content">
+                      <h3>Hello Sir/Madam,</h3>
+                      <p>We have reviewed your query:</p>
+                      <p>${message}</p>
+                      <p>Our team is working to resolve your concerns. Thank you for reaching out to us.</p>
+                      <p>Best regards,</p>
+                      <p>The myrentwish Support Team</p>
+                  </div>
+              </div>
+          </body>
+          </html>
+      `
+  };
 
-var transporter = nodemailer.createTransport({
- service: 'gmail',
- auth: {
-   user: 'vasubirla@gmail.com',
-   pass: 'phjwptaxdnaunqol'
- }
-});
+  transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+          console.error(error);
+          return false;
+      } else {
+          console.log("Email sent successfully");
+          return true;
+      }
+  });
+};
 
-var mailOptions = {
- from: 'vasubirla@gmail.com',
- to: email,
- subject: subject,
- html: "<h3> Hello Sir/Madam , We Have Reviewed your Query :</h1>"+"<h3>"+message+"</h1>"
-
-}
-
-const isSent =transporter.sendMail(mailOptions, function(error, info){ 
- if (error) {
-  console.log(error)
-  return false;
- 
-  //res.json({ result: "failed"});     
- } else {
-  console.log("emailllll sent...............")
-  //res.json({ result: "success","user_id":user.id,otp:otp}); 
-  return true;
-
- }
-}); 
-
-
-
-}
 
  //------------------- response to query ------------------ 
 

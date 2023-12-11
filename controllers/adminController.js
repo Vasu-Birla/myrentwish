@@ -8,7 +8,7 @@ import upload from '../middleware/upload.js';
 
 
 
-import {hashPassword, comparePassword, sendWelcomeMsg} from '../middleware/helper.js'
+import {hashPassword, comparePassword, sendWelcomeMsg , responsetoQuery} from '../middleware/helper.js'
 import { response } from 'express';
 
 
@@ -943,39 +943,235 @@ const viewSkills = async(req,res,next)=>{
 
 
 
-//-----------------------  Privacy Section Start ------------------------------ 
+
+const  deleteSkill = async(req,res,next)=>{ 
+
+  
+
+const con = await connection();
+const skillID = req.body.skillID; 
+
+try {  
+  await con.beginTransaction();
+
+  await con.query('DELETE FROM tbl_skills WHERE id = ?', [skillID]);
+
+  await con.commit();
+  res.status(200).json({ msg:true });
+  
+} catch (error) {
+
+  await con.rollback();
+  res.status(200).json({ msg:false });
+
+  
+}finally{
+
+  con.release();
+}
+}
 
 
-const userPrivacy = async(req,res,next)=>{ 
+
+
+
+const Deleteskill = async(req,res,next)=>{    
+
+  const con = await connection();
 
   try {
-    res.render('admin/userPrivacy') 
+
+    const [skills] = await con.query('SELECT * FROM tbl_skills');
+    res.render('admin/skills', { 'skills': skills, 'output': 'Skill Deleted' });
   } catch (error) {
     res.render('admin/kilvish500')
+  }finally{
+    con.release();
   }
-
-  }
-
-
-
-
-//--------------------  Terms & Condition Section Start -------------------------------
-
-
-
-
-
-const tandc = async(req,res,next)=>{ 
     
+ 
+}
+
+
+
+
+
+
+
+
+//==========================   Privacy Section Start ===========================================
+
+
   
+const userPrivacy = async(req,res,next)=>{ 
+
+  const con = await connection(); 
+
+  try {      
+  const [pandps] = await con.query('SELECT * FROM tbl_customerprivacyY');
+  res.render('admin/userPrivacy',{'output':'User Privacy Feched ..!','pandps':pandps})
+  } catch (error) {
+    res.render('admin/kilvish500',{'output':'Failed to Fetch Privacy','pandps':'pandps'})
+  }
+  }
+
+
+
+
+  const userPrivacyPost = async(req,res,next)=>{ 
+    
+    const con = await connection();
+    try {
+      
+  
+      const policyContent = decodeURIComponent(req.body.pandp);
+
+      //const tandcID = decodeURIComponent(req.body.tandcID);   //  For multiple TandC if required in Future 
+  
+      const [result] = await con.query('SELECT * FROM tbl_customerprivacy where id = ?', [1]);
+  
+      if (result.length > 0) {
+        const [results] = await con.query('UPDATE tbl_customerprivacy SET policy = ? WHERE id = ?', [policyContent, 1]);
+  
+        const [pandps] = await con.query('SELECT * FROM tbl_customerprivacy');
+  
+        if (results) {
+          res.render('userPrivacy', { output: 'Customer Privacy Updated Successfully !!', pandps: pandps });
+        } else {
+          res.render('userPrivacy', { output: 'Failed to update Customer Privacy', pandps: pandps });
+        }
+      } else {
+        await con.query('ALTER TABLE `tbl_customerprivacy` AUTO_INCREMENT = 1');
+        const sql = 'INSERT INTO `tbl_customerprivacy` ( policy ) VALUES (?)';
+        const values = [policyContent];
+        const [results] = await con.query(sql, values);
+     
+        const [pandps] = await con.query('SELECT * FROM tbl_customerprivacy');
+  
+  
+        if (results) {
+          res.render('userPrivacy', { output: 'Customer Privacy  Added Successfully !!', pandps: pandps });
+        } else {
+          res.render('userPrivacy', { output: 'Failed to add Customer Privacy', pandps: pandps });
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+
+      res.status(500).send('Internal Server Error', error);
+    }
+    }
+
+
+
+
+    const deleteuserPrivacy = async(req,res,next)=>{ 
+
+
+      const con = await connection();
+      const pandpID = req.query.pandpID; 
+      try {  
+    
+        await con.query('DELETE FROM tbl_customerprivacyy WHERE id = ?', [pandpID]);
+        const [pandps] = await con.query('SELECT * FROM tbl_customerprivacy');
+    
+        res.render('userPrivacy', {'pandps':pandps,'output':'User Privacy Deleted'});
+        
+      } catch (error) {
+    
+        const [pandps] = await con.query('SELECT * FROM tbl_customerprivacy');
+        res.render('userPrivacy', {'pandps':pandps,'output':'Failed to Delete User Privacy'});
+        
+      }finally{
+    
+        con.release();
+      }
+    
+    
+      }
+
+
+
+
+
+
+
+
+
+//==================================== Terms & Condition Section Start -------------------------------
+
+
+
+
+
+const tandc = async(req,res,next)=>{   
+  const con = await connection(); 
+ 
       try {
-        res.render('admin/tandc') 
+        const [tandcs] = await con.query('SELECT * FROM tbl_tandcc');   
+        res.render('admin/tandc',{'output':'T & C Fetched','tandcs':tandcs})
       } catch (error) {
         res.render('admin/kilvish500')
       }
  
   }
 
+
+  
+
+
+
+
+  const tandcPost = async (req, res, next) => {
+    const con = await connection();
+  
+    try {
+      await con.beginTransaction();
+  
+      const termsContent = decodeURIComponent(req.body.tandc);
+  
+      //const tandcID = decodeURIComponent(req.body.tandcID);   //  For multiple TandC if required in Future 
+  
+      const [result] = await con.query('SELECT * FROM tbl_tandc where id = ?', [1]);
+  
+      if (result.length > 0) {
+        const [results] = await con.query('UPDATE tbl_tandc SET terms = ? WHERE id = ?', [termsContent, 1]);
+  
+        const [tandcs] = await con.query('SELECT * FROM tbl_tandc');
+  
+        if (results) {
+          await con.commit();
+          res.render('admin/tandc', { output: 'Terms&Condition Updated Successfully !!', tandcs: tandcs });
+        } else {
+          await con.rollback();
+          res.render('admin/tandc', { output: 'Failed to update Terms&Condition', tandcs: tandcs });
+        }
+      } else {
+        await con.query('ALTER TABLE `tbl_tandc` AUTO_INCREMENT = 1');
+        const sql = 'INSERT INTO `tbl_tandc` ( terms ) VALUES (?)';
+        const values = [termsContent];
+        const [results] = await con.query(sql, values);
+        const [tandcs] = await con.query('SELECT * FROM tbl_tandc');
+  
+        if (results) {
+          await con.commit();
+          res.render('admin/tandc', { output: 'Terms&Condition Added Successfully !!', tandcs: tandcs });
+        } else {
+          await con.rollback();
+          res.render('admin/tandc', { output: 'Failed to add Terms&Condition ', tandcs: tandcs });
+        }
+      }
+    } catch (error) {
+      await con.rollback();
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
+    } finally {
+      con.release();
+    }
+  };
+
+  
+  
 
 
 
@@ -986,8 +1182,17 @@ const tandc = async(req,res,next)=>{
 const faq = async(req,res,next)=>{ 
   const con = await connection(); 
       try {
-    const [faqs] = await con.query('SELECT * FROM tbl_faqs'); 
-        res.render('admin/faq',{'output':'ALL FAQs Fetched','faqs':faqs})
+            const [faqs] = await con.query('SELECT * FROM tbl_faq'); 
+
+            console.log(faqs.length )
+
+            if(faqs.length > 0){
+              
+              res.render('admin/faq',{'output':'ALL FAQs Fetched','faqs':faqs})
+            }else{
+              res.render('admin/faq',{'output':'No FAQ found','faqs':faqs})
+            }
+       
       } catch (error) {
         res.render('admin/kilvish500')
       }
@@ -1081,12 +1286,12 @@ const deleteFAQ = async(req,res,next)=>{
   
 
   
-//--------------------------- FAQ -------------------------- 
+//--------------------------- FAQ  End -------------------------- 
 
 
 
 
-  //------------------  Help & inqueriy 
+  //============================== Help & inqueriy  =======================
 
 
 
@@ -1146,12 +1351,73 @@ const deleteFAQ = async(req,res,next)=>{
 
   const queries = async(req,res,next)=>{ 
 
+
+    const con = await connection(); 
     try {
-      res.render('admin/queries') 
+      
+      const [Queries] = await con.query('SELECT * FROM tbl_queries WHERE status IN (?, ?)', ['opened', 'closed']);
+      res.render('admin/queries',{"output":"","queries":Queries})
     } catch (error) {
       res.render('admin/kilvish500')
     }
 }
+
+
+const QueriesPost = async(req,res,next)=>{
+
+  const con = await connection(); 
+
+  
+  
+  var queryID = req.body.id;
+
+      if(req.body.status =='opened')
+      {
+          var newStatus = "closed"
+      }
+      else {
+          var newStatus = "opened"
+      }  
+  
+      const [results] = await con.query('UPDATE tbl_queries SET status = ? WHERE id = ?', [newStatus, queryID]);
+          if(results){
+              res.json({ msg: 'Action Taken on Query'})
+       }
+   
+  
+}
+
+
+
+const sendMailtoUser = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+      const email = req.body.recipientEmail;
+      const subject = req.body.emailSubject;
+      const message = req.body.emailMessage;
+
+      // Call the responsetoQuery function to send an email
+      responsetoQuery(email, message, subject);
+
+      // Fetch queries from the tbl_queries table
+      const [Queries] = await con.query('SELECT * FROM tbl_queries WHERE status IN (?, ?)', ['opened', 'closed']);
+
+      if (Queries) {
+          res.render('queries', { "output": "Email Sent to " + email + " Successfully", "queries": Queries });
+      } else {
+          res.render('queries', { "output": "Failed to send Email", "queries": Queries });
+      }
+  } catch (error) {
+      console.error('Error in sendMailtoUser API:', error);
+      res.status(500).json({ result: 'Internal Server Error' });
+  } finally {
+      con.release();
+  }
+};
+
+
+
 
 
 
@@ -1169,8 +1435,9 @@ export {homePage,
     tandc , faq, properties , queries, addInquiryDetails , 
     viewUser, updateUserStatus, viewUserPost, deleteUser, deleteUser1 ,
      propTypePost , updatepropType, deletepropType , deleteProperty ,
-      updatePropertyStatus, addQuestionPost , viewQuestion, viewQuestionPost , skills , skillsPost , 
-      deletepQues , editFAQ , deleteFAQ , addFAQ , SupportPost}
+      updatePropertyStatus, addQuestionPost , viewQuestion, viewQuestionPost , skills , skillsPost , Deleteskill,
+      deletepQues , editFAQ , deleteFAQ , addFAQ , SupportPost , tandcPost,
+       userPrivacyPost, deleteuserPrivacy, deleteSkill , sendMailtoUser , QueriesPost}
 
 
          

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2023 at 12:55 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
+-- Generation Time: Dec 11, 2023 at 02:34 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -52,6 +52,24 @@ INSERT INTO `tbl_admin` (`id`, `firstname`, `lastname`, `email`, `username`, `pa
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_customerprivacy`
+--
+
+CREATE TABLE `tbl_customerprivacy` (
+  `id` int(11) NOT NULL,
+  `policy` longtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_customerprivacy`
+--
+
+INSERT INTO `tbl_customerprivacy` (`id`, `policy`) VALUES
+(1, '<p><strong>User Privacy Policy for Myrentwish</strong></p>\r\n\r\n<p><strong>Last Updated: [Date]</strong></p>\r\n\r\n<p>Welcome to Myrentwish! This Privacy Policy describes how we collect, use, and share your personal information when you use our platform to rent or rent out properties.</p>\r\n\r\n<p><strong>1. Information We Collect:</strong></p>\r\n\r\n<p>We collect the following types of information when you use Myrentwish:</p>\r\n\r\n<ul>\r\n	<li>\r\n	<p><strong>User Information:</strong> When you create an account, we collect your name, email address, and other relevant information to provide our services.</p>\r\n	</li>\r\n	<li>\r\n	<p><strong>Property Details:</strong> If you list a property, we collect information such as property details, location, rental terms, and other details necessary for property listings.</p>\r\n	</li>\r\n	<li>\r\n	<p><strong>Payment Information:</strong> When making or receiving payments, we collect payment details to facilitate transactions securely.</p>\r\n	</li>\r\n	<li>\r\n	<p><strong>Communication Data:</strong> We collect information from your communications with other users on the platform, including messages and interactions.</p>\r\n	</li>\r\n</ul>\r\n\r\n<p><strong>2. How We Use Your Information:</strong></p>\r\n\r\n<p>We use your information for the following purposes:</p>\r\n\r\n<ul>\r\n	<li>\r\n	<p><strong>Providing Services:</strong> To facilitate property rentals, including connecting users, processing transactions, and managing property listings.</p>\r\n	</li>\r\n	<li>\r\n	<p><strong>Communication:</strong> To communicate with you regarding your account, property listings, and relevant updates.</p>\r\n	</li>\r\n	<li>\r\n	<p><strong>Improving Services:</strong> To analyze user behavior and preferences, improve our services, and enhance user experience.</p>\r\n	</li>\r\n	<li>\r\n	<p><strong>Legal Compliance:</strong> To comply with legal obligations, resolve disputes, and enforce our policies.</p>\r\n	</li>\r\n</ul>\r\n\r\n<p><strong>3. Information Sharing:</strong></p>\r\n\r\n<p>We may share your information with third parties under the following circumstances:</p>\r\n\r\n<ul>\r\n	<li>\r\n	<p><strong>With Other Users:</strong> Sharing necessary information with other users involved in a property transaction.</p>\r\n	</li>\r\n	<li>\r\n	<p><strong>Service Providers:</strong> Engaging third-party service providers to assist with services like payment processing.</p>\r\n	</li>\r\n	<li>\r\n	<p><strong>Legal Compliance:</strong> Disclosing information as required by law or in response to legal requests.</p>\r\n	</li>\r\n</ul>\r\n\r\n<p><strong>4. Data Security:</strong></p>\r\n\r\n<p>We take measures to protect your information, but no data transmission over the internet is entirely secure. Please take steps to keep your account information secure.</p>\r\n\r\n<p><strong>5. Your Choices:</strong></p>\r\n\r\n<p>You can manage your account settings and preferences through the platform. If you wish to delete your account, please contact us.</p>\r\n\r\n<p><strong>6. Updates to this Privacy Policy:</strong></p>\r\n\r\n<p>We may update this Privacy Policy to reflect changes in our practices. Check the policy periodically for updates.</p>\r\n\r\n<p><strong>7. Contact Us:</strong></p>\r\n\r\n<p>If you have questions about this Privacy Policy or your privacy on Myrentwish, please contact us at [your contact information].</p>\r\n\r\n<p>Thank you for using Myrentwish!</p>\r\n\r\n<hr />\r\n<p>Make sure to replace <code>[Date]</code> and <code>[your contact information]</code> with the appropriate details. Additionally, consider customizing the policy based on the specific features and functionalities of your platform.</p>\r\n');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_faq`
 --
 
@@ -68,7 +86,16 @@ CREATE TABLE `tbl_faq` (
 --
 
 INSERT INTO `tbl_faq` (`faq_id`, `faq`, `answer`, `faq_type`, `created_at`) VALUES
-(62, 'How to rent my room ? ', 'sfdsdffs', 'tenant', '2023-12-10 11:48:10');
+(66, 'How can I list my property on Myrentwish ?', 'To list your property, sign in to your account, go to the \"My Properties\" section, and follow the prompts to add a new listing. Provide accurate details and images to showcase your property effectively.', 'tenant', '2023-12-11 11:54:21'),
+(67, 'Can I rent multiple properties using the same account? ', 'Yes, you can list and manage multiple properties using a single Myrentwish account. Simply add each property through your account dashboard.', 'tenant', '2023-12-11 11:54:42'),
+(68, 'How do I search for properties on Myrentwish?', 'You can use the search bar on the homepage to enter location, price range, and other filters. Additionally, you can explore the \"Properties\" section for a comprehensive list of available properties.', 'tenant', '2023-12-11 11:55:02'),
+(69, 'What payment methods are accepted on Myrentwish?', 'Myrentwish supports various payment methods. During the booking process, you\'ll see the available payment options, including credit/debit cards and other secure methods.', 'tenant', '2023-12-11 11:55:15'),
+(70, 'Can I communicate with property owners before booking?', 'Yes, you can use the messaging feature on Myrentwish to communicate with property owners. This helps clarify any queries you may have before finalizing a booking.', 'tenant', '2023-12-11 11:55:46'),
+(71, 'How does Myrentwish ensure the security of my personal information?', 'Myrentwish prioritizes user data security. We employ industry-standard encryption and security measures to protect your personal information. Refer to our Privacy Policy for more details.\r\n\r\n', 'tenant', '2023-12-11 11:56:03'),
+(72, 'What should I do if I encounter issues during a property booking?', 'If you face any issues, reach out to our customer support team through the \"Contact Us\" page. We\'re here to assist you with any challenges you may encounter.', 'tenant', '2023-12-11 11:56:20'),
+(73, 'Are there any additional fees beyond the listed property price?', 'The property listing will specify any additional fees, such as cleaning fees or service charges. Review the listing details and booking confirmation to understand the complete cost.', 'tenant', '2023-12-11 11:56:47'),
+(74, 'Can I modify or cancel a booking after confirmation?', 'The ability to modify or cancel a booking depends on the property owner\'s cancellation policy. Check the property listing and booking confirmation for details. Some modifications may incur charges.', 'tenant', '2023-12-11 11:56:58'),
+(75, 'How can I report suspicious or fraudulent activity on Myrentwish?', 'If you come across any suspicious or fraudulent activity, report it immediately through the \"Report Listing\" option on the property page. Our team will investigate and take appropriate action.', 'tenant', '2023-12-11 11:57:39');
 
 -- --------------------------------------------------------
 
@@ -161,7 +188,7 @@ CREATE TABLE `tbl_prop` (
 
 INSERT INTO `tbl_prop` (`prop_id`, `user_id`, `owner_name`, `owner_contact`, `owner_email`, `title`, `description`, `address`, `city`, `country`, `prop_type`, `bedroom_nums`, `bathroom_type`, `parking_type`, `size_sqft`, `rent_amount`, `available_date`, `is_available`, `prop_status`, `images`, `created_at`, `updated_at`) VALUES
 (1, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701416919081.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701416919100.jpg\"}]', '2023-12-01 07:48:39', '2023-12-06 13:53:47'),
-(3, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', '1', 'rented', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701417946319.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701417946336.jpg\"}]', '2023-12-01 08:05:46', '2023-12-06 13:53:52'),
+(3, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', '1', 'rented', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701417946319.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701417946336.jpg\"}]', '2023-12-01 08:05:46', '2023-12-11 11:25:08'),
 (5, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '2BHK', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', '1', 'rented', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_472613970.jpg_1701419430686.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_images.jpg_1701419430688.jpg\"}]', '2023-12-01 08:30:30', '2023-12-06 13:53:55'),
 (6, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '4BHK', 'Very good 4BHK', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_female5.jpeg_1701432210023.jpeg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_female6.jpeg_1701432210024.jpeg\"}]', '2023-12-01 08:31:47', '2023-12-06 11:20:35'),
 (7, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '3BHK', 'very Stylish Moder Age 3BHK villa ', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_1.jpg_1701502945996.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_11.jpg_1701502946017.jpg\"}]', '2023-12-02 07:42:26', '2023-12-06 11:20:38'),
@@ -187,6 +214,30 @@ INSERT INTO `tbl_proptype` (`id`, `prop_type`, `created_at`) VALUES
 (2, 'Home', '2023-12-05 12:17:12'),
 (4, 'Room', '2023-12-06 06:21:59'),
 (7, 'Villa', '2023-12-07 11:31:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_queries`
+--
+
+CREATE TABLE `tbl_queries` (
+  `id` int(11) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `message` longtext NOT NULL,
+  `status` enum('opened','closed') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `tbl_queries`
+--
+
+INSERT INTO `tbl_queries` (`id`, `user_id`, `subject`, `email`, `message`, `status`) VALUES
+(1, '28', 'about my payment ', 'kilvishbirla@gmail.com', 'my payment is penging since 2 years', 'opened'),
+(2, '28', 'what about my Toys Order ?', 'vasubirla@gmail.com', 'Hello HW Team, I want to inform you that i have not received by Bult toys Order ... ', 'opened'),
+(3, '28', 'what about my Toys Order ?', 'vasubirla@gmail.com', 'Hello HW Team, I want to inform you that i have not received by Bult toys Order ... ', 'closed');
 
 -- --------------------------------------------------------
 
@@ -273,8 +324,45 @@ INSERT INTO `tbl_skills` (`id`, `skill`, `created_at`) VALUES
 (6, 'Elder cafe', '2023-12-07 13:07:09'),
 (7, 'Cooking', '2023-12-07 13:07:18'),
 (8, 'Child care', '2023-12-07 13:07:21'),
-(9, 'Ground Work', '2023-12-07 13:07:25'),
-(10, 'Championship', '2023-12-07 13:07:36');
+(12, 'Ground Work', '2023-12-11 11:37:50'),
+(13, 'Championship', '2023-12-11 11:38:09');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_support`
+--
+
+CREATE TABLE `tbl_support` (
+  `id` int(11) NOT NULL,
+  `support_email` varchar(255) DEFAULT NULL,
+  `support_contact` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_support`
+--
+
+INSERT INTO `tbl_support` (`id`, `support_email`, `support_contact`) VALUES
+(1, 'support@myrentwish.com', '+39-123456789');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_tandc`
+--
+
+CREATE TABLE `tbl_tandc` (
+  `id` int(11) NOT NULL,
+  `terms` longtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `tbl_tandc`
+--
+
+INSERT INTO `tbl_tandc` (`id`, `terms`) VALUES
+(1, '<p>&nbsp;</p>\r\n\r\n<p><strong>Terms and Conditions for Myrentwish</strong></p>\r\n\r\n<p><strong>Last Updated: [Date]</strong></p>\r\n\r\n<p>Welcome to Myrentwish! These Terms and Conditions (&quot;Terms&quot;) govern your use of the Myrentwish platform. By accessing or using our services, you agree to comply with these Terms.</p>\r\n\r\n<p><strong>1. User Eligibility:</strong></p>\r\n\r\n<p>You must be at least 18 years old and capable of forming a legally binding contract to use Myrentwish. By accessing or using our services, you confirm that you meet these eligibility requirements.</p>\r\n\r\n<p><strong>2. Account Registration:</strong></p>\r\n\r\n<p>To access certain features, you may need to create an account. Provide accurate and complete information during registration and keep your account information updated.</p>\r\n\r\n<p><strong>3. Property Listings:</strong></p>\r\n\r\n<p>If you list a property, you agree to provide accurate and up-to-date information about the property. Myrentwish reserves the right to remove any listing that violates these Terms or local laws.</p>\r\n\r\n<p><strong>4. User Conduct:</strong></p>\r\n\r\n<p>You agree not to engage in any activities that violate these Terms or applicable laws. This includes, but is not limited to, fraudulent activities, harassment, or any behavior that disrupts the normal functioning of the platform.</p>\r\n\r\n<p><strong>5. Payments:</strong></p>\r\n\r\n<p>For transactions conducted on the platform, you agree to abide by the payment terms outlined during the transaction process. Myrentwish may use third-party payment processors for secure transactions.</p>\r\n\r\n<p><strong>6. Privacy:</strong></p>\r\n\r\n<p>Your use of Myrentwish is subject to our Privacy Policy. By using our services, you consent to the collection, use, and sharing of your information as described in the Privacy Policy.</p>\r\n\r\n<p><strong>7. Intellectual Property:</strong></p>\r\n\r\n<p>Myrentwish retains ownership of all intellectual property associated with the platform. You may not use our trademarks, logos, or other proprietary materials without our written consent.</p>\r\n\r\n<p><strong>8. Termination:</strong></p>\r\n\r\n<p>Myrentwish reserves the right to suspend or terminate your account if you violate these Terms or engage in activities that could harm the platform or other users.</p>\r\n\r\n<p><strong>9. Disclaimer of Warranties:</strong></p>\r\n\r\n<p>Myrentwish provides services &quot;as is&quot; and makes no warranties or representations regarding the accuracy, completeness, or suitability of the information on the platform.</p>\r\n\r\n<p><strong>10. Limitation of Liability:</strong></p>\r\n\r\n<p>Myrentwish is not liable for any direct, indirect, incidental, special, or consequential damages resulting from your use of the platform or any interactions with other users.</p>\r\n\r\n<p><strong>11. Changes to Terms:</strong></p>\r\n\r\n<p>Myrentwish may update these Terms from time to time. Continued use of the platform after the effective date of changes constitutes acceptance of the modified Terms.</p>\r\n\r\n<p><strong>12. Governing Law:</strong></p>\r\n\r\n<p>These Terms are governed by and construed in accordance with the laws of [Your Jurisdiction]. Any disputes arising from or relating to these Terms will be subject to the exclusive jurisdiction of the courts in [Your Jurisdiction].</p>\r\n\r\n<p><strong>Contact Us:</strong></p>\r\n\r\n<p>If you have questions about these Terms, please contact us at [your contact information].</p>\r\n\r\n<p>Thank you for using Myrentwish!</p>\r\n\r\n<hr />\r\n<p>Replace <code>[Date]</code> and <code>[your contact information]</code> with the appropriate details. Customize the terms to suit the specific nature of your platform and comply with local regulations.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n');
 
 -- --------------------------------------------------------
 
@@ -345,8 +433,8 @@ CREATE TABLE `tbl_user_answers` (
 --
 
 INSERT INTO `tbl_user_answers` (`answer_id`, `user_id`, `question_id`, `question`, `answer`, `created_at`, `updated_at`) VALUES
-(1, 8, 1, 'what is your fvt color ?', 'green', '2023-12-07 07:40:06', '2023-12-07 07:45:40'),
-(6, 8, 4, 'which is your fvt Game?', 'chess', '2023-12-07 07:46:09', '2023-12-07 07:46:09');
+(1, 8, 1, 'what is your fvt color ?', 'yellow', '2023-12-07 07:40:06', '2023-12-11 08:05:22'),
+(8, 8, 2, 'which is your fvt Game?', 'Cricket', '2023-12-08 10:13:51', '2023-12-08 10:14:15');
 
 --
 -- Indexes for dumped tables
@@ -356,6 +444,12 @@ INSERT INTO `tbl_user_answers` (`answer_id`, `user_id`, `question_id`, `question
 -- Indexes for table `tbl_admin`
 --
 ALTER TABLE `tbl_admin`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_customerprivacy`
+--
+ALTER TABLE `tbl_customerprivacy`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -396,6 +490,12 @@ ALTER TABLE `tbl_proptype`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_queries`
+--
+ALTER TABLE `tbl_queries`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_questions`
 --
 ALTER TABLE `tbl_questions`
@@ -412,6 +512,18 @@ ALTER TABLE `tbl_register`
 -- Indexes for table `tbl_skills`
 --
 ALTER TABLE `tbl_skills`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_support`
+--
+ALTER TABLE `tbl_support`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_tandc`
+--
+ALTER TABLE `tbl_tandc`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -438,10 +550,16 @@ ALTER TABLE `tbl_admin`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `tbl_customerprivacy`
+--
+ALTER TABLE `tbl_customerprivacy`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `tbl_faq`
 --
 ALTER TABLE `tbl_faq`
-  MODIFY `faq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `faq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 
 --
 -- AUTO_INCREMENT for table `tbl_fcm`
@@ -474,6 +592,12 @@ ALTER TABLE `tbl_proptype`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `tbl_queries`
+--
+ALTER TABLE `tbl_queries`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `tbl_questions`
 --
 ALTER TABLE `tbl_questions`
@@ -489,7 +613,13 @@ ALTER TABLE `tbl_register`
 -- AUTO_INCREMENT for table `tbl_skills`
 --
 ALTER TABLE `tbl_skills`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `tbl_tandc`
+--
+ALTER TABLE `tbl_tandc`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_users`
@@ -501,7 +631,7 @@ ALTER TABLE `tbl_users`
 -- AUTO_INCREMENT for table `tbl_user_answers`
 --
 ALTER TABLE `tbl_user_answers`
-  MODIFY `answer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `answer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

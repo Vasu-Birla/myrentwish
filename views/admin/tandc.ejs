@@ -11,14 +11,45 @@
                   <h4> <i class="fa fa-align-right" aria-hidden="true"></i> Add Terms And Condition </h4>
                 </div>
                 
-                 <div class="faq-alls">
-                 <div class="textareass">
-                   <textarea id="myeditor" name="about"  class="form-control" rows="10" cols="80" Required></textarea>
-                 </div>
-                    <div class="add-admin" style="margin-bottom: 0px;">
-                       <input type="submit" name="add" class="btn btn-primary" value="Submit" style="width:20%;margin-left: 10px;"> 
-                    </div>
+                  <!--  Text Editor Start  -->
+
+                         <form method="post" action="/admin/tandc" id="tandcForm" class="needs-validation" novalidate="">
+
+                          <div class="form-group">
+
+                          <label for="InputFile">Content</label>
+                           <!--<textarea class="form-control" type="text" name="press_review" placeholder="Enter Description" Required/></textarea>-->
+                          <textarea id="myeditor" name="tandc"  class="form-control" rows="10" cols="80" Required>
+          
+                       
+                          </textarea>                                       
+                          
+                          <input class="form-control" type="hidden" id="kilvish" name="tandcID" >
+                          </div> 
+                          
+                          <div class="add-admin" style="margin-bottom: 0px;">
+                             <input type="submit" class="btn btn-primary"  style="width:20%;margin-left: 10px;"> 
+                          </div>
+
+               </form>
+                                                                              
+               <!--  Tect Editor End   -->
+
+               	<!-- alert msgs  -->
+                 <% if (output === 'Failed to update Terms&Condition' || output === 'Failed to add Terms&Condition ' || output === 'Failed to Delete') { %>
+               
+                  <div class="alert alert-danger">
+                    <%= output %>
+                  </div>   
+                  
+                <% } else { %>
+                    <div  class="alert alert-success">
+                    <%= output %>
                   </div>
+
+                                                 
+                <% } %> 
+          <!-- /alert msgs  -->
 
                     <div class="fulls-headings mt-4">
                      <h4><i class="fa fa-align-right" aria-hidden="true"></i>  View Terms And Condition </h4>
@@ -30,24 +61,29 @@
                           <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 10%;">Action</th></tr>
                       </thead>
                       <tbody>
-                      <tr role="row" class="odd">
-                          <td class="sorting_1">1</td>
-                           <td><p style="margin-bottom: 0rem;">A Terms and Conditions agreement acts as legal contracts between you (the company) who has the website or mobile app, and the user who accesses your website/app.</p>
-                           <p style="margin-bottom: 0rem;">A Terms and Conditions agreement acts as legal contracts between you (the company) who has the website or mobile app, and the user who accesses your website/app.</p>
-                         <p style="margin-bottom: 0rem;">A Terms and Conditions agreement acts as legal contracts between you (the company) who has the website or mobile app, and the user who accesses your website/app.</p></td>
-                       <td> <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Edit </a>
-                            <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Delete</a>
-                       </td>
-                      </tr>
-                        <tr role="row" class="even">
-                          <td class="sorting_1">2</td>
-                           <td><p style="margin-bottom: 0rem;">A Terms and Conditions agreement acts as legal contracts between you (the company) who has the website or mobile app, and the user who accesses your website/app.</p>
-                           <p style="margin-bottom: 0rem;">A Terms and Conditions agreement acts as legal contracts between you (the company) who has the website or mobile app, and the user who accesses your website/app.</p>
-                         <p style="margin-bottom: 0rem;">A Terms and Conditions agreement acts as legal contracts between you (the company) who has the website or mobile app, and the user who accesses your website/app.</p></td>
-                       <td><a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Edit </a>
-                            <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Delete</a>
-                          </td>
-                      </tr>
+
+
+              
+
+                      <% for(var i = 0; i < tandcs.length; i++) { %>
+                        <tr class="odd">
+                                <td class="sorting_1"><%- i+1 %></td>
+                                <td><%- tandcs[i].terms %></td>
+                                <td><div class="dropdown">
+                                  <button class="btn mt-1 mb-1 btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
+                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item"  onclick="updatetandc('<%- tandcs[i].id %>','<%= JSON.stringify(tandcs[i].terms) %>')" href="#">Edit</a>
+                                    <a class="dropdown-item" href="/deletetandc?tandcID=<%= tandcs[i].id %>"  >Delete</a>                                       
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+
+                            <% } %>
+            
+
+
+
                     </tbody>
                     </table>
 
@@ -95,3 +131,19 @@
 
 <!-- index  21 Nov 2019 03:47:04 GMT -->
 </html>
+
+
+<script> 
+
+
+  function updatetandc(id, content)
+  { 
+
+    content = content.replace(/"/g, '');
+  
+  CKEDITOR.instances.myeditor.setData(content);
+  document.getElementById("kilvish").value = id;
+  }
+  
+  
+  </script>

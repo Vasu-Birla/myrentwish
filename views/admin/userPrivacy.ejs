@@ -12,15 +12,44 @@
                   <h4>  <i class="fa fa-align-right" aria-hidden="true"></i> Add Privacy Policy </h4>
                 </div>
                 
-                   <div class="faq-alls">
-                 <div class="textareass">
-                   <textarea id="myeditor" name="about"  class="form-control" rows="10" cols="80" Required></textarea>
-                 </div>
-                    <div class="add-admin" style="margin-bottom: 0px;">
-                       <input type="submit" name="add" class="btn btn-primary" value="Submit" style="width:20%;margin-left: 10px;"> 
-                    </div>
-                  </div>
+                   <!--  Text Editor Start  -->
 
+                   <form method="post" action="/admin/userPrivacy" id="pandpForm" class="needs-validation" novalidate="">
+
+                    <div class="form-group">
+
+                    <label for="InputFile">Content</label>
+                     <!--<textarea class="form-control" type="text" name="press_review" placeholder="Enter Description" Required/></textarea>-->
+                    <textarea id="myeditor" name="pandp"  class="form-control" rows="10" cols="80" Required>
+    
+                    </textarea>                                       
+                    
+                    <input class="form-control" type="hidden" id="kilvish" name="pandpID" >
+                    </div> 
+                    
+                    <div class="add-admin" style="margin-bottom: 0px;">
+                       <input type="submit" class="btn btn-primary"  style="width:20%;margin-left: 10px;"> 
+                    </div>
+
+         </form>
+                                                                        
+         <!--  Tect Editor End   -->
+
+         	<!-- alert msgs  -->
+           <% if (output === 'Failed to update Customer Privacy' || output === 'Failed to add Customer Privacy' || output === 'Failed to Delete User Privacy') { %>
+               
+            <div class="alert alert-danger">
+              <%= output %>
+            </div>   
+            
+          <% } else { %>
+              <div  class="alert alert-success">
+              <%= output %>
+            </div>
+
+                                           
+          <% } %> 
+    <!-- /alert msgs  -->
 
                     <div class="fulls-headings mt-4">
                      <h4> <i class="fa fa-align-right" aria-hidden="true"></i>   View Privacy Policy </h4>
@@ -32,22 +61,23 @@
                           <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 10%;">Action</th></tr>
                       </thead>
                       <tbody>
-                      <tr role="row" class="odd">
-                          <td class="sorting_1">1</td>
-                           <td><p style="margin-bottom: 0rem;">A Privacy Policy is a statement or a legal document that states how a company or website collects, handles and processes data of its customers and visitors. It explicitly describes whether that information is kept confidential, or is shared with or sold to third parties.</p>
-                           <p style="margin-bottom: 0rem;">A Privacy Policy is a statement or a legal document that states how a company or website collects, handles and processes data of its customers and visitors. It explicitly describes whether that information is kept confidential, or is shared with or sold to third parties.</p></td>
-                       <td><a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Edit </a>
-                            <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Delete</a>
-                          </td>
-                      </tr>
-                         <tr role="row" class="User_view_management">
-                          <td class="sorting_1">2</td>
-                           <td><p style="margin-bottom: 0rem;">A Privacy Policy is a statement or a legal document that states how a company or website collects, handles and processes data of its customers and visitors. It explicitly describes whether that information is kept confidential, or is shared with or sold to third parties.</p>
-                           <p style="margin-bottom: 0rem;">A Privacy Policy is a statement or a legal document that states how a company or website collects, handles and processes data of its customers and visitors. It explicitly describes whether that information is kept confidential, or is shared with or sold to third parties.</p></td>
-                    <td><a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Edit </a>
-                            <a href="#" class="btn mt-1 mb-1 btn-outline-primary"> Delete</a>
-                          </td>
-                      </tr>
+             
+                        <% for(var i = 0; i < pandps.length; i++) { %>
+                          <tr class="odd">
+                                  <td class="sorting_1"><%- i+1 %></td>
+                                  <td><%- pandps[i].policy %></td>
+                                  <td><div class="dropdown">
+                                    <button class="btn mt-1 mb-1 btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                      <a class="dropdown-item"  onclick="updatepandp('<%- pandps[i].id %>','<%= JSON.stringify(pandps[i].policy) %>')" >Edit</a>
+                                      <a class="dropdown-item" href="/admin/deleteuserPrivacy?pandpID=<%= pandps[i].id %>"  >Delete</a>                                       
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+
+                              <% } %>
+                   
                     </tbody>
                     </table>
 
@@ -100,3 +130,19 @@
 
 <!-- index  21 Nov 2019 03:47:04 GMT -->
 </html>
+
+
+<script> 
+
+  
+  
+  function updatepandp(id, content)
+  { 
+    content = content.replace(/"/g, '');
+  
+  CKEDITOR.instances.myeditor.setData(content);
+  document.getElementById("kilvish").value = id;
+  }
+  
+  
+  </script>
