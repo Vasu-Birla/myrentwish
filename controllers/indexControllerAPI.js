@@ -1404,10 +1404,12 @@ const getQuestions = async (req, res, next) => {
     
 
     // Parse JSON strings in answer_options column
-    var formattedQuestions =  questions.map(question => {
+    var formattedQuestions =  questions.map((question, index) => {
       question.answer_options = JSON.parse(question.answer_options);
      // question = {"answer":"",...question }
       question.answer = userAnswersMap[question.question_id] || ''; // Set user answer or empty string
+      question.question_num = (offset + index + 1).toString();
+
       return question;
 
       
@@ -1415,13 +1417,6 @@ const getQuestions = async (req, res, next) => {
 
 
               totalPages = totalPages.toString();
-
-
-              //   formattedQuestions = { totalPages, ...formattedQuestions };
-
-              // //formattedQuestions = [...formattedQuestions, { totalPages }]
-              //   const formattedQuestionsArray = Object.values(formattedQuestions);
-                // formattedQuestions = { totalPages, ...formattedQuestions };
 
             const formattedQuestionsArray = Object.values(formattedQuestions);
 
