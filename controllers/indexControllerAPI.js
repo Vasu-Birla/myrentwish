@@ -1537,8 +1537,13 @@ const addAnswer = async (req, res, next) => {
     var { user_id, answers } = req.body;
 
      answers = JSON.parse(answers);
+     answers.forEach(answer => {
+      answer.question_id = parseInt(answer.question_id, 10);
+    });
 
     console.log(answers)
+
+    
 
     // Validate if the user exists
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
@@ -1559,9 +1564,7 @@ const addAnswer = async (req, res, next) => {
 
       console.log("question id ->> ", question)
       console.log("answer  ->> ", answer.answer)
-      
       return !question || !question.answer_options.includes(answer.answer);
-
     });
 
     if (invalidAnswers.length > 0) {
