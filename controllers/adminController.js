@@ -1112,7 +1112,7 @@ const tandc = async(req,res,next)=>{
   const con = await connection(); 
  
       try {
-        const [tandcs] = await con.query('SELECT * FROM tbl_tandcc');   
+        const [tandcs] = await con.query('SELECT * FROM tbl_tandc');   
         res.render('admin/tandc',{'output':'T & C Fetched','tandcs':tandcs})
       } catch (error) {
         res.render('admin/kilvish500')

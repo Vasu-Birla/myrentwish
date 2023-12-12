@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 12, 2023 at 09:25 AM
+-- Generation Time: Dec 12, 2023 at 11:53 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -218,12 +218,12 @@ CREATE TABLE `tbl_prop` (
 --
 
 INSERT INTO `tbl_prop` (`prop_id`, `user_id`, `owner_name`, `owner_contact`, `owner_email`, `title`, `prefered_gender`, `description`, `address`, `city`, `country`, `prop_type`, `bedroom_nums`, `bathroom_type`, `parking_type`, `size_sqft`, `rent_amount`, `available_date`, `is_available`, `prop_status`, `images`, `created_at`, `updated_at`) VALUES
-(1, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'male', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701416919081.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701416919100.jpg\"}]', '2023-12-01 07:48:39', '2023-12-12 08:03:05'),
-(3, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'male', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'false', 'rented', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701417946319.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701417946336.jpg\"}]', '2023-12-01 08:05:46', '2023-12-12 08:03:02'),
-(5, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '2BHK', 'male', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_472613970.jpg_1701419430686.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_images.jpg_1701419430688.jpg\"}]', '2023-12-01 08:30:30', '2023-12-12 08:03:00'),
-(6, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '4BHK', 'male', 'Very good 4BHK', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_female5.jpeg_1701432210023.jpeg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_female6.jpeg_1701432210024.jpeg\"}]', '2023-12-01 08:31:47', '2023-12-12 08:02:54'),
-(7, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '3BHK', 'male', 'very Stylish Moder Age 3BHK villa ', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_1.jpg_1701502945996.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_11.jpg_1701502946017.jpg\"}]', '2023-12-02 07:42:26', '2023-12-12 08:02:51'),
-(12, 26, 'User26', '9039568219', 'user26@gmail.com', '3BHK', 'male', 'Banglow', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_472613970.jpg_1702368026543.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_images.jpg_1702368026544.jpg\"}]', '2023-12-12 08:00:26', '2023-12-12 08:02:48');
+(1, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'Women', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701416919081.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701416919100.jpg\"}]', '2023-12-01 07:48:39', '2023-12-12 10:42:13'),
+(3, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'Women', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'false', 'rented', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701417946319.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701417946336.jpg\"}]', '2023-12-01 08:05:46', '2023-12-12 10:42:13'),
+(5, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '2BHK', 'Women', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_472613970.jpg_1701419430686.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_images.jpg_1701419430688.jpg\"}]', '2023-12-01 08:30:30', '2023-12-12 10:42:13'),
+(6, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '4BHK', 'Women', 'Very good 4BHK', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_female5.jpeg_1701432210023.jpeg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_female6.jpeg_1701432210024.jpeg\"}]', '2023-12-01 08:31:47', '2023-12-12 10:42:13'),
+(7, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '3BHK', 'Women', 'very Stylish Moder Age 3BHK villa ', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_1.jpg_1701502945996.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_11.jpg_1701502946017.jpg\"}]', '2023-12-02 07:42:26', '2023-12-12 10:42:13'),
+(12, 26, 'User26', '9039568219', 'user26@gmail.com', '3BHK', 'Women', 'Banglow', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_472613970.jpg_1702368026543.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_images.jpg_1702368026544.jpg\"}]', '2023-12-12 08:00:26', '2023-12-12 10:42:13');
 
 -- --------------------------------------------------------
 
@@ -261,6 +261,13 @@ CREATE TABLE `tbl_queries` (
   `complain_number` varchar(50) NOT NULL,
   `status` enum('opened','closed') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `tbl_queries`
+--
+
+INSERT INTO `tbl_queries` (`id`, `user_id`, `subject`, `email`, `message`, `complain_number`, `status`) VALUES
+(8, '8', 'My Rent is due ', 'kilvishbirla@gmail.com', 'My prvious Tatent gave me half rent', '86218', 'opened');
 
 -- --------------------------------------------------------
 
@@ -428,12 +435,12 @@ CREATE TABLE `tbl_users` (
 --
 
 INSERT INTO `tbl_users` (`user_id`, `firstname`, `lastname`, `user_email`, `password`, `user_mobile`, `birthday`, `location`, `latitude`, `longitude`, `address`, `country`, `city`, `gender`, `prefered_gender`, `prefered_city`, `prefered_country`, `bedroom_nums`, `bathroom_type`, `parking_type`, `prefered_rent`, `about_me`, `skill`, `image`, `imagePath`, `status`, `created_at`) VALUES
-(8, 'Kilvish11', 'Birla', 'kilvishbirla@gmail.com', '$2a$10$jv.Gpm1HMKXAzcPOLhVnR.ns5q2/8re7lEimjfOGsFv9PHl.jxlP2', '9039568219', '25-03-1970', '', '', '', '           Sai ram plaza       ', 'India', 'Indore', 'male', 'female', 'newyork', 'USA', '1', 'Shared', 'Shared', '200', 'i am andhera ', 'House Work', 'img_batman.jpg_1701259463709.jpg', 'http://195.35.23.27:3008/uploads/img_batman.jpg_1701259463709.jpg', 'active', '2023-11-29 07:39:02'),
-(9, 'Vasu', 'Birla', 'vasubirla@gmail.com', '$2a$10$LIWBfxIho8ZodGzPqrfKC.a4mxqpz392NPsl5ETI/p8tJ6Zy/Kw7i', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', '', ' ', ' ', 'inactive', '2023-11-29 12:21:41'),
-(12, 'vishnu', 'prajapati', 'vishnuprajapati1@gmail.com', '$2a$10$u9O5qoBN/DfTFPRuOFsaOOqTxTG/Qzsxcpjpb/OQovJT8r/AFU00q', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', 'female', 'indore', 'India', '1', 'Shared', 'Shared', '500', 'vishnu', '', 'img_scaled_Snapchat-181536531.jpg_1701342334363.jpg', 'http://195.35.23.27:3008/uploads/img_scaled_Snapchat-181536531.jpg_1701342334363.jpg', 'active', '2023-11-30 06:49:19'),
-(16, 'vishnu', 'prajapati', 'vishnuprajapati2@gmail.com', '$2a$10$Xssq1UKg11c6Os.ZRj8XZ.nxoWz7IgBCDPoU0TZmLtkMU6q8jHEj6', '1234567899', '24/06/2003', '', '', '', '  Sairam ram plaza  ', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-12-01 06:01:24'),
-(17, 'vishnu', 'prajapati', 'vishnuprajapati3@gmail.com', '$2a$10$tKef6ypmAvLDshoKWLdaJ.H4ZoKMGNkqm7F8xB9VlA6iX2MHDCTMa', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', '', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-12-01 10:41:31'),
-(26, 'user26', ' ', 'user26@gmail.com', '$2a$10$ak4u8X.1ex4JEHp3CAxvp.XZHCSdRQZecnJq2EgJUw/GUUYy5S036', '9039568219', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'male', 'female', 'newyork', 'Canada', '1', 'Shared', 'Shared', '300', 'i am andhera ', 'House Work', '', '', 'active', '2023-12-07 07:51:06');
+(8, 'Kilvish11', 'Birla', 'kilvishbirla@gmail.com', '$2a$10$jv.Gpm1HMKXAzcPOLhVnR.ns5q2/8re7lEimjfOGsFv9PHl.jxlP2', '9039568219', '25-03-1970', '', '', '', '           Sai ram plaza       ', 'India', 'Indore', 'Man', 'Women', 'newyork', 'USA', '1', 'Shared', 'Shared', '200', 'i am andhera ', 'House Work', 'img_batman.jpg_1701259463709.jpg', 'http://195.35.23.27:3008/uploads/img_batman.jpg_1701259463709.jpg', 'active', '2023-11-29 07:39:02'),
+(9, 'Vasu', 'Birla', 'vasubirla@gmail.com', '$2a$10$LIWBfxIho8ZodGzPqrfKC.a4mxqpz392NPsl5ETI/p8tJ6Zy/Kw7i', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'Man', 'Women', '', '', '', '', '', '', '', '', ' ', ' ', 'inactive', '2023-11-29 12:21:41'),
+(12, 'vishnu', 'prajapati', 'vishnuprajapati1@gmail.com', '$2a$10$u9O5qoBN/DfTFPRuOFsaOOqTxTG/Qzsxcpjpb/OQovJT8r/AFU00q', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'Man', 'Women', 'indore', 'India', '1', 'Shared', 'Shared', '500', 'vishnu', '', 'img_scaled_Snapchat-181536531.jpg_1701342334363.jpg', 'http://195.35.23.27:3008/uploads/img_scaled_Snapchat-181536531.jpg_1701342334363.jpg', 'active', '2023-11-30 06:49:19'),
+(16, 'vishnu', 'prajapati', 'vishnuprajapati2@gmail.com', '$2a$10$Xssq1UKg11c6Os.ZRj8XZ.nxoWz7IgBCDPoU0TZmLtkMU6q8jHEj6', '1234567899', '24/06/2003', '', '', '', '  Sairam ram plaza  ', 'India', 'Indore', 'Man', 'Women', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-12-01 06:01:24'),
+(17, 'vishnu', 'prajapati', 'vishnuprajapati3@gmail.com', '$2a$10$tKef6ypmAvLDshoKWLdaJ.H4ZoKMGNkqm7F8xB9VlA6iX2MHDCTMa', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'Man', 'Women', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-12-01 10:41:31'),
+(26, 'user26', ' ', 'user26@gmail.com', '$2a$10$ak4u8X.1ex4JEHp3CAxvp.XZHCSdRQZecnJq2EgJUw/GUUYy5S036', '9039568219', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'Man', 'Women', 'newyork', 'Canada', '1', 'Shared', 'Shared', '300', 'i am andhera ', 'House Work', '', '', 'active', '2023-12-07 07:51:06');
 
 -- --------------------------------------------------------
 
@@ -630,7 +637,7 @@ ALTER TABLE `tbl_proptype`
 -- AUTO_INCREMENT for table `tbl_queries`
 --
 ALTER TABLE `tbl_queries`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tbl_questions`

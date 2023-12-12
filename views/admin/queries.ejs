@@ -56,6 +56,7 @@
                 <thead>
                      <tr role="row">
                         <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 30.0781px;">Id</th>
+                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 80.0781px;">Ticket Num  </th>
                       <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 80.0781px;">Subject  </th>
                       <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Dc Id: activate to sort column ascending" style="width: 167.953px;"> Message </th>
                       <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Dc Id: activate to sort column ascending" style="width: 167.953px;"> Sent BY</th>                    
@@ -69,7 +70,9 @@
 
                         <% for(var i = 0; i < queries.length; i++) { %>
                       <tr>
-                        <td><%- queries[i].id %></td>                    
+                        <td><%- queries[i].id %></td>   
+                        
+                        <td>  <%- queries[i].complain_number %> </td>
 
 
                         <td>  <%- queries[i].subject %> </td>
