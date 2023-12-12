@@ -1017,11 +1017,11 @@ const Properties = async (req, res, next) => {
 
     }
 
-    const formattedproperties = Object.values(properties);
+    // const formattedproperties = Object.values(properties);
 
-    const result = {  totalPages,  properties: formattedproperties };
+    // const result = {  totalPages,  properties: formattedproperties };
 
-    res.json(result);
+    res.json(properties);
 
   } catch (error) {
     console.error('Error in fetchAllProperties API:', error);
