@@ -7,6 +7,7 @@ import { Deleteskill, Profile, ProfilePost, QueriesPost, SupportPost, addFAQ, ad
     deleteUser1, 
     deletepQues, 
     deletepropType, 
+    deletetandc, 
     deleteuserPrivacy, 
     editFAQ, 
     faq,  
@@ -170,6 +171,9 @@ router.route('/deleteuserPrivacy').get(deleteuserPrivacy)
 router.route('/tandc').get(tandc)
 
 router.route('/tandc').post(tandcPost)
+
+router.route('/deletetandc').get(deletetandc)
+
 
 
 

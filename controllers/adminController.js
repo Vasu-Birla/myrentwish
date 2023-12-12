@@ -1177,6 +1177,36 @@ const tandc = async(req,res,next)=>{
   };
 
   
+
+
+
+  
+  const  deletetandc= async (req, res)=>{
+    
+    const con = await connection();
+    const tandcID = req.query.tandcID; 
+    try {  
+  
+      await con.query('DELETE FROM tbl_tandc WHERE id = ?', [tandcID]);
+      const [tandcs] = await con.query('SELECT * FROM tbl_tandc');
+  
+      res.render('tandc', {'tandcs':tandcs,'output':'T&C Deleted'});
+      
+    } catch (error) {
+  
+    const [tandcs] = await con.query('SELECT * FROM tbl_tandc');
+  
+      res.render('tandc', {'tandcs':tandcs,'output':'Failed to Delete'});
+      
+    }finally{
+  
+      con.release();
+    }
+  
+  
+     
+    }
+  
   
 
 
@@ -1443,7 +1473,7 @@ export {homePage,
      propTypePost , updatepropType, deletepropType , deleteProperty ,
       updatePropertyStatus, addQuestionPost , viewQuestion, viewQuestionPost , skills , skillsPost , Deleteskill,
       deletepQues , editFAQ , deleteFAQ , addFAQ , SupportPost , tandcPost,
-       userPrivacyPost, deleteuserPrivacy, deleteSkill , sendMailtoUser , QueriesPost}
+       userPrivacyPost, deleteuserPrivacy, deleteSkill , sendMailtoUser , QueriesPost , deletetandc}
 
 
          
