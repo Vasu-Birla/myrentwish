@@ -41,7 +41,9 @@ import { register ,Login, Logout,  ForgotPassword ,
     getQuestions,
     addAnswer,
     removeAccount,
-    propTypes} from '../controllers/indexControllerAPI.js';
+    propTypes,
+    getSkills,
+    contactUs} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -81,6 +83,8 @@ router.route('/removeAccount').post(upload.none(),removeAccount)
 
 router.route('/updatePreference').post(upload.none(),updatePreference)
 
+router.route('/getSkills').get(upload.none(),getSkills)
+
 
 //------------- Property Section ------------------- 
 
@@ -111,6 +115,30 @@ router.route('/propTypes').get(upload.none(),propTypes)
 router.route('/getQuestions').post(upload.none(),getQuestions)
 
 router.route('/addAnswer').post(upload.none(),addAnswer)
+
+
+
+
+//------------  contact us ---------------------  
+
+
+router.route('/contactUs').post(upload.none(),contactUs)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

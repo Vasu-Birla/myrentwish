@@ -830,7 +830,7 @@ const updloadBYUser   = async(req,res,next)=>{
 
 
 
-const addProperty = async (req, res, next) => {  console.log(req.files)
+const addProperty = async (req, res, next) => {  
   const con = await connection();
   try {
    
@@ -852,6 +852,7 @@ const addProperty = async (req, res, next) => {  console.log(req.files)
       owner_contact,
       owner_email,
       title,
+      prefered_gender,
       description,
       address,
       city,
@@ -872,7 +873,7 @@ const addProperty = async (req, res, next) => {  console.log(req.files)
 
     const images = req.files.map(file => ({path:`http://${process.env.Host1}/uploads/${file.filename}`}));
 
-    console.log(images)
+
 
     //const formattedDate = format(new Date(available_date), 'yyyy-MM-dd');
 
@@ -880,13 +881,14 @@ const addProperty = async (req, res, next) => {  console.log(req.files)
 
     // Insert property details into the tbl_prop table
     const insertSql =
-      'INSERT INTO tbl_prop (user_id, owner_name, owner_contact, owner_email, title, description, address, city, country, prop_type, bedroom_nums, bathroom_type, parking_type, size_sqft, rent_amount, available_date, is_available, prop_status, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      'INSERT INTO tbl_prop (user_id, owner_name, owner_contact, owner_email, title,prefered_gender, description, address, city, country, prop_type, bedroom_nums, bathroom_type, parking_type, size_sqft, rent_amount, available_date, is_available, prop_status, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const insertValues = [
       userID,
       owner_name,
       owner_contact,
       owner_email,
       title,
+      prefered_gender,
       description,
       address,
       city,
@@ -909,11 +911,12 @@ const addProperty = async (req, res, next) => {  console.log(req.files)
     const selectPropertySql = 'SELECT * FROM `tbl_prop` WHERE prop_id = ?';
     var [[propertyDetails]] = await con.query(selectPropertySql, [results.insertId]);
 
-console.log(propertyDetails)
+
     propertyDetails.images = JSON.parse(propertyDetails.images) 
     propertyDetails.available_date = format(new Date(propertyDetails.available_date), 'yyyy-MM-dd');
 
     await con.commit();
+    console.log("Property added successfully ..")
     res.json({result: 'success', ...propertyDetails,  });
   } catch (error) {
     // Rollback the transaction in case of an error
@@ -987,8 +990,6 @@ const Properties = async (req, res, next) => {
     const resultsPerPage = 5;
     const offset = (page - 1) * resultsPerPage;
 
-
-
     
     // Fetch total number of questions for pagination calculation
     const [totalPropsResult] = await con.query('SELECT COUNT(*) as total FROM tbl_prop');
@@ -998,23 +999,26 @@ const Properties = async (req, res, next) => {
     var totalPages = Math.ceil(totalProperties / resultsPerPage);
     totalPages = totalPages.toString();
 
-  
-
-
-
     const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ? LIMIT ? OFFSET ?';
     const [properties] = await con.query(selectPropertiesSql, [userID, resultsPerPage, offset]);
 
     for (const row of properties) {
       row.images = JSON.parse(row.images);
       row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
+
+       // Check if the property is in the user's interest
+  const [interestResult] = await con.query('SELECT * FROM tbl_interest WHERE user_id = ? AND prop_id = ?', [userID, row.prop_id]);
+
+  row.interest = (interestResult.length > 0).toString();
+
+
+
     }
 
     const formattedproperties = Object.values(properties);
 
     const result = {  totalPages,  properties: formattedproperties };
 
-    //var props ={"totalPages":totalPages,...properties }  ; 
     res.json(result);
 
   } catch (error) {
@@ -1300,9 +1304,33 @@ const propTypes = async (req, res, next) => {
 
 
 
+const getSkills = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+
+    const selectSql = 'SELECT * FROM tbl_skills';
+    const [skills] = await con.query(selectSql);  
+
+    res.json( skills );
+
+  } catch (error) {
+    console.error('Error in getskills :', error);
+    res.status(500).json({ result: 'failed' , message:'Internal Server Error' });
+
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
+
 //----------- add to interest ------------- 
 
-const addToInterest = async (req, res, next) => {
+const addToInterest1 = async (req, res, next) => {
   const con = await connection();
   try {
     await con.beginTransaction();
@@ -1341,6 +1369,71 @@ const addToInterest = async (req, res, next) => {
     // Add the interest to tbl_interest table
     const insertSql = 'INSERT INTO tbl_interest (user_id, prop_id) VALUES (?, ?)';
     await con.query(insertSql, [userID, propertyID]);
+
+    await con.commit();
+    //await sendPushNotification(ownerID, userID);
+    res.json({ result: "success", message: "Added to interest list successfully" });
+
+  } catch (error) {
+    // Rollback the transaction in case of an error
+    await con.rollback();
+    console.error('Error in addToInterest API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+const addToInterest = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    await con.beginTransaction();
+
+    const userID = req.body.user_id;
+    const propertyID = req.body.prop_id;
+
+    // Check if the user and property exist
+    const [userResult] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+    const [propertyResult] = await con.query('SELECT * FROM tbl_prop WHERE prop_id = ?', [propertyID]);
+
+
+    if (!userResult[0] || !propertyResult[0]) {
+      await con.rollback();
+      return res.json({ result: "User or Property not found" });
+    }
+
+    // Check if the user is already interested in the property
+    const [existingInterest] = await con.query('SELECT * FROM tbl_interest WHERE user_id = ? AND prop_id = ?', [userID, propertyID]);
+
+    if (existingInterest.length > 0) {
+      await con.rollback();
+      return res.json({ result: "User is already interested in this property" });
+    }
+
+    // Retrieve the owner's user_id from the tbl_prop table
+    const [ownerResult] = await con.query('SELECT user_id FROM tbl_prop WHERE prop_id = ?', [propertyID]);
+
+    if (!ownerResult[0]) {
+      await con.rollback();
+      return res.json({ result: "Owner not found for this property" });
+    }
+
+    const ownerID = ownerResult[0].user_id;
+
+    // Add the interest to tbl_interest table
+    const insertSql = 'INSERT INTO tbl_interest (user_id, prop_id) VALUES (?, ?)';
+    await con.query(insertSql, [userID, propertyID]);
+
+    // Insert notification into tbl_notifications
+    const notificationSql = 'INSERT INTO tbl_notifications (user_id, owner_id, property_id, title, message, created_at) VALUES (?, ?, ?, ?, ?, NOW())';
+    const notificationTitle = 'New Interest';
+    const notificationMessage = `User ${userResult[0].firstname} is interested in your property ${propertyResult[0].title}`;
+    await con.query(notificationSql, [userID, ownerID, propertyID, notificationTitle, notificationMessage]);
 
     await con.commit();
     //await sendPushNotification(ownerID, userID);
@@ -1675,6 +1768,53 @@ const obtainToken = async (req, res, next) => {
 };
 
 
+
+
+
+
+
+//===========================  Contact US API ================================ 
+
+
+
+const contactUs = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    await con.beginTransaction();
+
+    const { user_id, subject, email, message } = req.body;
+
+    // Validate if the user exists
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
+    if (!user) {
+      await con.rollback();
+      return res.json({ result: 'User not found' });
+    }
+
+    // Generate a random 4-digit number
+    const random4Digits = Math.floor(1000 + Math.random() * 9000);
+
+    // Combine user_id and random4Digits to create a complain_number
+    const complain_number = `${user_id}${random4Digits}`;
+
+    // Insert the contact query into tbl_queries
+    const insertSql = 'INSERT INTO tbl_queries (user_id, subject, email, message, complain_number) VALUES (?, ?, ?, ?, ?)';
+    const [result] = await con.query(insertSql, [user_id, subject, email, message, complain_number]);
+
+    await con.commit();
+
+    res.json({ result: 'success', message: 'Contact query added successfully', complain_number });
+  } catch (error) {
+    await con.rollback();
+    console.error('Error in contactUs API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
 
 
 
@@ -2157,7 +2297,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
      updatePreference, addProperty, property, Properties , myProperties , 
      updateProperty , deleteProperty , addtestUser , logintestUser , addToInterest , getQuestions,
-     addAnswer , removeAccount , propTypes
+     addAnswer , removeAccount , propTypes , getSkills , contactUs
 
 }
 

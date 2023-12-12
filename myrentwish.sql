@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 11, 2023 at 02:34 PM
+-- Generation Time: Dec 12, 2023 at 09:24 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -132,6 +132,36 @@ CREATE TABLE `tbl_interest` (
   `prop_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tbl_interest`
+--
+
+INSERT INTO `tbl_interest` (`interest_id`, `user_id`, `prop_id`) VALUES
+(7, 12, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_notifications`
+--
+
+CREATE TABLE `tbl_notifications` (
+  `notification_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `owner_id` int(11) NOT NULL,
+  `property_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_notifications`
+--
+
+INSERT INTO `tbl_notifications` (`notification_id`, `user_id`, `owner_id`, `property_id`, `title`, `message`, `created_at`) VALUES
+(4, 12, 8, 3, 'New Interest', 'User vishnu is interested in your property 2BHK', '2023-12-12 07:20:47');
+
 -- --------------------------------------------------------
 
 --
@@ -164,6 +194,7 @@ CREATE TABLE `tbl_prop` (
   `owner_contact` varchar(20) DEFAULT NULL,
   `owner_email` varchar(255) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
+  `prefered_gender` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `city` varchar(100) DEFAULT NULL,
@@ -186,13 +217,13 @@ CREATE TABLE `tbl_prop` (
 -- Dumping data for table `tbl_prop`
 --
 
-INSERT INTO `tbl_prop` (`prop_id`, `user_id`, `owner_name`, `owner_contact`, `owner_email`, `title`, `description`, `address`, `city`, `country`, `prop_type`, `bedroom_nums`, `bathroom_type`, `parking_type`, `size_sqft`, `rent_amount`, `available_date`, `is_available`, `prop_status`, `images`, `created_at`, `updated_at`) VALUES
-(1, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701416919081.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701416919100.jpg\"}]', '2023-12-01 07:48:39', '2023-12-06 13:53:47'),
-(3, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', '1', 'rented', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701417946319.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701417946336.jpg\"}]', '2023-12-01 08:05:46', '2023-12-11 11:25:08'),
-(5, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '2BHK', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', '1', 'rented', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_472613970.jpg_1701419430686.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_images.jpg_1701419430688.jpg\"}]', '2023-12-01 08:30:30', '2023-12-06 13:53:55'),
-(6, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '4BHK', 'Very good 4BHK', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_female5.jpeg_1701432210023.jpeg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_female6.jpeg_1701432210024.jpeg\"}]', '2023-12-01 08:31:47', '2023-12-06 11:20:35'),
-(7, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '3BHK', 'very Stylish Moder Age 3BHK villa ', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_1.jpg_1701502945996.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_11.jpg_1701502946017.jpg\"}]', '2023-12-02 07:42:26', '2023-12-06 11:20:38'),
-(10, 26, 'User26', '9039568219', 'user26@gmail.com', '3BHK', 'Banglow', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_472613970.jpg_1701935698979.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_images.jpg_1701935698982.jpg\"}]', '2023-12-07 07:54:59', '2023-12-07 07:54:59');
+INSERT INTO `tbl_prop` (`prop_id`, `user_id`, `owner_name`, `owner_contact`, `owner_email`, `title`, `prefered_gender`, `description`, `address`, `city`, `country`, `prop_type`, `bedroom_nums`, `bathroom_type`, `parking_type`, `size_sqft`, `rent_amount`, `available_date`, `is_available`, `prop_status`, `images`, `created_at`, `updated_at`) VALUES
+(1, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'male', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701416919081.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701416919100.jpg\"}]', '2023-12-01 07:48:39', '2023-12-12 08:03:05'),
+(3, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'male', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'false', 'rented', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701417946319.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701417946336.jpg\"}]', '2023-12-01 08:05:46', '2023-12-12 08:03:02'),
+(5, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '2BHK', 'male', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_472613970.jpg_1701419430686.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_images.jpg_1701419430688.jpg\"}]', '2023-12-01 08:30:30', '2023-12-12 08:03:00'),
+(6, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '4BHK', 'male', 'Very good 4BHK', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_female5.jpeg_1701432210023.jpeg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_female6.jpeg_1701432210024.jpeg\"}]', '2023-12-01 08:31:47', '2023-12-12 08:02:54'),
+(7, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '3BHK', 'male', 'very Stylish Moder Age 3BHK villa ', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_1.jpg_1701502945996.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_11.jpg_1701502946017.jpg\"}]', '2023-12-02 07:42:26', '2023-12-12 08:02:51'),
+(12, 26, 'User26', '9039568219', 'user26@gmail.com', '3BHK', 'male', 'Banglow', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_472613970.jpg_1702368026543.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_images.jpg_1702368026544.jpg\"}]', '2023-12-12 08:00:26', '2023-12-12 08:02:48');
 
 -- --------------------------------------------------------
 
@@ -227,17 +258,9 @@ CREATE TABLE `tbl_queries` (
   `subject` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `message` longtext NOT NULL,
+  `complain_number` varchar(50) NOT NULL,
   `status` enum('opened','closed') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `tbl_queries`
---
-
-INSERT INTO `tbl_queries` (`id`, `user_id`, `subject`, `email`, `message`, `status`) VALUES
-(1, '28', 'about my payment ', 'kilvishbirla@gmail.com', 'my payment is penging since 2 years', 'opened'),
-(2, '28', 'what about my Toys Order ?', 'vasubirla@gmail.com', 'Hello HW Team, I want to inform you that i have not received by Bult toys Order ... ', 'opened'),
-(3, '28', 'what about my Toys Order ?', 'vasubirla@gmail.com', 'Hello HW Team, I want to inform you that i have not received by Bult toys Order ... ', 'closed');
 
 -- --------------------------------------------------------
 
@@ -472,6 +495,12 @@ ALTER TABLE `tbl_interest`
   ADD UNIQUE KEY `unique_user_prop` (`user_id`,`prop_id`);
 
 --
+-- Indexes for table `tbl_notifications`
+--
+ALTER TABLE `tbl_notifications`
+  ADD PRIMARY KEY (`notification_id`);
+
+--
 -- Indexes for table `tbl_prefer`
 --
 ALTER TABLE `tbl_prefer`
@@ -571,7 +600,13 @@ ALTER TABLE `tbl_fcm`
 -- AUTO_INCREMENT for table `tbl_interest`
 --
 ALTER TABLE `tbl_interest`
-  MODIFY `interest_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `interest_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `tbl_notifications`
+--
+ALTER TABLE `tbl_notifications`
+  MODIFY `notification_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_prefer`
@@ -583,7 +618,7 @@ ALTER TABLE `tbl_prefer`
 -- AUTO_INCREMENT for table `tbl_prop`
 --
 ALTER TABLE `tbl_prop`
-  MODIFY `prop_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `prop_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tbl_proptype`
@@ -595,7 +630,7 @@ ALTER TABLE `tbl_proptype`
 -- AUTO_INCREMENT for table `tbl_queries`
 --
 ALTER TABLE `tbl_queries`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tbl_questions`

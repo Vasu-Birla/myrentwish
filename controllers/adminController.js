@@ -642,30 +642,34 @@ const deleteProperty = async (req, res, next) => {
 
 
 
-const updatePropertyStatus = async(req,res,next)=>{ 
-
-
-  const con = await connection(); 
+const updatePropertyStatus = async (req, res, next) => {
+  const con = await connection();
   try {
-
     await con.beginTransaction();
-    
+
     const { prop_id, status } = req.body;
-    const [result] = await con.query('UPDATE tbl_prop SET prop_status = ? WHERE prop_id = ?', [status, prop_id]);
-  
-      await con.commit();
-    res.status(200).json({ msg:true,message: `Status Updated'}`});
+
+    // Update status and is_available based on the new status
+    const newStatus = status === 'rented' ? 'rented' : 'available';
+    // const isAvailable = status !== 'rented';
+    const isAvailable = status !== 'rented' ? 'true' : 'false';
+
+    const [result] = await con.query(
+      'UPDATE tbl_prop SET prop_status = ?, is_available = ? WHERE prop_id = ?',
+      [newStatus, isAvailable, prop_id]
+    );
+
+    await con.commit();
+    res.status(200).json({ msg: true, message: 'Status and is_available updated' });
   } catch (error) {
     await con.rollback();
-    console.error("Database error:", error);
+    console.error('Database error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
-  }finally {
-    con.release(); 
+  } finally {
+    con.release();
   }
-  
+};
 
-
-}
 
 
 
