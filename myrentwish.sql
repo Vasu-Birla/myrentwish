@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 12, 2023 at 11:53 AM
+-- Generation Time: Dec 12, 2023 at 12:05 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -421,6 +421,7 @@ CREATE TABLE `tbl_users` (
   `bedroom_nums` varchar(255) NOT NULL,
   `bathroom_type` varchar(255) NOT NULL,
   `parking_type` varchar(255) NOT NULL,
+  `prefered_type` varchar(255) NOT NULL,
   `prefered_rent` varchar(255) NOT NULL,
   `about_me` text NOT NULL,
   `skill` varchar(255) NOT NULL,
@@ -434,13 +435,13 @@ CREATE TABLE `tbl_users` (
 -- Dumping data for table `tbl_users`
 --
 
-INSERT INTO `tbl_users` (`user_id`, `firstname`, `lastname`, `user_email`, `password`, `user_mobile`, `birthday`, `location`, `latitude`, `longitude`, `address`, `country`, `city`, `gender`, `prefered_gender`, `prefered_city`, `prefered_country`, `bedroom_nums`, `bathroom_type`, `parking_type`, `prefered_rent`, `about_me`, `skill`, `image`, `imagePath`, `status`, `created_at`) VALUES
-(8, 'Kilvish11', 'Birla', 'kilvishbirla@gmail.com', '$2a$10$jv.Gpm1HMKXAzcPOLhVnR.ns5q2/8re7lEimjfOGsFv9PHl.jxlP2', '9039568219', '25-03-1970', '', '', '', '           Sai ram plaza       ', 'India', 'Indore', 'Man', 'Women', 'newyork', 'USA', '1', 'Shared', 'Shared', '200', 'i am andhera ', 'House Work', 'img_batman.jpg_1701259463709.jpg', 'http://195.35.23.27:3008/uploads/img_batman.jpg_1701259463709.jpg', 'active', '2023-11-29 07:39:02'),
-(9, 'Vasu', 'Birla', 'vasubirla@gmail.com', '$2a$10$LIWBfxIho8ZodGzPqrfKC.a4mxqpz392NPsl5ETI/p8tJ6Zy/Kw7i', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'Man', 'Women', '', '', '', '', '', '', '', '', ' ', ' ', 'inactive', '2023-11-29 12:21:41'),
-(12, 'vishnu', 'prajapati', 'vishnuprajapati1@gmail.com', '$2a$10$u9O5qoBN/DfTFPRuOFsaOOqTxTG/Qzsxcpjpb/OQovJT8r/AFU00q', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'Man', 'Women', 'indore', 'India', '1', 'Shared', 'Shared', '500', 'vishnu', '', 'img_scaled_Snapchat-181536531.jpg_1701342334363.jpg', 'http://195.35.23.27:3008/uploads/img_scaled_Snapchat-181536531.jpg_1701342334363.jpg', 'active', '2023-11-30 06:49:19'),
-(16, 'vishnu', 'prajapati', 'vishnuprajapati2@gmail.com', '$2a$10$Xssq1UKg11c6Os.ZRj8XZ.nxoWz7IgBCDPoU0TZmLtkMU6q8jHEj6', '1234567899', '24/06/2003', '', '', '', '  Sairam ram plaza  ', 'India', 'Indore', 'Man', 'Women', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-12-01 06:01:24'),
-(17, 'vishnu', 'prajapati', 'vishnuprajapati3@gmail.com', '$2a$10$tKef6ypmAvLDshoKWLdaJ.H4ZoKMGNkqm7F8xB9VlA6iX2MHDCTMa', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'Man', 'Women', '', '', '', '', '', '', '', '', ' ', ' ', 'active', '2023-12-01 10:41:31'),
-(26, 'user26', ' ', 'user26@gmail.com', '$2a$10$ak4u8X.1ex4JEHp3CAxvp.XZHCSdRQZecnJq2EgJUw/GUUYy5S036', '9039568219', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'Man', 'Women', 'newyork', 'Canada', '1', 'Shared', 'Shared', '300', 'i am andhera ', 'House Work', '', '', 'active', '2023-12-07 07:51:06');
+INSERT INTO `tbl_users` (`user_id`, `firstname`, `lastname`, `user_email`, `password`, `user_mobile`, `birthday`, `location`, `latitude`, `longitude`, `address`, `country`, `city`, `gender`, `prefered_gender`, `prefered_city`, `prefered_country`, `bedroom_nums`, `bathroom_type`, `parking_type`, `prefered_type`, `prefered_rent`, `about_me`, `skill`, `image`, `imagePath`, `status`, `created_at`) VALUES
+(8, 'Kilvish11', 'Birla', 'kilvishbirla@gmail.com', '$2a$10$jv.Gpm1HMKXAzcPOLhVnR.ns5q2/8re7lEimjfOGsFv9PHl.jxlP2', '9039568219', '25-03-1970', '', '', '', '           Sai ram plaza       ', 'India', 'Indore', 'Man', 'Women', 'newyork', 'USA', '1', 'Shared', 'Shared', 'Home', '200', 'i am andhera ', 'House Work', 'img_batman.jpg_1701259463709.jpg', 'http://195.35.23.27:3008/uploads/img_batman.jpg_1701259463709.jpg', 'active', '2023-11-29 07:39:02'),
+(9, 'Vasu', 'Birla', 'vasubirla@gmail.com', '$2a$10$LIWBfxIho8ZodGzPqrfKC.a4mxqpz392NPsl5ETI/p8tJ6Zy/Kw7i', '9039568219', '25-03-1970', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'Man', 'Women', '', '', '', '', '', 'Home', '', '', '', ' ', ' ', 'inactive', '2023-11-29 12:21:41'),
+(12, 'vishnu', 'prajapati', 'vishnuprajapati1@gmail.com', '$2a$10$u9O5qoBN/DfTFPRuOFsaOOqTxTG/Qzsxcpjpb/OQovJT8r/AFU00q', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'Man', 'Women', 'indore', 'India', '1', 'Shared', 'Shared', 'Home', '500', 'vishnu', '', 'img_scaled_Snapchat-181536531.jpg_1701342334363.jpg', 'http://195.35.23.27:3008/uploads/img_scaled_Snapchat-181536531.jpg_1701342334363.jpg', 'active', '2023-11-30 06:49:19'),
+(16, 'vishnu', 'prajapati', 'vishnuprajapati2@gmail.com', '$2a$10$Xssq1UKg11c6Os.ZRj8XZ.nxoWz7IgBCDPoU0TZmLtkMU6q8jHEj6', '1234567899', '24/06/2003', '', '', '', '  Sairam ram plaza  ', 'India', 'Indore', 'Man', 'Women', '', '', '', '', '', 'Home', '', '', '', ' ', ' ', 'active', '2023-12-01 06:01:24'),
+(17, 'vishnu', 'prajapati', 'vishnuprajapati3@gmail.com', '$2a$10$tKef6ypmAvLDshoKWLdaJ.H4ZoKMGNkqm7F8xB9VlA6iX2MHDCTMa', '1234567899', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'Man', 'Women', '', '', '', '', '', 'Home', '', '', '', ' ', ' ', 'active', '2023-12-01 10:41:31'),
+(26, 'user26', ' ', 'user26@gmail.com', '$2a$10$ak4u8X.1ex4JEHp3CAxvp.XZHCSdRQZecnJq2EgJUw/GUUYy5S036', '9039568219', '24/06/2003', '', '', '', 'Sairam ram plaza', 'India', 'Indore', 'Man', 'female', 'newyork', 'Canada', '1', 'Shared', 'Shared', 'Home', '300', 'i am andhera ', 'House Work', '', '', 'active', '2023-12-07 07:51:06');
 
 -- --------------------------------------------------------
 
