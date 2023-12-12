@@ -1773,7 +1773,7 @@ const obtainToken = async (req, res, next) => {
 
 
 
-//===========================  Contact US API ================================ 
+//===========================  Contact US  Section  ================================ 
 
 
 
@@ -1808,6 +1808,33 @@ const contactUs = async (req, res, next) => {
   } catch (error) {
     await con.rollback();
     console.error('Error in contactUs API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+const myTickets = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    const { user_id } = req.body;
+
+    // Validate if the user exists
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
+    if (!user) {
+      return res.json({ result: 'User not found' });
+    }
+
+    // Fetch tickets for the specified user
+    const [tickets] = await con.query('SELECT * FROM tbl_queries WHERE user_id = ?', [user_id]);
+
+    res.json(tickets);
+  } catch (error) {
+    console.error('Error in myTickets API:', error);
     res.status(500).json({ result: 'Internal Server Error' });
   } finally {
     if (con) {
@@ -2297,7 +2324,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
      updatePreference, addProperty, property, Properties , myProperties , 
      updateProperty , deleteProperty , addtestUser , logintestUser , addToInterest , getQuestions,
-     addAnswer , removeAccount , propTypes , getSkills , contactUs
+     addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets
 
 }
 

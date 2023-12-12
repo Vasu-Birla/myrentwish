@@ -43,7 +43,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     removeAccount,
     propTypes,
     getSkills,
-    contactUs} from '../controllers/indexControllerAPI.js';
+    contactUs,
+    myTickets} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -123,6 +124,8 @@ router.route('/addAnswer').post(upload.none(),addAnswer)
 
 
 router.route('/contactUs').post(upload.none(),contactUs)
+
+router.route('/myTickets').post(upload.none(),myTickets)
 
 
 
