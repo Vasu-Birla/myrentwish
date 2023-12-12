@@ -143,7 +143,7 @@ const Profile= async(req,res,next)=>{
 }
 
 
-const ProfilePost= async(req,res,next)=>{   
+const ProfilePost= async(req,res,next)=>{    console.log(req.file)
   
   const con = await connection(); 
 try {
@@ -155,17 +155,20 @@ try {
    imagePath=  req.file.path ;   
 }
 
+console.log(image)
 var uDetails = req.body; 
-var userdata = {"firstname":uDetails.firstname,"lastname":uDetails.lastname,"email":uDetails.email,"username":uDetails.username,"contact":uDetails.contact, "image":image ,"imagePath":imagePath};
- await con.query('UPDATE tbl_admin SET ? WHERE email = ?', [userdata, uDetails.email]);
+var userdata = {"firstname":uDetails.firstname,"lastname":uDetails.lastname,"email":uDetails.email,"username":uDetails.username,"contact":uDetails.contact, "image":image ,"imagePath":imagePath , "address":req.body.address};
+ await con.query('UPDATE tbl_admin SET ? WHERE id = ?', [userdata, req.admin.id]);
 
-const [[user]] = await con.query('SELECT * FROM tbl_admin WHERE id = ?', [req.admin.id]);
-res.render('admin/profile',{'user':user,"output":" Profile Updated Successfully !!"})
+const [[admin]] = await con.query('SELECT * FROM tbl_admin WHERE id = ?', [req.admin.id]);
+
+console.log(admin)
+res.render('admin/profile',{'admin':admin,"output":" Profile Updated Successfully !!"})
   
 } catch (error) {
-  const [[user]] = await con.query('SELECT * FROM tbl_admin WHERE id = ?', [req.admin.id]);
+  const [[admin]] = await con.query('SELECT * FROM tbl_admin WHERE id = ?', [req.admin.id]);
 
-  res.render('admin/profile',{'user':user,"output":"Failed to  Updated Profile !!"})
+  res.render('admin/profile',{'admin':admin,"output":"Failed to  Updated Profile !!"})
   
 }finally {
   con.release(); 
@@ -220,7 +223,6 @@ const changepass = async (req, res, next) => {
   try {
   
     const existingPass = req.admin.password;
-
   
     const { opass, npass, cpass } = req.body;
 
@@ -1012,7 +1014,7 @@ const userPrivacy = async(req,res,next)=>{
   const con = await connection(); 
 
   try {      
-  const [pandps] = await con.query('SELECT * FROM tbl_customerprivacyY');
+  const [pandps] = await con.query('SELECT * FROM tbl_customerprivacy');
   res.render('admin/userPrivacy',{'output':'User Privacy Feched ..!','pandps':pandps})
   } catch (error) {
     res.render('admin/kilvish500',{'output':'Failed to Fetch Privacy','pandps':'pandps'})
