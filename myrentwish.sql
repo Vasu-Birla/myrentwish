@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 13, 2023 at 08:12 AM
+-- Generation Time: Dec 13, 2023 at 01:23 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -47,7 +47,21 @@ CREATE TABLE `tbl_admin` (
 --
 
 INSERT INTO `tbl_admin` (`id`, `firstname`, `lastname`, `email`, `username`, `password`, `contact`, `about`, `address`, `image`, `imagePath`, `date`) VALUES
-(1, 'Kilvish', 'Cisss', 'admin@gmail.com', '', '123456', '9039568219', 'CISS Invoice Management System can be a robust and useful addition, allowing administrators to manage users, invoices, and other essential functions. Below are some key features and considerations for your admin panel:', 'Indore', 'img_tonystark.jpg_1702387978539.jpg', 'public\\uploads\\img_tonystark.jpg_1702387978539.jpg', '2023-08-14 12:15:42.000000');
+(1, 'Kilvish', 'Cisss', 'admin@gmail.com', 'admin', '123456', '9039568219', 'CISS Invoice Management System can be a robust and useful addition, allowing administrators to manage users, invoices, and other essential functions. Below are some key features and considerations for your admin panel:', 'Indore', 'img_tonystark.jpg_1702387978539.jpg', 'public\\uploads\\img_tonystark.jpg_1702387978539.jpg', '2023-08-14 12:15:42.000000');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_apppass`
+--
+
+CREATE TABLE `tbl_apppass` (
+  `id` int(11) NOT NULL,
+  `appEmail` varchar(255) NOT NULL,
+  `appPassword` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -496,6 +510,12 @@ ALTER TABLE `tbl_admin`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_apppass`
+--
+ALTER TABLE `tbl_apppass`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_customerprivacy`
 --
 ALTER TABLE `tbl_customerprivacy`
@@ -609,6 +629,12 @@ ALTER TABLE `tbl_user_answers`
 --
 ALTER TABLE `tbl_admin`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `tbl_apppass`
+--
+ALTER TABLE `tbl_apppass`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tbl_customerprivacy`

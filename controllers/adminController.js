@@ -1456,6 +1456,54 @@ const sendMailtoUser = async (req, res, next) => {
 
 
 
+const appPass = async(req,res,next)=>{ 
+
+  try {
+    
+    res.render('appPass',{"output":""})
+    
+  } catch (error) {
+    res.render('admin/kilvish500', {'output':'Internal Server Error'});
+    
+  }
+
+  }
+
+
+
+
+//=================== set Google App pass to send email ============= 
+
+const appPassPost = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    await con.beginTransaction();
+
+    const { appEmail, appPassword } = req.body;
+    const sqlCheck = `SELECT * FROM tbl_appPass`;
+    const [results] = await con.query(sqlCheck);
+
+    if (results.length === 0) {
+      const sqlInsert = `INSERT INTO tbl_appPass (appEmail, appPassword) VALUES (?, ?)`;
+      await con.query(sqlInsert, [appEmail, appPassword]);
+    } else {
+      // Assuming you want to update the first record if it exists
+      const sqlUpdate = `UPDATE tbl_appPass SET appEmail = ?, appPassword = ? WHERE id = ?`;
+      await con.query(sqlUpdate, [appEmail, appPassword, results[0].id]);
+    }
+
+    await con.commit();
+    res.render('appPass', { "output": "App Password Added Successfully, Email Service Activated" });
+  } catch (error) {
+    await con.rollback();
+    console.error('Error:', error);
+    res.render('appPass', { "output": "Failed to add App Password" });
+  } finally {
+    con.release();
+  }
+};
+
 
 
 
@@ -1473,7 +1521,7 @@ export {homePage,
      propTypePost , updatepropType, deletepropType , deleteProperty ,
       updatePropertyStatus, addQuestionPost , viewQuestion, viewQuestionPost , skills , skillsPost , Deleteskill,
       deletepQues , editFAQ , deleteFAQ , addFAQ , SupportPost , tandcPost,
-       userPrivacyPost, deleteuserPrivacy, deleteSkill , sendMailtoUser , QueriesPost , deletetandc}
+       userPrivacyPost, deleteuserPrivacy, deleteSkill , sendMailtoUser , QueriesPost , deletetandc , appPass, appPassPost}
 
 
          
