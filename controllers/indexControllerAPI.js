@@ -1852,6 +1852,129 @@ const myTickets = async (req, res, next) => {
 
 
 
+//======================   Terms & Condition  Webview ================== 
+
+const tandc = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    // Fetch the terms and conditions from the database
+    const [result] = await con.query('SELECT * FROM tbl_tandc where id = ?', [1]);
+
+    if (result.length > 0) {
+      const termsContent = result[0].terms;
+
+      // Return the HTML content as a response
+      res.send(termsContent);
+    } else {
+      // If terms and conditions not found, you can send an appropriate response
+      res.status(404).send('Terms and conditions not found');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  } finally {
+    con.release();
+  }
+};
+
+
+
+//========================== UserPrivacy and policy webview ============== 
+
+
+
+const pandp = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    // Fetch the terms and conditions from the database
+    const [result] = await con.query('SELECT * FROM tbl_pandp where id = ?', [1]);
+
+    if (result.length > 0) {
+      const policyContent = result[0].policy;
+
+      // Return the HTML content as a response
+      res.send(policyContent);
+    } else {
+      // If terms and conditions not found, you can send an appropriate response
+      res.status(404).send('User Privacy not found');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  } finally {
+    con.release();
+  }
+};
+
+
+
+
+
+//=======================  FAQ webview ========================= 
+
+
+
+const faqs1 = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    // Fetch FAQs from the database
+    const [results] = await con.query('SELECT * FROM tbl_faq');
+
+    if (results.length > 0) {
+      // Extract questions and answers from the results
+      const faqs = results.map(result => ({ question: result.faq, answer: result.answer }));
+
+      // Return the FAQs as a response
+      res.json({ faqs });
+    } else {
+      // If no FAQs found, you can send an appropriate response
+      res.status(404).json({ result: 'No FAQs found' });
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {
+    con.release();
+  }
+};
+
+
+
+const faqs = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    // Fetch FAQs from the database
+    const [results] = await con.query('SELECT * FROM tbl_faq');
+
+    if (results.length > 0) {
+      // Generate HTML for FAQs with index
+      const faqHTML = results.map((result, index) => `
+        <p><strong>Q.${index + 1}: ${result.faq}</strong></p>
+        <p>${result.answer}</p>
+      `).join('');
+
+      // Return the HTML as a response
+      res.send(faqHTML);
+    } else {
+      // If no FAQs found, you can send an appropriate response
+      res.status(404).send('No FAQs found');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  } finally {
+    con.release();
+  }
+};
+
+
+
+
+
 //------------  machine  testing API -> 
 
 
@@ -2327,7 +2450,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
      updatePreference, addProperty, property, Properties , myProperties , 
      updateProperty , deleteProperty , addtestUser , logintestUser , addToInterest , getQuestions,
-     addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets
+     addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets ,tandc , pandp , faqs
 
 }
 

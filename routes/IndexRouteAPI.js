@@ -44,7 +44,10 @@ import { register ,Login, Logout,  ForgotPassword ,
     propTypes,
     getSkills,
     contactUs,
-    myTickets} from '../controllers/indexControllerAPI.js';
+    myTickets,
+    tandc,
+    pandp,
+    faqs} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -126,6 +129,20 @@ router.route('/addAnswer').post(upload.none(),addAnswer)
 router.route('/contactUs').post(upload.none(),contactUs)
 
 router.route('/myTickets').post(upload.none(),myTickets)
+
+
+
+
+
+//---------------- Terms and condition  , Privacy and FAQ  webview  ----------- 
+
+
+
+router.route('/tandc').get(upload.none(),tandc)
+
+router.route('/pandp').get(upload.none(),pandp)
+
+router.route('/faqs').get(upload.none(),faqs)
 
 
 

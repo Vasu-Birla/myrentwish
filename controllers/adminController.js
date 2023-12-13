@@ -1014,7 +1014,7 @@ const userPrivacy = async(req,res,next)=>{
   const con = await connection(); 
 
   try {      
-  const [pandps] = await con.query('SELECT * FROM tbl_customerprivacy');
+  const [pandps] = await con.query('SELECT * FROM tbl_pandp');
   res.render('admin/userPrivacy',{'output':'User Privacy Feched ..!','pandps':pandps})
   } catch (error) {
     res.render('admin/kilvish500',{'output':'Failed to Fetch Privacy','pandps':'pandps'})
@@ -1034,12 +1034,12 @@ const userPrivacy = async(req,res,next)=>{
 
       //const tandcID = decodeURIComponent(req.body.tandcID);   //  For multiple TandC if required in Future 
   
-      const [result] = await con.query('SELECT * FROM tbl_customerprivacy where id = ?', [1]);
+      const [result] = await con.query('SELECT * FROM tbl_pandp where id = ?', [1]);
   
       if (result.length > 0) {
-        const [results] = await con.query('UPDATE tbl_customerprivacy SET policy = ? WHERE id = ?', [policyContent, 1]);
+        const [results] = await con.query('UPDATE tbl_pandp SET policy = ? WHERE id = ?', [policyContent, 1]);
   
-        const [pandps] = await con.query('SELECT * FROM tbl_customerprivacy');
+        const [pandps] = await con.query('SELECT * FROM tbl_pandp');
   
         if (results) {
           res.render('userPrivacy', { output: 'Customer Privacy Updated Successfully !!', pandps: pandps });
@@ -1047,12 +1047,12 @@ const userPrivacy = async(req,res,next)=>{
           res.render('userPrivacy', { output: 'Failed to update Customer Privacy', pandps: pandps });
         }
       } else {
-        await con.query('ALTER TABLE `tbl_customerprivacy` AUTO_INCREMENT = 1');
-        const sql = 'INSERT INTO `tbl_customerprivacy` ( policy ) VALUES (?)';
+        await con.query('ALTER TABLE `tbl_pandp` AUTO_INCREMENT = 1');
+        const sql = 'INSERT INTO `tbl_pandp` ( policy ) VALUES (?)';
         const values = [policyContent];
         const [results] = await con.query(sql, values);
      
-        const [pandps] = await con.query('SELECT * FROM tbl_customerprivacy');
+        const [pandps] = await con.query('SELECT * FROM tbl_pandp');
   
   
         if (results) {
@@ -1078,14 +1078,14 @@ const userPrivacy = async(req,res,next)=>{
       const pandpID = req.query.pandpID; 
       try {  
     
-        await con.query('DELETE FROM tbl_customerprivacyy WHERE id = ?', [pandpID]);
-        const [pandps] = await con.query('SELECT * FROM tbl_customerprivacy');
+        await con.query('DELETE FROM tbl_pandpy WHERE id = ?', [pandpID]);
+        const [pandps] = await con.query('SELECT * FROM tbl_pandp');
     
         res.render('userPrivacy', {'pandps':pandps,'output':'User Privacy Deleted'});
         
       } catch (error) {
     
-        const [pandps] = await con.query('SELECT * FROM tbl_customerprivacy');
+        const [pandps] = await con.query('SELECT * FROM tbl_pandp');
         res.render('userPrivacy', {'pandps':pandps,'output':'Failed to Delete User Privacy'});
         
       }finally{
