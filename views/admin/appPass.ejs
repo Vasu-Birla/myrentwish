@@ -1,0 +1,159 @@
+
+<%- include ("header.ejs") %>
+<%- include ("navbar.ejs") %>
+
+<style>
+ 
+
+    h4 {
+        text-align: center;
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px;
+    }
+ 
+    p {
+        margin-bottom: 10px;
+    }
+ 
+    ol {
+        padding-left: 20px;
+    }
+ 
+    li {
+        margin-bottom: 5px;
+    }
+ </style>
+ 
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="full-city">
+               
+                <form action="/admin/appPass" method="post">
+                    <div class="form-group row add-user">
+                   
+
+                      <div class="form-group col-md-4">
+                       <i class="fa fa-envelope icon-user"></i>
+                    <label for="exampleInputPassword1">Email</label>
+                    <input required  name="appEmail" type="text" class="form-control  user-fill" id="user-add-form" placeholder="App Email">
+                  </div>
+
+                  <br>
+                  
+                  <div class="form-group col-md-4">
+                    <i class="fa fa-envelope icon-user"></i>
+                 <label for="exampleInputPassword1">Password</label>
+                 <input required  name="appPassword" type="text" class="form-control  user-fill" id="user-add-form" placeholder="App Pass">
+               </div>
+                   
+                      
+
+                   <div class="form-group col-md-12">
+                      <button type="submit" class="btn btn-primary">Submit </button>
+                    </div>
+                 </div>
+                 </form>
+
+
+
+                </div>
+
+
+
+                <div class="full-city mt-3">
+              
+                   	<!-- alert msgs  -->
+                       <% if (output === 'Failed to add App Password' || output === 'Failed to add Terms&Condition ' || output === 'Failed to Delete') { %>
+               
+                        <div class="alert alert-danger">
+                          <%= output %>
+                        </div>   
+                        
+                      <% } else { %>
+                          <div  class="alert alert-success">
+                          <%= output %>
+                        </div>
+      
+                                                       
+                      <% } %> 
+                <!-- /alert msgs  -->
+
+
+
+
+
+                    <h4>Simplify Your Email Workflow with Node Mailer</h4>
+                    <p><strong>Dear <%= admin.firstname %>,</strong></p>
+                    <p>We hope this message finds you well. We wanted to highlight a powerful feature of Node Mailer that could significantly simplify your email workflow. By using Node Mailer, you can seamlessly send emails to your customers directly from your application. However, to achieve this, you must follow the instructions outlined below.</p>
+                    <p>If you haven't already done so, you will need to create an app password from Google to authenticate your application and securely send emails using your Gmail account. This process ensures that your primary Google account password remains secure while allowing your application to send emails on your behalf.</p>
+                    <p><strong>Follow these steps to generate an app password for your Gmail account:</strong></p>
+                    <ol>
+                        <li>Log in to your Google account.</li>
+                        <li>Navigate to the Google Account settings page.</li>
+                        <li>In the "Security" section, locate the "Signing in to Google" option.</li>
+                        <li>Click on the "App passwords" or "Create a new app password" link.</li>
+                        <li>You may need to re-enter your Google account password for verification.</li>
+                        <li>Select the appropriate app and device for which you want to generate the app password.</li>
+                        <li>Follow the on-screen instructions to create an app password. Make sure to securely store this password for future use.</li>
+                        <li>You can now use this app password within your Node Mailer configuration to send emails seamlessly from your application.</li>
+                    </ol>
+                    <p>If you encounter any difficulties or need further assistance, please feel free to reach out to us. We are more than happy to help you set up Node Mailer and guide you through the process of generating a Google app password.</p>
+                    <p>Best regards,</p>
+                    <p>Ciss Developement Team</p>
+                
+                
+
+                       </div>
+
+
+
+
+
+
+              </div>
+
+
+
+
+
+
+            </div>
+          </div>
+          </div>
+        </section>
+
+      </div>
+      <footer class="main-footer">
+        <div class="footer-left">
+          COPYRIGHT MIE RIDE, 2023 Design & Developed by
+          <a href="https://cyberimpulses.com/">CISS</a></a>
+        </div>
+        <div class="footer-right">
+        </div>
+      </footer>
+    </div>
+  </div>
+  <!-- General JS Scripts -->
+  <script src="../assets/js/app.min.js"></script>
+  <!-- JS Libraies -->
+  <script src="../assets/bundles/apexcharts/apexcharts.min.js"></script>
+  <!-- Page Specific JS File -->
+  <script src="../assets/js/page/index.js"></script>
+  <!-- Template JS File -->
+  <script src="../assets/js/scripts.js"></script>
+  <!-- Custom JS File -->
+  <script src="../assets/js/custom.js"></script>
+  <!-- DATA TABLES SCRIPT START -->
+
+</body>
+
+
+<!-- index  21 Nov 2019 03:47:04 GMT -->
+</html>

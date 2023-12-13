@@ -1,5 +1,5 @@
 import express from 'express'
-import { Deleteskill, Profile, ProfilePost, QueriesPost, SupportPost, addFAQ, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, changepass, checkPass, 
+import { Deleteskill, Profile, ProfilePost, QueriesPost, SupportPost, addFAQ, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, appPass, appPassPost, changepass, checkPass, 
     deleteFAQ, 
     deleteProperty, 
     deleteSkill, 
@@ -213,6 +213,13 @@ router.route('/queries').post( QueriesPost)
 
 router.route('/sendemail').post( sendMailtoUser)
 
+
+//--------- add Google App pass to send Emails ---------
+
+
+router.route('/appPass').get(appPass)
+
+router.route('/appPass').post(appPassPost)
 
 
 
