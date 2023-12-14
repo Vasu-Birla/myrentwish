@@ -157,7 +157,6 @@ const checkPass = async (req, res, next) => {
      const email = req.body.email; // The email provided by the user
      const otp = Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit OTP
 
-     console.log(otp)
  
      const con = await connection();
  

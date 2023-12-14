@@ -1888,8 +1888,10 @@ const obtainToken = async (req, res, next) => {
     const userID = req.body.user_id;
     const device_token = req.body.device_token;
     const device_status = req.body.device_status;
-    const created_at = Date.now();
-    const updated_at = Date.now();
+    const timestamp = Date.now();
+    const created_at = new Date(timestamp);
+    const updated_at = new Date(timestamp);
+
 
     // Check if a record already exists for this user and device token
     const [existingRecords] = await con.query('SELECT * FROM tbl_fcm WHERE user_id = ? AND device_token = ?', [userID, device_token]);

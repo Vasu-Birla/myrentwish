@@ -513,7 +513,7 @@ const sendOTPFornewPass = async function (email,otp) {
     var mailOptions = {
       from: 'vasubirla@gmail.com',
       to: email,
-      subject: 'Welcome to Credx Invoice Management System',
+      subject: 'Reset Password OTP (MyrentWish)',
       html: `
           <html>
           <head>
@@ -546,11 +546,10 @@ const sendOTPFornewPass = async function (email,otp) {
                   <h1> Forgot Password Request Service </h1>
                   <p>Dear User,</p>
                   <h2>  ${otp} </h2> <p> is Your OTP to reset Password.</p>
-                  <p>With our system, you can easily create, manage, and track your invoices, ensuring smooth financial transactions.</p>
-                  <p>If you have any questions or need assistance, please don't hesitate to reach out to our support team.</p>
-                  <p>Thank you for choosing Credx!</p>
+                
+                  <p>Thank you for choosing MyrentWish!</p>
                   <p>Best regards,</p>
-                  <p>Your Credx Team</p>
+                  <p>Your MyrentWish Team</p>
                   <p>Kilvish Birla</p>
               </div>
           </body>
