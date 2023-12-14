@@ -112,7 +112,7 @@ a:hover {
               <h4 style="color:white;text-align: left;font-size: 19px;    line-height: 1.6; margin-bottom: 10px;"> Welcome to Myrentwish </h4>
               <h6 class="font-weight-light " style="color:white">Sign in to continue.</h6>
 
-              <% if (output === 'Logged Out !!') { %>
+              <% if (output === 'Logged Out !!' || output == 'Password Reset Success !') { %>
                 <p class="success-text"><%= output %></p>
               <% } else { %>
                 <p class="error-text"><%= output %></p>
@@ -129,7 +129,7 @@ a:hover {
                   <input name="password" type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password">
                 </div>
                 <div class="form-check text-right form group col-lg-12">
-                  <a href="forget-password.html" class="auth-link text-black">Forgot password?</a>
+                  <a href="/admin/ForgotPassword" class="auth-link text-black">Forgot password?</a>
                     </div>
              
                   <!-- <div class="form-check form group col-lg-12">

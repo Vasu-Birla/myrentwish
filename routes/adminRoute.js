@@ -1,5 +1,5 @@
 import express from 'express'
-import { Deleteskill, Profile, ProfilePost, QueriesPost, SupportPost, addFAQ, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, appPass, appPassPost, changepass, checkPass, 
+import { Deleteskill, ForgotPassword, Profile, ProfilePost, QueriesPost, SupportPost, addFAQ, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, appPass, appPassPost, changepass, checkPass, 
     deleteFAQ, 
     deleteProperty, 
     deleteSkill, 
@@ -12,10 +12,10 @@ import { Deleteskill, Profile, ProfilePost, QueriesPost, SupportPost, addFAQ, ad
     editFAQ, 
     faq,  
     homePage, loginAdmin, loginPage, logout, notification,
-     propType, propTypePost, properties, queries, sendMailtoUser, skills, skillsPost, tandc, 
+     propType, propTypePost, properties, queries, resetpassword, sendMailtoUser, sendOTP, skills, skillsPost, tandc, 
      tandcPost, 
      updatePropertyStatus, updateUserStatus, updateadminpic,
-      updatepropType, userPrivacy, userPrivacyPost, viewQuestion, viewQuestionPost, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
+      updatepropType, userPrivacy, userPrivacyPost, verifyOTP, viewQuestion, viewQuestionPost, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
 
 
 import upload from '../middleware/upload.js';
@@ -50,6 +50,18 @@ router.route('/checkPass').post(checkPass)
 
 
 router.route('/logout').get(logout)
+
+
+
+//------------------------- Forgot Reset Password ----------------
+
+router.route('/ForgotPassword').get(ForgotPassword)
+
+router.route('/sendOTP').post(sendOTP)
+
+router.route('/verify-otp').post(verifyOTP)
+
+router.route('/reset-password').post(resetpassword)
 
 
 //------- user section --------- 

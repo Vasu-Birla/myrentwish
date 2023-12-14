@@ -574,5 +574,5 @@ const sendOTPFornewPass = async function (email,otp) {
 
 export { hashPassword , comparePassword ,sendWelcomeMsg, sendMailOTP , 
   responsetoQuery, sendNotification , sendPushNotification, 
- sendInvoice , sendOTPFornewPass};
+ sendInvoice , sendOTPFornewPass };
 

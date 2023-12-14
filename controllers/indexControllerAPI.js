@@ -870,7 +870,6 @@ const updloadBYUser   = async(req,res,next)=>{
 
 
 
-
 //====================================== Property Section Start ==================================== 
 
 
@@ -987,6 +986,8 @@ const addProperty = async (req, res, next) => {
 
 
 //---------- fetch Properties -------
+
+
 // const Properties = async (req, res, next) => {
 // const  con = await connection();
 //   try {
@@ -1024,7 +1025,7 @@ const addProperty = async (req, res, next) => {
 
 
 
-const Properties = async (req, res, next) => {
+const Properties1 = async (req, res, next) => {
   const con = await connection();
 
   try {
@@ -1080,6 +1081,124 @@ const Properties = async (req, res, next) => {
     }
   }
 };
+
+
+
+
+
+
+const Properties = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    const userID = req.body.user_id;
+
+    // Validate if the user exists
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+    if (!user) {
+      return res.json({ result: "User not found" });
+    }
+
+    const page = req.body.page_number || 1; // Default to page 1 if not provided
+    const resultsPerPage = 5;
+    const offset = (page - 1) * resultsPerPage;
+
+    // Fetch total number of properties for pagination calculation
+    const [totalPropsResult] = await con.query('SELECT COUNT(*) as total FROM tbl_prop');
+    const totalProperties = totalPropsResult[0].total;
+
+    const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ? LIMIT ? OFFSET ?';
+    const [properties] = await con.query(selectPropertiesSql, [userID, resultsPerPage, offset]);
+
+    for (const row of properties) {
+      row.images = JSON.parse(row.images);
+      row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
+
+      // Check if the property is in the user's interest
+      const [interestResult] = await con.query('SELECT * FROM tbl_interest WHERE user_id = ? AND prop_id = ?', [userID, row.prop_id]);
+
+      row.interest = (interestResult.length > 0).toString();
+
+      // Calculate match percentage
+      const matchPercentage = calculatePreferencesMatchPercentage(user, row);
+      row.match_percentage = `${matchPercentage}%`;
+    }
+
+    // Sort properties by match percentage in descending order
+    properties.sort((a, b) => parseFloat(b.match_percentage) - parseFloat(a.match_percentage));
+
+    res.json(properties);
+
+  } catch (error) {
+    console.error('Error in fetchAllProperties API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+// Function to calculate match percentage based on preferences
+const calculatePreferencesMatchPercentage = (userPreferences, propertyDetails) => {
+  // Define weights for each preference (adjust these according to importance)
+  const weightGender = 10;
+  const weightCity = 8;
+  const weightCountry = 7;
+  const weightBedrooms = 5;
+  const weightBathroomType = 5;
+  const weightParkingType = 5;
+  const weightPreferredType = 6;
+  const weightPreferredRent = 14;
+
+  // Initialize match percentageṁ
+  let matchPercentage = 0;
+
+  // Check each preference and increase matchPercentage accordingly
+  if (userPreferences.gender == propertyDetails.prefered_gender) {
+    matchPercentage += weightGender;
+  }
+
+  if (userPreferences.prefered_city == propertyDetails.city) {
+    matchPercentage += weightCity;
+  }
+
+  if (userPreferences.prefered_country == propertyDetails.country) {
+    matchPercentage += weightCountry;
+  }
+
+  if (userPreferences.bedroom_nums == propertyDetails.bedroom_nums) {
+    matchPercentage += weightBedrooms;
+  }
+
+  if (userPreferences.bathroom_type == propertyDetails.bathroom_type) {
+    matchPercentage += weightBathroomType;
+  }
+
+  if (userPreferences.parking_type == propertyDetails.parking_type) {
+    matchPercentage += weightParkingType;
+  }
+
+  if (userPreferences.prefered_type == propertyDetails.prop_type) {
+    matchPercentage += weightPreferredType;
+  }
+
+  // Calculate match percentage based on rent difference
+  const rentDifference = Math.abs(userPreferences.prefered_rent - propertyDetails.rent_amount);
+  const maxRentDifference = 1000; // Adjust this value based on your criteria
+  const rentMatch = Math.max(0, maxRentDifference - rentDifference) / maxRentDifference * weightPreferredRent;
+  matchPercentage += rentMatch;
+
+  return parseInt(matchPercentage);
+};
+
+
+
+
+
+
+
+
 
 
 

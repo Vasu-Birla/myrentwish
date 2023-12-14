@@ -8,7 +8,7 @@ import upload from '../middleware/upload.js';
 
 
 
-import {hashPassword, comparePassword, sendWelcomeMsg , responsetoQuery} from '../middleware/helper.js'
+import {hashPassword, comparePassword, sendWelcomeMsg , responsetoQuery , sendOTPFornewPass} from '../middleware/helper.js'
 import { response } from 'express';
 
 
@@ -123,6 +123,165 @@ const checkPass = async (req, res, next) => {
     con.release(); 
   }
 };
+
+
+
+
+
+    //----------------------- Profile Forgot Password Section Start ------------------------------------- 
+
+
+    const ForgotPassword = async(req,res,next)=>{  
+
+          
+      try {
+       res.render('ForgotPassword', { 
+         showForgotPasswordForm: true,
+         showVerifyOTPPrompt: false,
+         showResetPasswordForm: false,
+         "output":"Enter Your Email"
+       });
+   
+       
+      } catch (error) {
+         res.json("Internal Server Error ")
+      }
+ 
+ }
+
+
+ 
+
+ const sendOTP = async (req, res, next) => {
+   try {
+     const email = req.body.email; // The email provided by the user
+     const otp = Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit OTP
+
+     console.log(otp)
+ 
+     const con = await connection();
+ 
+     // Check if the user's email already exists in tbl_otp
+     const [results] = await con.query('SELECT * FROM tbl_otp WHERE email = ?', [email]);
+ 
+     if (results.length === 0) {
+       // Insert a new record in tbl_otp
+       const currentTime = new Date();
+       const expiryTime = new Date(currentTime.getTime() + 10 * 60000); // Expiry time is set to 10 minutes from the current time
+       await con.query('INSERT INTO tbl_otp (email, otp_code, expire_at) VALUES (?, ?, ?)', [email, otp, expiryTime]);
+     } else {
+       // Update the existing record in tbl_otp
+       const currentTime = new Date();
+       const expiryTime = new Date(currentTime.getTime() + 10 * 60000); // Expiry time is set to 10 minutes from the current time
+       await con.query('UPDATE tbl_otp SET otp_code = ?, expire_at = ? WHERE email = ?', [otp, expiryTime, email]);
+     }
+ 
+     // Call the function to send the OTP through the appropriate channel (e.g., email, SMS)
+     await sendOTPFornewPass(email, otp);
+ 
+     res.render('ForgotPassword', {
+       showForgotPasswordForm: false,
+       showVerifyOTPPrompt: true,
+       showResetPasswordForm: false,
+       output: 'OTP sent !!',
+       email: email
+     });
+   } catch (error) {
+     console.log(error);
+     res.render('ForgotPassword', {
+       showForgotPasswordForm: true,
+       showVerifyOTPPrompt: false,
+       showResetPasswordForm: false,
+       output: 'Failed to send OTP. Internal server error.'
+     });
+   }
+ };
+ 
+
+
+const verifyOTP = async (req, res, next) => {
+
+ const con = await connection();
+ const userOTP = req.body.otp;
+ const email = req.body.verifyEmail; 
+ try {
+
+   const [results] = await con.query('SELECT * FROM tbl_otp WHERE email = ?', [email]);
+   const storedOTP = results[0].otp_code;
+   const expiryTime = new Date(results[0].expire_at);
+
+   console.log('storedOTP',storedOTP)
+   
+   console.log('userOTP',userOTP)
+
+   // Verify the OTP
+   if (userOTP == storedOTP && new Date() < expiryTime) {  console.log("correct OTP")
+     res.render('ForgotPassword', {
+       showForgotPasswordForm: false,
+       showVerifyOTPPrompt: false,
+       showResetPasswordForm: true,
+       output: '',
+       email: email
+     });
+   } else { console.log(" Incorrect OTP")
+     res.render('ForgotPassword', {  
+       showForgotPasswordForm: false,
+       showVerifyOTPPrompt: true,
+       showResetPasswordForm: false,
+       output: 'Invalid or expired OTP. Please try again',
+       email: email
+     });
+   }
+ } catch (error) {
+   console.error(error);
+   res.json('Error in verifying OTP');
+ }
+};
+
+
+
+
+const resetpassword = async(req,res,next)=>{ 
+ const con = await connection();  
+  
+ const { resetemail, npass, cpass } = req.body;
+
+ 
+try {
+ if (npass !== cpass) {
+
+
+  return res.render('ForgotPassword', {
+     showForgotPasswordForm: false,
+     showVerifyOTPPrompt: false,
+     showResetPasswordForm: true,
+     "output":"New password and confirm password do not match",
+     "email":resetemail
+   });    
+  }
+
+
+ await con.query('UPDATE tbl_admin SET password = ? WHERE email = ?', [cpass, resetemail ])
+
+ res.render('login',{'output':'Password Reset Success !'})
+ 
+} catch (error) {
+  console.log(error)
+
+ res.render('ForgotPassword', { 
+   showForgotPasswordForm: true,
+   showVerifyOTPPrompt: false,
+   showResetPasswordForm: false,
+   "output":"Failed to Reset Password , Please Try Again "
+ });
+ 
+}
+     
+
+}
+
+ 
+//------------------------------- Forgot Password End ---------------------------- 
 
 
 
@@ -1521,7 +1680,8 @@ export {homePage,
      propTypePost , updatepropType, deletepropType , deleteProperty ,
       updatePropertyStatus, addQuestionPost , viewQuestion, viewQuestionPost , skills , skillsPost , Deleteskill,
       deletepQues , editFAQ , deleteFAQ , addFAQ , SupportPost , tandcPost,
-       userPrivacyPost, deleteuserPrivacy, deleteSkill , sendMailtoUser , QueriesPost , deletetandc , appPass, appPassPost}
+       userPrivacyPost, deleteuserPrivacy, deleteSkill , sendMailtoUser , QueriesPost ,
+        deletetandc , appPass, appPassPost , ForgotPassword , sendOTP , verifyOTP , resetpassword  }
 
 
          
