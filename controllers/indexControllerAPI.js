@@ -814,9 +814,56 @@ const updloadBYUser   = async(req,res,next)=>{
       }
     }
   };
+
+
+
+
+
+
+//----------- check that User Updated Prefrence even once or not --- 
+
+
+  const checkPreferenceAvailability = async (req, res, next) => {
+    const con = await connection();
   
-
-
+    try {
+      const userID = req.body.user_id;
+  
+      // Check if the user has ever updated preferences
+      const [[existingUser]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+  
+      if (!existingUser) {
+        res.json({ result: "User not found" });
+        return;
+      }
+  
+      const hasUpdatedPreferences =
+        existingUser.prefered_gender !== null && existingUser.prefered_gender.trim() !== '' ||
+        existingUser.prefered_city !== null && existingUser.prefered_city.trim() !== '' ||
+        existingUser.prefered_country !== null && existingUser.prefered_country.trim() !== '' ||
+        existingUser.bedroom_nums !== null && existingUser.bedroom_nums.trim() !== '' ||
+        existingUser.bathroom_type !== null && existingUser.bathroom_type.trim() !== '' ||
+        existingUser.parking_type !== null && existingUser.parking_type.trim() !== '' ||
+        existingUser.prefered_type !== null && existingUser.prefered_type.trim() !== '' ||
+        existingUser.prefered_rent !== null && existingUser.prefered_rent.trim() !== '' ||
+        existingUser.about_me !== null && existingUser.about_me.trim() !== '' ||
+        existingUser.skill !== null && existingUser.skill.trim() !== '';
+  
+      if (hasUpdatedPreferences) {
+        res.json({ result: "success" });
+      } else {
+        res.json({ result: "failed" });
+      }
+    } catch (error) {
+      console.error('Error in checkPreferenceUpdate API:', error);
+      res.status(500).json({ result: 'Internal Server Error' });
+    } finally {
+      if (con) {
+        con.release();
+      }
+    }
+  };
+  
 
 
 
@@ -2450,8 +2497,8 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      successPayment, cancelPayment ,paymentStatus, obtainToken, updateProfile ,
      updatePreference, addProperty, property, Properties , myProperties , 
      updateProperty , deleteProperty , addtestUser , logintestUser , addToInterest , getQuestions,
-     addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets ,tandc , pandp , faqs
-
+     addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets ,tandc , pandp , faqs,
+     checkPreferenceAvailability
 }
 
 

@@ -47,7 +47,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     myTickets,
     tandc,
     pandp,
-    faqs} from '../controllers/indexControllerAPI.js';
+    faqs,
+    checkPreferenceAvailability} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -86,6 +87,12 @@ router.route('/removeAccount').post(upload.none(),removeAccount)
 
 
 router.route('/updatePreference').post(upload.none(),updatePreference)
+
+router.route('/checkPreference').post(upload.none(),checkPreferenceAvailability)
+
+
+
+
 
 router.route('/getSkills').get(upload.none(),getSkills)
 
