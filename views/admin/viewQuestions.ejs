@@ -52,7 +52,14 @@
 
                         <td><%- questions[i].question_type %>  </td>
                         
-                        <td><%- questions[i].answer_options %> </td>                                             
+                        <!-- <td><%- questions[i].answer_options %> </td>       -->
+
+                        <td>
+                          <%  JSON.parse(questions[i].answer_options).forEach(function(option) { %>                    
+                            <button type="button" class="btn btn btn-info btn-sm extra-small-btn m-1"><%= option %></button>
+                          <% }); %>
+                        </td>
+
 
                     
 
