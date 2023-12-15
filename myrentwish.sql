@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 14, 2023 at 01:33 PM
+-- Generation Time: Dec 15, 2023 at 06:16 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -47,7 +47,7 @@ CREATE TABLE `tbl_admin` (
 --
 
 INSERT INTO `tbl_admin` (`id`, `firstname`, `lastname`, `email`, `username`, `password`, `contact`, `about`, `address`, `image`, `imagePath`, `date`) VALUES
-(1, 'Kilvish', 'Cisss', 'admin@gmail.com', 'admin', '123456', '9039568219', 'CISS Invoice Management System can be a robust and useful addition, allowing administrators to manage users, invoices, and other essential functions. Below are some key features and considerations for your admin panel:', 'Indore', 'img_tonystark.jpg_1702387978539.jpg', 'public\\uploads\\img_tonystark.jpg_1702387978539.jpg', '2023-08-14 12:15:42.000000');
+(1, 'Kilvish', 'Cisss', 'kilvishbirla@gmail.com', 'admin', '123456', '9039568219', 'CISS Invoice Management System can be a robust and useful addition, allowing administrators to manage users, invoices, and other essential functions. Below are some key features and considerations for your admin panel:', 'Indore', 'img_tonystark.jpg_1702387978539.jpg', 'public\\uploads\\img_tonystark.jpg_1702387978539.jpg', '2023-08-14 12:15:42.000000');
 
 -- --------------------------------------------------------
 
@@ -139,7 +139,7 @@ CREATE TABLE `tbl_fcm` (
 
 INSERT INTO `tbl_fcm` (`id`, `user_id`, `device_token`, `device_status`, `created_at`, `updated_at`) VALUES
 (1, 8, 'f0CYFFO1Q7yM7-odkColEz:APA91bHefpuwb-YK0rUXOIxf0H_rQta6sEkNv1ja1XCnKw5MSTbbGw4vKOlWzB1samIyQuzpTtpLayfeIry6W3rNhKI20jwDnvrwN3dN57-OhvWvX7Nkoc_Bn5B1yQxwp7UZr-h-txjW', 'Android', '2023-12-06 07:23:51', '2023-12-06 07:23:51'),
-(2, 12, 'vvv', 'android', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
+(2, 12, 'vvv', 'Android', '0000-00-00 00:00:00', '2023-12-14 13:08:29');
 
 -- --------------------------------------------------------
 
@@ -527,8 +527,8 @@ CREATE TABLE `tbl_user_answers` (
 --
 
 INSERT INTO `tbl_user_answers` (`answer_id`, `user_id`, `question_id`, `question`, `answer`, `created_at`, `updated_at`) VALUES
-(1, 8, 1, 'what is your fvt color ?', 'yellow', '2023-12-07 07:40:06', '2023-12-11 08:05:22'),
-(8, 8, 2, 'which is your fvt Game?', 'Cricket', '2023-12-08 10:13:51', '2023-12-08 10:14:15');
+(1, 12, 1, 'what is your fvt color ?', 'yellow', '2023-12-07 07:40:06', '2023-12-15 05:13:49'),
+(8, 12, 2, 'which is your fvt Game?', 'Cricket', '2023-12-08 10:13:51', '2023-12-15 05:13:56');
 
 --
 -- Indexes for dumped tables
@@ -767,7 +767,7 @@ ALTER TABLE `tbl_tandc`
 -- AUTO_INCREMENT for table `tbl_users`
 --
 ALTER TABLE `tbl_users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `tbl_user_answers`
