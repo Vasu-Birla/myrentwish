@@ -946,7 +946,7 @@ const viewQuestion = async(req,res,next)=>{
   }
 }
 
-const viewQuestionPost = async (req, res, next) => {  console.log("start updating..... .... ")
+const viewQuestionPost = async (req, res, next) => {  
   const con = await connection();
 
   try {
