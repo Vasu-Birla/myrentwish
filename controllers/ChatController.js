@@ -8,9 +8,9 @@ const con = await connection();
 
 const chatHome = async (req, res, next) => {
 
-//    res.render('chat')
+   res.render('chat')
     
-//   //res.sendFile(__dirname + "/public/index.html");
+    //res.sendFile(__dirname + "/public/index.html");
 
 };
 

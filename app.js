@@ -79,9 +79,10 @@ app.get('/api/hello', (req, res) => {
   res.json({ message: 'Hello, World!' });
 });
 
-app.get('/scat', (req, res) => {
-  initializeChatService(server);
-});
+// app.get('/scat', (req, res) => {
+//   console.log("req to chat service")
+//   return initializeChatService(server);
+// });  
 
 
     initializeChatService(server);

@@ -5,7 +5,7 @@ import fs from 'fs/promises';
 
 import connection from '../config.js';
 
-const db = await connection();
+const con = await connection();
 
 import path from 'path';
 
@@ -32,11 +32,11 @@ export default function initializeChatService(server) {
         console.log("Chat Socket connected...");
 
         socket.on('userConnected', async (userId) => {
-          const db = await connection();
+          const con = await connection();
          console.log("User Connected -> ",userId)
           onlineUsers.set(socket.id, { userId, unreadMsgCount: 0 });
           var newStatus = 'online'
-          await db.query('UPDATE messages SET userStatus = ? WHERE user_from = ?', [newStatus, userId]);
+          await con.query('UPDATE messages SET userStatus = ? WHERE user_from = ?', [newStatus, userId]);
           updateOnlineStatus(userId, true);
 
          
@@ -59,7 +59,7 @@ export default function initializeChatService(server) {
 
         //------------------ UnRead Msg -------------------- 
         // socket.on('unreadMsgs', async (userId) => { 
-        //   const db = await connection();
+        //   const con = await connection();
 
          
         //   var unreadCount;
@@ -95,8 +95,9 @@ export default function initializeChatService(server) {
     
         //------------------  Send and Receive Real-Time msg -------------------------------
 
-        socket.on("message", async(msg)=> {               
+        socket.on("message", async(msg)=> {    
 
+          
             var data = msg;  
 
             //console.log(data); 
@@ -121,6 +122,8 @@ export default function initializeChatService(server) {
                     data.thumbnail =data.filePath
                 
                 }
+
+                console.log("data.mimetype--->>",data.mimetype  )
 
               
                  
@@ -157,12 +160,12 @@ export default function initializeChatService(server) {
           if(clients[targetId]){ 
              readStaus = 'true';
            }
-    const db = await connection();
+    const con = await connection();
             
   var main = "INSERT INTO `messages` (`user_from`, `user_to`, `message`, `filename`, `filePath`, `mimetype`, `thumbnail`, `timestamp`,`userStatus`, `readStaus`) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?)"
-            //db.query("INSERT INTO `messages` (`user_from`,`user_to`,`message`,`image`,`base64`,`timestamp`) VALUES ('"+data.sourceId+"','"+data.targetId+"','"+data.message+"','"+data.image+"','"+data.base64+"','"+formattedDateTime+"')");
+            //con.query("INSERT INTO `messages` (`user_from`,`user_to`,`message`,`image`,`base64`,`timestamp`) VALUES ('"+data.sourceId+"','"+data.targetId+"','"+data.message+"','"+data.image+"','"+data.base64+"','"+formattedDateTime+"')");
             
-        const [insertedResult] =  await  db.query(main,[data.sourceId, data.targetId, data.message, data.filename, kil , data.mimetype, data.thumbnail , formattedDateTime,userStatus, readStaus])
+        const [insertedResult] =  await  con.query(main,[data.sourceId, data.targetId, data.message, data.filename, kil , data.mimetype, data.thumbnail , formattedDateTime,userStatus, readStaus])
                  
 
         if(insertedResult){
@@ -170,7 +173,7 @@ export default function initializeChatService(server) {
                     const insertedRowId = insertedResult.insertId;
 
                   
-                   var [latestMsg] = await db.query("SELECT * FROM messages WHERE id = '" +insertedRowId+ "'")
+                   var [latestMsg] = await con.query("SELECT * FROM messages WHERE id = '" +insertedRowId+ "'")
 
                     for( let row of latestMsg){
 
@@ -205,7 +208,7 @@ export default function initializeChatService(server) {
                   } else{
                    
                    console.log("Off-line TargetID", targetId);
-                   sendPushNotification(targetId,latestMsg[0].message,data.sourceId) 
+                  // sendPushNotification(targetId,latestMsg[0].message,data.sourceId) 
                   // socket.emit("message", latestMsg);  
                        
                    //clients[targetId].emit("message", latestMsg); 
@@ -233,9 +236,14 @@ export default function initializeChatService(server) {
 //---------------------- Delete Chat start  --------------------------------
 
 
+
     socket.on('delete',async(messageIds, targetId) => {
 
-      const db = await connection();
+      console.log(messageIds)   
+
+        
+
+      const con = await connection();
       // clients[targetId] = socket;
 
             if (!Array.isArray(messageIds)) {
@@ -244,7 +252,7 @@ export default function initializeChatService(server) {
             } 
             
           //   for (const row of messageIds) {  
-          //     const [[msg]] = await db.query('SELECT * from messages where id = ? ',[row]);
+          //     const [[msg]] = await con.query('SELECT * from messages where id = ? ',[row]);
                         
           //     if( msg && msg.mimetype != 'txt'){
           //       var filepath = path.join('public', 'chatUploads', msg.filename);  
@@ -256,7 +264,7 @@ export default function initializeChatService(server) {
 
           const filePathsToDelete = messageIds.map( async (messageId) => {
                         
-            const [[msg]] = await db.query('SELECT * from messages where id = ? ',[messageId]);  
+            const [[msg]] = await con.query('SELECT * from messages where id = ? ',[messageId]);  
      
             if(msg && msg.mimetype != 'txt'){
               var filepath = path.join('public', 'chatUploads', msg.filename);  
@@ -268,7 +276,7 @@ export default function initializeChatService(server) {
             // ----Delete the messages with the given messageIds from the "messages" table
             const deleteQuery = 'DELETE FROM messages WHERE id IN (?)';
 
-            const [result] = await db.query(deleteQuery, [messageIds]);
+            const [result] = await con.query(deleteQuery, [messageIds]);
 
             if(result){
 
@@ -314,13 +322,15 @@ export default function initializeChatService(server) {
   // ---------------------- Chat History  ------------------------- 
   socket.on('chatHistory', async (data) =>{  console.log(".........",data.sourceId)
 
-  const db = await connection();
-  const [chats] = await db.query("SELECT * FROM messages WHERE (user_from = '" + data.sourceId+ "' AND  user_to = '" + data.targetId + "' ) OR (user_from = '" + data.targetId + "' AND  user_to = '" + data.sourceId+ "')  ORDER BY timestamp ASC")
+  const con = await connection();
+  const [chats] = await con.query("SELECT * FROM messages WHERE (user_from = '" + data.sourceId+ "' AND  user_to = '" + data.targetId + "' ) OR (user_from = '" + data.targetId + "' AND  user_to = '" + data.sourceId+ "')  ORDER BY timestamp ASC")
   
+
   //--- here userFrom value will be userTO actually
-  const [readALL] = await db.query('UPDATE messages SET readStaus = ? WHERE user_from =? AND user_to = ?', ['true',data.targetId, data.sourceId]);
+  const [readALL] = await con.query('UPDATE messages SET readStaus = ? WHERE user_from =? AND user_to = ?', ['true',data.targetId, data.sourceId]);
   
   if(readALL){
+
     console.log("readALL updated");
   }
 
@@ -353,13 +363,20 @@ export default function initializeChatService(server) {
 
 //--------------------------- Chat History End ---------------------
 
+
+//----------------- chatList start -------------- 
+
+
+
 socket.on('chatList', async (userID) =>{
 
-  const db = await connection();
+  console.log(userID)
+
+  const con = await connection();
 
   //var userID = req.body.user_id;
-  const [chats] = await db.query('SELECT * FROM messages WHERE user_from = ? ORDER BY timestamp ASC', [userID ]);  
-  const [chats1] = await db.query('SELECT * FROM messages WHERE user_to = ? ORDER BY timestamp ASC', [userID ]);  
+  const [chats] = await con.query('SELECT * FROM messages WHERE user_from = ? ORDER BY timestamp ASC', [userID ]);  
+  const [chats1] = await con.query('SELECT * FROM messages WHERE user_to = ? ORDER BY timestamp ASC', [userID ]);  
  
  for (let row of chats1){
 
@@ -383,8 +400,8 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
      if (!uniqueReceivers.has(receiverID)) {
 
         
-        var [[receiver]] = await db.query('SELECT * from tbl_user where id = ? ',[receiverID]); 
-        const [[user]] = await db.query('SELECT * FROM messages WHERE user_from = ? ORDER BY timestamp ASC', [receiverID ]);  
+        var [[receiver]] = await con.query('SELECT * from tbl_users where user_id = ? ',[receiverID]); 
+        const [[user]] = await con.query('SELECT * FROM messages WHERE user_from = ? ORDER BY timestamp ASC', [receiverID ]);  
   
            
   
@@ -444,7 +461,7 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
 
 });
 
-//----------------- chatList start -------------- 
+
 
 
 
@@ -453,13 +470,16 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
 
 
 
-              socket.on('disconnect', async () => {
-                const db = await connection();
-                console.log('A user disconnected.');
-                const disconnectedUserId = Object.keys(clients).find(key => clients[key] === socket);
-                var newStatus = Date.now()
-                await db.query('UPDATE messages SET userStatus = ? WHERE user_from = ?', [newStatus, disconnectedUserId]);
+
+              socket.on('disconnect', async () => {  
+                const con = await connection();
                 
+                const disconnectedUserId = Object.keys(clients).find(key => clients[key] === socket);
+
+                console.log("disconnectedUserId",disconnectedUserId)
+                var newStatus = Date.now()
+                await con.query('UPDATE messages SET userStatus = ? WHERE user_from = ?', [newStatus, disconnectedUserId]);
+                console.log('A user disconnected.');
                 onlineUsers.delete(socket.id);
 
                 if (disconnectedUserId) {

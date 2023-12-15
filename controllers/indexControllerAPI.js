@@ -912,6 +912,7 @@ const addProperty = async (req, res, next) => {
       parking_type,
       size_sqft,
       rent_amount,
+      currency,
       available_date,
       prop_status, // Assuming this is part of the request body
     } = req.body;
@@ -930,7 +931,7 @@ const addProperty = async (req, res, next) => {
 
     // Insert property details into the tbl_prop table
     const insertSql =
-      'INSERT INTO tbl_prop (user_id, owner_name, owner_contact, owner_email, title,prefered_gender, description, address, city, country, prop_type, bedroom_nums, bathroom_type, parking_type, size_sqft, rent_amount, available_date, is_available, prop_status, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      'INSERT INTO tbl_prop (user_id, owner_name, owner_contact, owner_email, title,prefered_gender, description, address, city, country, prop_type, bedroom_nums, bathroom_type, parking_type, size_sqft, rent_amount, currency, available_date, is_available, prop_status, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const insertValues = [
       userID,
       owner_name,
@@ -948,6 +949,7 @@ const addProperty = async (req, res, next) => {
       parking_type,
       size_sqft,
       rent_amount,
+      currency,
       available_date,
       is_available,
       prop_status,
@@ -1307,6 +1309,7 @@ const updateProperty = async (req, res, next) => {
       parking_type,
       size_sqft,
       rent_amount,
+      currency,
       available_date,
       prop_status, // Assuming this is part of the request body
     } = req.body;
@@ -1335,6 +1338,7 @@ const updateProperty = async (req, res, next) => {
       parking_type: parking_type || property.parking_type,
       size_sqft: size_sqft || property.size_sqft,
       rent_amount: rent_amount || property.rent_amount,
+      currency:  currency || property.currency,
       available_date: available_date || property.available_date,
       is_available: is_available || property.is_available,
       prop_status: prop_status || property.prop_status,
@@ -1343,7 +1347,7 @@ const updateProperty = async (req, res, next) => {
 
     // Update property details in the tbl_prop table
     const updateSql =
-      'UPDATE tbl_prop SET owner_name=?, owner_contact=?, owner_email=?, title=?, description=?, address=?, city=?, country=?, prop_type=?, bedroom_nums=?, bathroom_type=?, parking_type=?, size_sqft=?, rent_amount=?, available_date=?, is_available=?, prop_status=?, images=? WHERE prop_id=?';
+      'UPDATE tbl_prop SET owner_name=?, owner_contact=?, owner_email=?, title=?, description=?, address=?, city=?, country=?, prop_type=?, bedroom_nums=?, bathroom_type=?, parking_type=?, size_sqft=?, rent_amount=?,  currency=?, available_date=?, is_available=?, prop_status=?, images=? WHERE prop_id=?';
     const updateValues = [
       updatedPropertyDetails.owner_name,
       updatedPropertyDetails.owner_contact,
@@ -1359,6 +1363,7 @@ const updateProperty = async (req, res, next) => {
       updatedPropertyDetails.parking_type,
       updatedPropertyDetails.size_sqft,
       updatedPropertyDetails.rent_amount,
+      updatedPropertyDetails.currency,
       updatedPropertyDetails.available_date,
       updatedPropertyDetails.is_available,
       updatedPropertyDetails.prop_status,
@@ -2593,17 +2598,6 @@ const paymentStatus = async(req,res,next)=>{
       
 
 }
-
-
-
-
-
-
-    
-
-
-
-
 
 
 
