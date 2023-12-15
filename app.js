@@ -11,6 +11,11 @@ import http from 'http';
 import AdminRouter from './routes/adminRoute.js'
 import IndexRouter from './routes/IndexRoute.js';
 import IndexRouterAPI from './routes/IndexRouteAPI.js';
+import ChatRouter from './routes/ChatRoute.js';
+
+import initializeChatService from './controllers/chatSocket.js'; 
+
+
 dotenv.config({path:"./config.env"});
 
 //---------------Import Section Finish ----------------
@@ -48,8 +53,12 @@ app.use(async (req, res, next) => {
   
 });
 
+
+
 app.use('/api', IndexRouterAPI);
 app.use('/admin',AdminRouter)
+
+app.use('/chat',ChatRouter);
 app.use("/",IndexRouter);
 
 //------------------   Middleware Section  End ---------------
@@ -70,7 +79,12 @@ app.get('/api/hello', (req, res) => {
   res.json({ message: 'Hello, World!' });
 });
 
-// initializeChatService(server);
+app.get('/scat', (req, res) => {
+  initializeChatService(server);
+});
+
+
+    initializeChatService(server);
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
