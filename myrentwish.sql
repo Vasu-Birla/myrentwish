@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2023 at 06:16 AM
+-- Generation Time: Dec 15, 2023 at 01:53 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -20,6 +20,36 @@ SET time_zone = "+00:00";
 --
 -- Database: `myrentwish`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messages`
+--
+
+CREATE TABLE `messages` (
+  `id` int(11) NOT NULL,
+  `user_from` varchar(255) NOT NULL,
+  `user_to` varchar(255) NOT NULL,
+  `message` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `filename` varchar(255) NOT NULL,
+  `filePath` longtext NOT NULL,
+  `mimetype` varchar(255) NOT NULL,
+  `thumbnail` text NOT NULL,
+  `timestamp` varchar(255) NOT NULL,
+  `userStatus` varchar(255) NOT NULL,
+  `readStaus` varchar(255) NOT NULL DEFAULT 'false'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`id`, `user_from`, `user_to`, `message`, `filename`, `filePath`, `mimetype`, `thumbnail`, `timestamp`, `userStatus`, `readStaus`) VALUES
+(7, '8', '12', 'Hello, user 12 kya haal chal?', '', '', 'txt', '', '2023-12-15 04:36 PM', 'online', 'true'),
+(8, '8', '12', 'Hello, user 12 kya haal chal?', '', '', 'txt', '', '2023-12-15 04:36 PM', 'online', 'true'),
+(9, '8', '12', 'Hello, user 12 kya haal chal?', '', '', 'txt', '', '2023-12-15 04:52 PM', 'online', 'true'),
+(10, '8', '12', 'Hello, user 12 kya haal chal?', '', '', 'txt', '', '2023-12-15 05:01 PM', 'online', 'false');
 
 -- --------------------------------------------------------
 
@@ -266,6 +296,7 @@ CREATE TABLE `tbl_prop` (
   `parking_type` enum('Dedicated','Shared','Available','Not Available') DEFAULT NULL,
   `size_sqft` varchar(255) DEFAULT NULL,
   `rent_amount` varchar(255) DEFAULT NULL,
+  `currency` varchar(3) DEFAULT 'CAD',
   `available_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `is_available` varchar(255) DEFAULT 'true',
   `prop_status` enum('available','rented') DEFAULT 'available',
@@ -278,14 +309,13 @@ CREATE TABLE `tbl_prop` (
 -- Dumping data for table `tbl_prop`
 --
 
-INSERT INTO `tbl_prop` (`prop_id`, `user_id`, `owner_name`, `owner_contact`, `owner_email`, `title`, `prefered_gender`, `description`, `address`, `city`, `country`, `prop_type`, `bedroom_nums`, `bathroom_type`, `parking_type`, `size_sqft`, `rent_amount`, `available_date`, `is_available`, `prop_status`, `images`, `created_at`, `updated_at`) VALUES
-(1, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'Women', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701416919081.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701416919100.jpg\"}]', '2023-12-01 07:48:39', '2023-12-12 10:42:13'),
-(3, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'Women', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'false', 'rented', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701417946319.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701417946336.jpg\"}]', '2023-12-01 08:05:46', '2023-12-12 10:42:13'),
-(5, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '4BHK', 'Women', 'Very good 4BHK', 'Vijay Nagar', 'Bhopal', 'India', 'Villa', '2', 'Private', 'Dedicated', '1000', '1000', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_female12.jpeg_1702548559794.jpeg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_female13.jpeg_1702548559795.jpeg\"}]', '2023-12-01 08:30:30', '2023-12-14 10:09:19'),
-(6, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '4BHK', 'Women', 'Very good 4BHK', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_female5.jpeg_1701432210023.jpeg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_female6.jpeg_1701432210024.jpeg\"}]', '2023-12-01 08:31:47', '2023-12-12 10:42:13'),
-(7, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '3BHK', 'Women', 'very Stylish Moder Age 3BHK villa ', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_1.jpg_1701502945996.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_11.jpg_1701502946017.jpg\"}]', '2023-12-02 07:42:26', '2023-12-12 10:42:13'),
-(12, 26, 'User26', '9039568219', 'user26@gmail.com', '3BHK', 'Women', 'Banglow', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_472613970.jpg_1702368026543.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_images.jpg_1702368026544.jpg\"}]', '2023-12-12 08:00:26', '2023-12-12 10:42:13'),
-(14, 8, 'Kilvish11', '9039568219', 'kilvishbirla@gmail.com', '3BHK', 'Man', 'Banglow', 'Vijay Nagar', 'Indore', 'India', 'Home', '1', 'Shared', 'Shared', '2000', '500', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_bungalow.jpg_1702549757099.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_bungalow-design.jpg_1702549757102.jpg\"}]', '2023-12-14 10:29:17', '2023-12-14 10:29:17');
+INSERT INTO `tbl_prop` (`prop_id`, `user_id`, `owner_name`, `owner_contact`, `owner_email`, `title`, `prefered_gender`, `description`, `address`, `city`, `country`, `prop_type`, `bedroom_nums`, `bathroom_type`, `parking_type`, `size_sqft`, `rent_amount`, `currency`, `available_date`, `is_available`, `prop_status`, `images`, `created_at`, `updated_at`) VALUES
+(1, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'Women', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', 'CAD', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701416919081.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701416919100.jpg\"}]', '2023-12-01 07:48:39', '2023-12-12 10:42:13'),
+(3, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'Women', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', 'CAD', '2023-11-30 18:30:00', 'false', 'rented', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701417946319.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701417946336.jpg\"}]', '2023-12-01 08:05:46', '2023-12-12 10:42:13'),
+(5, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '4BHK', 'Women', 'Very good 4BHK', 'Vijay Nagar', 'Bhopal', 'India', 'Villa', '2', 'Private', 'Dedicated', '1000', '1000', 'CAD', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_female12.jpeg_1702548559794.jpeg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_female13.jpeg_1702548559795.jpeg\"}]', '2023-12-01 08:30:30', '2023-12-14 10:09:19'),
+(6, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '4BHK', 'Women', 'Very good 4BHK', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', 'CAD', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_female5.jpeg_1701432210023.jpeg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_female6.jpeg_1701432210024.jpeg\"}]', '2023-12-01 08:31:47', '2023-12-12 10:42:13'),
+(7, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '3BHK', 'Women', 'very Stylish Moder Age 3BHK villa ', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', 'CAD', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_1.jpg_1701502945996.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_11.jpg_1701502946017.jpg\"}]', '2023-12-02 07:42:26', '2023-12-12 10:42:13'),
+(12, 26, 'User26', '9039568219', 'user26@gmail.com', '3BHK', 'Women', 'Banglow', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', 'CAD', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_472613970.jpg_1702368026543.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_images.jpg_1702368026544.jpg\"}]', '2023-12-12 08:00:26', '2023-12-12 10:42:13');
 
 -- --------------------------------------------------------
 
@@ -535,6 +565,12 @@ INSERT INTO `tbl_user_answers` (`answer_id`, `user_id`, `question_id`, `question
 --
 
 --
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_admin`
 --
 ALTER TABLE `tbl_admin`
@@ -662,6 +698,12 @@ ALTER TABLE `tbl_user_answers`
 --
 
 --
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `tbl_admin`
 --
 ALTER TABLE `tbl_admin`
@@ -725,7 +767,7 @@ ALTER TABLE `tbl_prefer`
 -- AUTO_INCREMENT for table `tbl_prop`
 --
 ALTER TABLE `tbl_prop`
-  MODIFY `prop_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `prop_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `tbl_proptype`
