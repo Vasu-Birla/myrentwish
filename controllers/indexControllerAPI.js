@@ -1832,13 +1832,21 @@ const addAnswer = async (req, res, next) => {
 
     const questionMap = new Map(questions.map(question => [question.question_id, question]));
 
+
+
+
+    
     // Validate answers
 const invalidAnswers = answers.filter(answer => {
   const question = questionMap.get(parseInt(answer.question_id, 10));
 
   console.log("question id ->> ", question);
   console.log("answer  ->> ", answer.answer);
-  return !question || !question.answer_options.includes(answer.answer);
+
+  if(question.question_type != 'Text'){
+    return !question || !question.answer_options.includes(answer.answer);
+  }
+ 
 });
 
     if (invalidAnswers.length > 0) {

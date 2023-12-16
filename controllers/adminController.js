@@ -878,12 +878,14 @@ const addQuestionPost = async (req, res, next) => {
     console.log("answer_options -> ",answerOptions)
     
 
-    if (!['options_2', 'options_3', 'dropdown'].includes(question_type)) {
+    if (!['options_2', 'options_3', 'dropdown','Text'].includes(question_type)) {
       await con.rollback();
       return res.json({ result: "Invalid question type" });
     }
 
 
+
+    console.log(question_type)
     // Insert the question into the tbl_questions table
     const insertSql = 'INSERT INTO tbl_questions (question_text, question_type, answer_options) VALUES (?, ?, ?)';
     const insertValues = [question_text, question_type, JSON.stringify(answerOptions)];

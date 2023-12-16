@@ -33,8 +33,9 @@
                 <select name="question_type" class="form-control" required>
                   <option selected > Question Type ? </option>
                   <option value="options_2">2 Options</option>
-                  <option value="options_3">3 Options</option>
+                  <option value="options_3">3 Options</option>                 
                   <option value="dropdown">Dropdown</option>
+                  <option value="Text"> Text </option>
                 </select>
               </div>
 
@@ -132,7 +133,12 @@
       if (selectedType === 'dropdown') {        
       
         answerOptionsContainer.append('<div class="input-group mb-3"><input type="text" name="answerOptions[]" class="form-control" placeholder="Option 1" required><div class="input-group-append"><button class="btn btn-success" type="button" id="addOption">Add Option</button></div></div>');
-      } else {
+      } else if(selectedType === 'Text'){
+
+        answerOptionsContainer.append('<div class="input-group mb-3"><input type="hidden" name="answerOptions[]" class="form-control" placeholder="" value="" ><div class="input-group-append">   </div></div>');
+
+      
+      }  else {
         for (let i = 1; i <= parseInt(selectedType.split('_')[1]); i++) {
           const optionInput = $('<input>')
             .attr({

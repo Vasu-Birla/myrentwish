@@ -50,9 +50,25 @@
                    
                         <td><%- questions[i].question_text %>  </td>
 
-                        <td><%- questions[i].question_type %>  </td>
-                        
-                        <!-- <td><%- questions[i].answer_options %> </td>       -->
+                        <!-- <td><%- questions[i].question_type %>  </td> -->
+
+                        <td>
+
+
+                          <% if (questions[i].question_type == 'options_2') { %>
+                          
+                            Only  2 Answers (Radio)
+                          
+                          <% } else if (questions[i].question_type == 'options_3')  { %>
+                           
+                            Only 3 Answers (Radio)
+                           
+                          <% } else {   %>
+                          Infinite Answers (Dropdown)
+                            <% } %>
+
+                        </td>
+                      
 
                         <td>
                           <%  JSON.parse(questions[i].answer_options).forEach(function(option) { %>                    
