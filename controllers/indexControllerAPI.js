@@ -1127,7 +1127,7 @@ const Properties = async (req, res, next) => {
     }
 
     // Sort properties by match percentage in descending order
-    properties.sort((a, b) => parseFloat(b.match_percentage) - parseFloat(a.match_percentage));
+    properties.sort((a, b) => parseInt(b.match_percentage) - parseInt(a.match_percentage));
 
     res.json(properties);
 

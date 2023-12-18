@@ -507,15 +507,14 @@ const sendOTPFornewPass = async function (email,otp) {
   
     const AppEmail = rows[0].appEmail;
     const AppPassword = rows[0].appPassword;
-    
   
   
   try {
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'vasubirla@gmail.com',
-            pass: 'phjwptaxdnaunqol'
+            user: AppEmail,
+            pass: AppPassword
         }
     });
 

@@ -153,12 +153,27 @@ const checkPass = async (req, res, next) => {
  
 
  const sendOTP = async (req, res, next) => {
+  const con = await connection();
+  const email = req.body.email; 
    try {
-     const email = req.body.email; // The email provided by the user
+     
+     await con.beginTransaction();
+
+    var [isUser] =  await con.query('SELECT * FROM tbl_admin WHERE email = ?', [email]);
+
+   if(isUser.length == 0){
+  return  res.render('ForgotPassword', {
+      showForgotPasswordForm: true,
+      showVerifyOTPPrompt: false,
+      showResetPasswordForm: false,
+      output: 'Invalid Email.'
+    });
+   }
+
+
      const otp = Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit OTP
 
  
-     const con = await connection();
  
      // Check if the user's email already exists in tbl_otp
      const [results] = await con.query('SELECT * FROM tbl_otp WHERE email = ?', [email]);
@@ -175,6 +190,7 @@ const checkPass = async (req, res, next) => {
        await con.query('UPDATE tbl_otp SET otp_code = ?, expire_at = ? WHERE email = ?', [otp, expiryTime, email]);
      }
  
+     await con.commit();
      // Call the function to send the OTP through the appropriate channel (e.g., email, SMS)
      await sendOTPFornewPass(email, otp);
  
@@ -187,6 +203,7 @@ const checkPass = async (req, res, next) => {
      });
    } catch (error) {
      console.log(error);
+     await con.rollback();
      res.render('ForgotPassword', {
        showForgotPasswordForm: true,
        showVerifyOTPPrompt: false,
@@ -1617,10 +1634,12 @@ const sendMailtoUser = async (req, res, next) => {
 
 
 const appPass = async(req,res,next)=>{ 
-
+  const con = await connection();
   try {
+
+    const [rows] = await con.query('SELECT appEmail, appPassword FROM tbl_apppass WHERE id = ?', [1]);
     
-    res.render('appPass',{"output":""})
+    res.render('appPass',{"output":"","rows":rows})
     
   } catch (error) {
     res.render('admin/kilvish500', {'output':'Internal Server Error'});

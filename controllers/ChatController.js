@@ -133,7 +133,7 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
       if (!uniqueReceivers.has(receiverID)) {
 
          
-         var [[receiver]] = await con.query('SELECT * from tbl_user where id = ? ',[receiverID]); 
+         var [[receiver]] = await con.query('SELECT * from tbl_users where user_id = ? ',[receiverID]); 
          const [[user]] = await con.query('SELECT * FROM messages WHERE user_from = ? ORDER BY timestamp ASC', [receiverID ]);  
          const [unreadResult] = await con.query('SELECT * FROM messages WHERE user_from = ? AND user_to = ? AND readStaus = ? ', [receiverID,userID,'false'] );
             

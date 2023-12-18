@@ -36,10 +36,13 @@ export default function initializeChatService(server) {
          console.log("User Connected -> ",userId)
           onlineUsers.set(socket.id, { userId, unreadMsgCount: 0 });
           var newStatus = 'online'
-          await con.query('UPDATE messages SET userStatus = ? WHERE user_from = ?', [newStatus, userId]);
-          updateOnlineStatus(userId, true);
-
-         
+         const [result] = await con.query('UPDATE messages SET userStatus = ? WHERE user_from = ?', [newStatus, userId]);
+          
+         if(result){
+          console.log(userId, "..is Online.")
+         }
+           
+         updateOnlineStatus(userId, true);         
 
         });
 
@@ -169,6 +172,10 @@ export default function initializeChatService(server) {
                  
 
         if(insertedResult){
+
+          const [result] = await con.query('UPDATE messages SET userStatus = ? WHERE user_from = ?', ['online', data.sourceId]);
+
+          console.log(result)
 
                     const insertedRowId = insertedResult.insertId;
 
@@ -354,7 +361,7 @@ export default function initializeChatService(server) {
     return { ...row };    
   })  
   
-   // console.log(chatHistory);
+   console.log(chatHistory);
     
   socket.emit('chatHistory', chatHistory);              
     
@@ -478,8 +485,10 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
 
                 console.log("disconnectedUserId",disconnectedUserId)
                 var newStatus = Date.now()
-                await con.query('UPDATE messages SET userStatus = ? WHERE user_from = ?', [newStatus, disconnectedUserId]);
-                console.log('A user disconnected.');
+             const[result] =   await con.query('UPDATE messages SET userStatus = ? WHERE user_from = ?', [newStatus, disconnectedUserId]);
+               
+                  console.log(result)
+             console.log('A user disconnected.');
                 onlineUsers.delete(socket.id);
 
                 if (disconnectedUserId) {
