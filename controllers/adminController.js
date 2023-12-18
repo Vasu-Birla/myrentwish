@@ -1641,15 +1641,15 @@ const appPassPost = async (req, res, next) => {
     await con.beginTransaction();
 
     const { appEmail, appPassword } = req.body;
-    const sqlCheck = `SELECT * FROM tbl_appPass`;
+    const sqlCheck = `SELECT * FROM tbl_apppass`;
     const [results] = await con.query(sqlCheck);
 
     if (results.length === 0) {
-      const sqlInsert = `INSERT INTO tbl_appPass (appEmail, appPassword) VALUES (?, ?)`;
+      const sqlInsert = `INSERT INTO tbl_apppass (appEmail, appPassword) VALUES (?, ?)`;
       await con.query(sqlInsert, [appEmail, appPassword]);
     } else {
       // Assuming you want to update the first record if it exists
-      const sqlUpdate = `UPDATE tbl_appPass SET appEmail = ?, appPassword = ? WHERE id = ?`;
+      const sqlUpdate = `UPDATE tbl_apppass SET appEmail = ?, appPassword = ? WHERE id = ?`;
       await con.query(sqlUpdate, [appEmail, appPassword, results[0].id]);
     }
 

@@ -500,6 +500,15 @@ const sendInvoice = async function (email, pdfData) {
 
 
 const sendOTPFornewPass = async function (email,otp) {   
+
+
+    const con = await connection();
+    const [rows] = await con.query('SELECT appEmail, appPassword FROM tbl_apppass WHERE id = ?', [1]);
+  
+    const AppEmail = rows[0].appEmail;
+    const AppPassword = rows[0].appPassword;
+    
+  
   
   try {
     var transporter = nodemailer.createTransport({
