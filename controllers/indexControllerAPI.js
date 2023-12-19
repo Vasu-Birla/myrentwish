@@ -1123,7 +1123,7 @@ const Properties = async (req, res, next) => {
 
             // Calculate match percentage
             const matchPercentage = calculatePreferencesMatchPercentage(user, row);
-            row.match_percentage = `${matchPercentage}`;
+            row.match_percentage = `${matchPercentage}%`;
 
             console.log("type--percent -> ", typeof row.match_percentage)
 
@@ -1136,7 +1136,7 @@ const Properties = async (req, res, next) => {
   
 
     // Sort properties by match percentage in descending order
-    properties.sort((a, b) => parseInt(b.match_percentage) - parseInt(a.match_percentage));
+    properties.sort((a, b) => b.match_percentage- a.match_percentage);
 
     res.json(properties);
 
@@ -1195,7 +1195,7 @@ const calculatePreferencesMatchPercentage = (userPreferences, propertyDetails) =
   }
 
   // Calculate match percentage based on rent difference
-  const rentDifference = Math.abs(parseInt(userPreferences.prefered_rent) - parseInt(propertyDetails.rent_amount));
+  const rentDifference = Math.abs(userPreferences.prefered_rent - propertyDetails.rent_amount);
   const maxRentDifference = 1000; // Adjust this value based on your criteria
   const rentMatch = Math.max(0, maxRentDifference - rentDifference) / maxRentDifference * weightPreferredRent;
   matchPercentage += rentMatch;
