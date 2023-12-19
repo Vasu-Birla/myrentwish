@@ -1113,18 +1113,27 @@ const Properties = async (req, res, next) => {
     const [properties] = await con.query(selectPropertiesSql, [userID, resultsPerPage, offset]);
 
     for (const row of properties) {
-      row.images = JSON.parse(row.images);
-      row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
+            row.images = JSON.parse(row.images);
+            row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
 
-      // Check if the property is in the user's interest
-      const [interestResult] = await con.query('SELECT * FROM tbl_interest WHERE user_id = ? AND prop_id = ?', [userID, row.prop_id]);
+            // Check if the property is in the user's interest
+            const [interestResult] = await con.query('SELECT * FROM tbl_interest WHERE user_id = ? AND prop_id = ?', [userID, row.prop_id]);
 
-      row.interest = (interestResult.length > 0).toString();
+            row.interest = (interestResult.length > 0).toString();
 
-      // Calculate match percentage
-      const matchPercentage = calculatePreferencesMatchPercentage(user, row);
-      row.match_percentage = `${matchPercentage}%`;
+            // Calculate match percentage
+            const matchPercentage = calculatePreferencesMatchPercentage(user, row);
+            row.match_percentage = `${matchPercentage}`;
+
+            console.log("type--percent -> ", typeof row.match_percentage)
+
+            var [[owner]] = await con.query('SELECT * from tbl_users where user_id = ? ',[row.user_id]); 
+
+            row.owner_image = owner.imagePath
+            
     }
+
+  
 
     // Sort properties by match percentage in descending order
     properties.sort((a, b) => parseInt(b.match_percentage) - parseInt(a.match_percentage));
@@ -1906,6 +1915,12 @@ const obtainToken = async (req, res, next) => {
     const timestamp = Date.now();
     const created_at = new Date(timestamp);
     const updated_at = new Date(timestamp);
+
+    console.log("--------------------")
+
+    console.log(device_token)
+
+    console.log("--------------------")
 
 
     // Check if a record already exists for this user and device token

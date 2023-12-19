@@ -377,8 +377,6 @@ export default function initializeChatService(server) {
 
 socket.on('chatList', async (userID) =>{
 
-  console.log(userID)
-
   const con = await connection();
 
   //var userID = req.body.user_id;
@@ -409,7 +407,10 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
         
         var [[receiver]] = await con.query('SELECT * from tbl_users where user_id = ? ',[receiverID]); 
         const [[user]] = await con.query('SELECT * FROM messages WHERE user_from = ? ORDER BY timestamp ASC', [receiverID ]);  
-  
+        const [unreadResult] = await con.query('SELECT * FROM messages WHERE user_from = ? AND user_to = ? AND readStaus = ? ', [receiverID,userID,'false'] );
+            
+       
+        console.log(unreadResult.length," unread msgs from ",receiverID," for ",userID)
            
   
         if(user != undefined){
@@ -454,11 +455,8 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
            lastSeen = "Never Logged in"
         }
   
-       var panewala = {"id":receiver.id, "name":receiver.firstname,"image":receiver.imagePath,"LastSeen": lastSeen}
-        receivers.push(panewala)
-
-
-
+       var panewala = {"id":receiver.id, "name":receiver.firstname,"image":receiver.imagePath,"LastSeen": lastSeen,"unreadCount":unreadResult.length} 
+       receivers.push(panewala)
         uniqueReceivers.add(receiverID);
      }
   
