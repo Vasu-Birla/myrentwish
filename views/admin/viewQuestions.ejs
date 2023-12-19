@@ -63,8 +63,12 @@
                            
                             Only 3 Answers (Radio)
                            
-                          <% } else {   %>
-                          Infinite Answers (Dropdown)
+                          <% } else if (questions[i].question_type == 'Text') {   %>
+                                No Answer
+                            <% } else { %>
+
+                              Infinite Answers (Dropdown)
+                              
                             <% } %>
 
                         </td>
