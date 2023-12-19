@@ -1699,7 +1699,9 @@ const getQuestions = async (req, res, next) => {
 
             const formattedQuestionsArray = Object.values(formattedQuestions);
 
-            const result = {  totalPages,  questions: formattedQuestionsArray };
+            const result = { "status": "success",  "message": "Questions retrieved successfully", totalPages,  questions: formattedQuestionsArray };
+
+            
 
     res.json(result);
 
