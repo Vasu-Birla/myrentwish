@@ -680,11 +680,13 @@ const updloadBYUser   = async(req,res,next)=>{
         return;
       }
 
-   
+
 
       var image =  existingUser.image
       var imagePath=  existingUser.imagePath 
      if (req.file) {
+
+      console.log(" new image found ...")
        image =  req.file.filename ;
        imagePath=   req.file.path = `http://${process.env.Host1}/uploads/${req.file.filename}`; 
     }
@@ -1328,10 +1330,26 @@ const updateProperty = async (req, res, next) => {
     // Set is_available based on prop_status
     const is_available = prop_status === 'available';
 
+  // if(req.body.images==''){
+      
+  // }
+
     // Convert uploaded file data to an array of image paths
-    const images = req.files
-      ? req.files.map(file => ({ path: `http://${process.env.Host1}/uploads/${file.filename}` }))
-      : JSON.parse(property.images); // Use existing images if no new images are provided
+    // const images = req.files
+    //   ? req.files.map(file => ({ path: `http://${process.env.Host1}/uploads/${file.filename}` }))
+    //   : JSON.parse(property.images); // Use existing images if no new images are provided
+
+      let images;
+
+      if (req.files && req.files.length > 0) {
+        console.log("new Images uploaded")
+        images = req.files.map(file => ({ path: `http://${process.env.Host1}/uploads/${file.filename}` }));
+      } else {
+        console.log("Existing Images uploaded")
+        images = JSON.parse(property.images);
+      }
+
+
 
     // Create an object with updated property details
     const updatedPropertyDetails = {
