@@ -1108,7 +1108,7 @@ const Properties = async (req, res, next) => {
     const offset = (page - 1) * resultsPerPage;
 
     // Fetch total number of properties for pagination calculation
-    const [totalPropsResult] = await con.query('SELECT COUNT(*) as total FROM tbl_prop');
+    const [totalPropsResult] = await con.query('SELECT COUNT(*) as total FROM tbl_propp');
     const totalProperties = totalPropsResult[0].total;
 
     const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ? LIMIT ? OFFSET ?';
@@ -1144,7 +1144,7 @@ const Properties = async (req, res, next) => {
 
   } catch (error) {
     console.error('Error in fetchAllProperties API:', error);
-    res.status(500).json({ result: 'Internal Server Error' });
+    res.status(404).json({ result: 'Properties not found' });
   } finally {
     if (con) {
       con.release();
@@ -1512,14 +1512,14 @@ const getSkills = async (req, res, next) => {
 
   try {
 
-    const selectSql = 'SELECT * FROM tbl_skills';
+    const selectSql = 'SELECT * FROM tbl_skillss';
     const [skills] = await con.query(selectSql);  
 
     res.json( skills );
 
   } catch (error) {
     console.error('Error in getskills :', error);
-    res.status(500).json({ result: 'failed' , message:'Internal Server Error' });
+    res.status(404).json({ result: 'failed' , message:'Internal Server Error' });
 
   } finally {
     if (con) {

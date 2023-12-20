@@ -8,7 +8,7 @@ import upload from '../middleware/upload.js';
 
 
 
-import {hashPassword, comparePassword, sendWelcomeMsg , responsetoQuery , sendOTPFornewPass} from '../middleware/helper.js'
+import {hashPassword, comparePassword, sendWelcomeMsg , responsetoQuery , sendOTPFornewPass ,sendNotification} from '../middleware/helper.js'
 import { response } from 'express';
 
 
@@ -853,16 +853,65 @@ const updatePropertyStatus = async (req, res, next) => {
 
 //--Notify user ------------- 
 
-const notification = async(req,res,next)=>{    
-
+const notification = async(req,res,next)=>{   
+  
+  const con = await connection(); 
   try {
-    res.render('admin/notification') 
+    const [users] = await con.query('SELECT * FROM tbl_users ORDER BY created_at DESC');
+    res.render('admin/notification',{'output':'','users':users}) 
   } catch (error) {
+    console.log(error)
     res.render('admin/kilvish500')
+  } finally{
+    con.release()
   }
     
  
 }
+
+
+const NotifyPost = async (req, res, next) => {  
+
+  console.log("in API ->> ",req.body.recipientEmail)
+  const con = await connection();
+
+  try {
+    const recipientEmails = Array.isArray(req.body.recipientEmail) ? req.body.recipientEmail : [req.body.recipientEmail];
+
+    const subject = req.body.emailSubject;
+    const message = req.body.emailMessage;
+
+    await con.beginTransaction();
+
+    const isSent = await sendNotification(recipientEmails, message, subject);
+    const [users] = await con.query('SELECT * FROM tbl_users ORDER BY created_at DESC');
+
+    await con.commit();
+    res.render('admin/notification',{'output':'','users':users}) 
+
+    // if (isSent) {
+    //   await con.commit();
+    //   res.render('admin/notification', {
+    //     "output": "Email Sent to " + recipientEmails.join(", ") + " Successfully",
+    //     "users": users
+    //   });
+    // } else {
+    //   await con.rollback();
+    //   res.render('admin/notification', {
+    //     "output": "Failed to send Email",
+    //   });
+    // }
+  } catch (error) {
+    console.error('Error in NotifyPost API:', error);
+    await con.rollback();
+    res.status(500).send('Internal Server Error');
+  } finally {
+   
+      con.release();
+  
+  }
+};
+
 
 
 //====================================== Question Section  ======================
@@ -1701,7 +1750,7 @@ export {homePage,
       updatePropertyStatus, addQuestionPost , viewQuestion, viewQuestionPost , skills , skillsPost , Deleteskill,
       deletepQues , editFAQ , deleteFAQ , addFAQ , SupportPost , tandcPost,
        userPrivacyPost, deleteuserPrivacy, deleteSkill , sendMailtoUser , QueriesPost ,
-        deletetandc , appPass, appPassPost , ForgotPassword , sendOTP , verifyOTP , resetpassword  }
+        deletetandc , appPass, appPassPost , ForgotPassword , sendOTP , verifyOTP , resetpassword , NotifyPost }
 
 
          

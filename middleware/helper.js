@@ -265,8 +265,8 @@ const sendMailOTP = function (email,otp,user) {
 // };
 
 
-const sendNotification = async function (recipients, message, subject) {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+const sendNotification = async function (recipients, message, subject) {  console.log("in helper->> ",recipients)
+ // process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
   var transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -280,7 +280,48 @@ const sendNotification = async function (recipients, message, subject) {
     from: 'vasubirla@gmail.com',
     to: recipients.join(', '), // Join all recipients with a comma
     subject: subject,
-    html: "<h3>Notification From MYHW App :</h1>" + "<h3>" + message + "</h1>"
+    html:  `
+    <html>
+    <head>
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+            }
+            .container {
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+            .header {
+                text-align: center;
+                background-color: #f5f5f5;
+                padding: 10px;
+                border-radius: 5px 5px 0 0;
+            }
+            .content {
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h2>Myrentwish Notification  </h2>
+            </div>
+            <div class="content">
+                <h3>Hello Sir/Madam,</h3>
+              
+                <p>${message}</p>
+              
+                <p>Best regards,</p>
+                <p>The myrentwish Support Team</p>
+            </div>
+        </div>
+    </body>
+    </html>
+`
   };
 
   try {

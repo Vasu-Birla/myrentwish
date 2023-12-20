@@ -49,7 +49,7 @@ export default function initializeChatService(server) {
         //----  KilLogin Start --------
         socket.on("signIn",async (id)  => {
             console.log("logged in ",id);
-            clients[id] = socket;           
+            clients[id] = socket;        
           
        
             // const initialUnreadCount = unreadMessageCounts[id] || 0;
@@ -175,7 +175,7 @@ export default function initializeChatService(server) {
 
           const [result] = await con.query('UPDATE messages SET userStatus = ? WHERE user_from = ?', ['online', data.sourceId]);
 
-          console.log(result)
+        
 
                     const insertedRowId = insertedResult.insertId;
 
@@ -361,7 +361,7 @@ export default function initializeChatService(server) {
     return { ...row };    
   })  
   
-   console.log(chatHistory);
+  //  console.log(chatHistory);
     
   socket.emit('chatHistory', chatHistory);              
     
@@ -376,6 +376,8 @@ export default function initializeChatService(server) {
 
 
 socket.on('chatList', async (userID) =>{
+
+  console.log("---...userID ",  userID)
 
   const con = await connection();
 
@@ -405,10 +407,21 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
      if (!uniqueReceivers.has(receiverID)) {
 
         
+        // var [[receiver]] = await con.query('SELECT * from tbl_users where user_id = ? ',[receiverID]); 
+        // const [[user]] = await con.query('SELECT * FROM messages WHERE user_from = ? ORDER BY timestamp ASC', [receiverID ]);  
+        // const [unreadResult] = await con.query('SELECT * FROM messages WHERE user_from = ? AND user_to = ? AND readStaus = ? ', [receiverID,userID,'false'] );
+            
+
+  
+                 
         var [[receiver]] = await con.query('SELECT * from tbl_users where user_id = ? ',[receiverID]); 
         const [[user]] = await con.query('SELECT * FROM messages WHERE user_from = ? ORDER BY timestamp ASC', [receiverID ]);  
         const [unreadResult] = await con.query('SELECT * FROM messages WHERE user_from = ? AND user_to = ? AND readStaus = ? ', [receiverID,userID,'false'] );
-            
+           
+        //console.log(receiver)
+
+        console.log("isse chat hui he ->>> ",receiver.user_id)
+    
        
         console.log(unreadResult.length," unread msgs from ",receiverID," for ",userID)
            
@@ -454,8 +467,10 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
         }else {
            lastSeen = "Never Logged in"
         }
-  
-       var panewala = {"id":receiver.id, "name":receiver.firstname,"image":receiver.imagePath,"LastSeen": lastSeen,"unreadCount":unreadResult.length} 
+
+      
+
+       var panewala = {"id":receiver.user_id, "name":receiver.firstname,"image":receiver.imagePath,"LastSeen": lastSeen,"unreadCount":unreadResult.length} 
        receivers.push(panewala)
         uniqueReceivers.add(receiverID);
      }

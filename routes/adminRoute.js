@@ -1,5 +1,5 @@
 import express from 'express'
-import { Deleteskill, ForgotPassword, Profile, ProfilePost, QueriesPost, SupportPost, addFAQ, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, appPass, appPassPost, changepass, checkPass, 
+import { Deleteskill, ForgotPassword, NotifyPost, Profile, ProfilePost, QueriesPost, SupportPost, addFAQ, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, appPass, appPassPost, changepass, checkPass, 
     deleteFAQ, 
     deleteProperty, 
     deleteSkill, 
@@ -163,6 +163,8 @@ router.route('/delskills').get(Deleteskill)
 
 //------ notification 
 router.route('/notify').get(notification)
+
+router.route('/notify').post(NotifyPost)
 
 
 //--------- Useer Privacy ------------
