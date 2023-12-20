@@ -61,7 +61,7 @@ function setValue()
   
       if (userResult[0].count > 0) {
         await con.rollback();
-        return res.status(200).json({ result: 'Email already exists' });
+        return res.status(409).json({ result: 'Email already exists' });
       } else {
         const sql =
           'INSERT INTO `tbl_users` ( firstname, lastname, user_email,  password, user_mobile, birthday, location, latitude, longitude, address, country, city, gender, image, imagePath, prefered_gender, prefered_city, prefered_country, bedroom_nums, bathroom_type, parking_type,prefered_type, prefered_rent, about_me, skill) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
