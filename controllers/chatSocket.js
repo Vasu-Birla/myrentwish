@@ -336,14 +336,14 @@ export default function initializeChatService(server) {
 //   SELECT *
 //   FROM messages
 //   WHERE (user_from = ? AND user_to = ?) OR (user_from = ? AND user_to = ?)
-//   ORDER BY timeorder ASC, id ASC;  
+//   ORDER BY timeorder DESC, id ASC;   
 // `, [data.sourceId, data.targetId, data.targetId, data.sourceId]);
-
 
 // SELECT *
 // FROM messages
 // WHERE (user_from = ? AND user_to = ?) OR (user_from = ? AND user_to = ?)
-// ORDER BY timeorder ASC, id ASC;
+// ORDER BY timeorder DESC, id ASC;
+
 
 
 
