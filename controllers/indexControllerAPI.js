@@ -136,7 +136,7 @@ const Login = async (req, res, next) => {
   
       // If user doesn't enter email or password
       if (!user_email || !password) {
-        res.json({ result: "Please Enter Email and Password" });
+        res.status(204).json({ result: "Please Enter Email and Password" });
         return;
       }
   
@@ -145,14 +145,14 @@ const Login = async (req, res, next) => {
 
   
       if (!user) {
-        res.json({ result: "Account does not exist!" });
+        res.status(404).json({ result: "Account does not exist!" });
         return;
       }
   
       let isValid = comparePassword(password, user.password);
   
       if (!isValid) {
-        res.json({ result: "Incorrect Password" });
+        res.status(401).json({ result: "Incorrect Password" });
         return;
       }
   
@@ -160,12 +160,12 @@ const Login = async (req, res, next) => {
         sendTokenUser(user, 200, res);
         await con.commit();
       } else {
-        res.json({ result: "Your Account Has Been Deactivated!" });
+        res.status(403).json({ result: "Your Account Has Been Deactivated!" });
       }
     } catch (error) {
       await con.rollback();
       console.error('Error in Login API:', error);
-      res.json({ result: 'Internal Server Error' });
+      res.status(500).json({ result: 'Internal Server Error' });
     } finally {      
         con.release();
     }
@@ -181,7 +181,7 @@ const Logout = async(req,res,next)=>{
         httpOnly:true
     })
 
-    res.json({ result: "logout success" });
+    res.status(200).json({ result: "logout success" });
 
 }
 
@@ -206,15 +206,15 @@ const ForgotPassword = async (req, res, next) => {
           console.log(otp);
   
       if (!email) {
-        res.json({ result: "Email Required " });
+        res.status(204).json({ result: "Email Required " });
       } else {
         const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_email = ?', [email]);
   
         if (!user) {
-          res.json({ result: "Invalid Email" });
+          res.status(400).json({ result: "Invalid Email" });
         } else {
           sendMailOTP(email, otp, user);
-          res.json({ result: "success", user_id: user.user_id, otp: otp });
+          res.status(200).json({ result: "success", user_id: user.user_id, otp: otp });
         }
       }
     } catch (error) {
@@ -281,7 +281,7 @@ const  removeAccount = async(req,res,next)=>{
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
   
     if ( user.status == "inactive") {
-      return res.json({ result: "failed", message:"Deactivated Profile Cannot be deleted" });
+      return res.status(401).json({ result: "failed", message:"Deactivated Profile Cannot be deleted" });
     } 
     await con.query('DELETE FROM tbl_users WHERE user_id = ?', [userID]);
    
@@ -292,7 +292,7 @@ const  removeAccount = async(req,res,next)=>{
   } catch (error) {
     await con.rollback();
    
-    res.json({ result: "failed", message:" Unable to delete Your Account  !" });
+    res.status(500).json({ result: "failed", message:" Unable to delete Your Account  !" });
     
   }finally{
     con.release();
@@ -676,7 +676,7 @@ const updloadBYUser   = async(req,res,next)=>{
   
       if (!existingUser) {
         await con.rollback();
-        res.json({ result: "User not found" });
+        res.status(404).json({ result: "User not found" });
         return;
       }
 
@@ -766,7 +766,7 @@ const updloadBYUser   = async(req,res,next)=>{
   
       if (!existingUser) {
         await con.rollback();
-        res.json({ result: "User not found" });
+        res.status(404).json({ result: "User not found" });
         return;
       }
   
@@ -835,7 +835,7 @@ const updloadBYUser   = async(req,res,next)=>{
       const [[existingUser]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
   
       if (!existingUser) {
-        res.json({ result: "User not found" });
+        res.status(404).json({ result: "User not found" });
         return;
       }
   
@@ -854,7 +854,7 @@ const updloadBYUser   = async(req,res,next)=>{
       if (hasUpdatedPreferences) {
         res.json({ result: "success" });
       } else {
-        res.json({ result: "failed" });
+        res.status(500).json({ result: "failed" });
       }
     } catch (error) {
       console.error('Error in checkPreferenceUpdate API:', error);
@@ -894,7 +894,7 @@ const addProperty = async (req, res, next) => {
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
     if (!user) {
       await con.rollback();
-      return res.json({ result: "User not found" });
+      return res.status(404).json({ result: "User not found" });
     }
 
     // Extract property details from the request body
@@ -1100,7 +1100,7 @@ const Properties = async (req, res, next) => {
     // Validate if the user exists
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
     if (!user) {
-      return res.json({ result: "User not found" });
+      return res.status(404).json({ result: "User not found" });
     }
 
     const page = req.body.page_number || 1; // Default to page 1 if not provided
@@ -1108,7 +1108,7 @@ const Properties = async (req, res, next) => {
     const offset = (page - 1) * resultsPerPage;
 
     // Fetch total number of properties for pagination calculation
-    const [totalPropsResult] = await con.query('SELECT COUNT(*) as total FROM tbl_propp');
+    const [totalPropsResult] = await con.query('SELECT COUNT(*) as total FROM tbl_prop');
     const totalProperties = totalPropsResult[0].total;
 
     const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ? LIMIT ? OFFSET ?';
@@ -1228,7 +1228,7 @@ const myProperties = async (req, res, next) => {
       const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
       if (!user) {
         await con.rollback();
-        return res.json({ result: "User not found" });
+        return res.status(404).json({ result: "User not found" });
       }
   
       const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id = ?';  
@@ -1262,7 +1262,7 @@ const property = async (req, res, next) => {
     const [[property]] = await con.query('SELECT * FROM tbl_prop WHERE prop_id = ?', [prop_id]);
 
     if (!property) {
-      return res.json({ result: "Property Not Found" });
+      return res.status(404).json({ result: "Property Not Found" });
      
     } 
 
@@ -1296,7 +1296,7 @@ const updateProperty = async (req, res, next) => {
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
     if (!user) {
       await con.rollback();
-      return res.json({ result: "User not found" });
+      return res.status(404).json({ result: "User not found" });
     }
 
     // Validate if the property exists and is owned by the user
@@ -1447,14 +1447,14 @@ const deleteProperty = async (req, res, next) => {
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
     if (!user) {
       await con.rollback();
-      return res.json({ result: "User not found" });
+      return res.status(404).json({ result: "User not found" });
     }
 
     // Validate if the property exists and is owned by the user
     const [[property]] = await con.query('SELECT * FROM `tbl_prop` WHERE prop_id = ? AND user_id = ?', [propertyID, userID]);
     if (!property) {
       await con.rollback();
-      return res.json({ result: "Property not found or does not belong to the user" });
+      return res.status(404).json({ result: "Property not found or does not belong to the user" });
     }
 
     // Delete the property from the tbl_prop table
@@ -1512,7 +1512,7 @@ const getSkills = async (req, res, next) => {
 
   try {
 
-    const selectSql = 'SELECT * FROM tbl_skillss';
+    const selectSql = 'SELECT * FROM tbl_skills';
     const [skills] = await con.query(selectSql);  
 
     res.json( skills );
@@ -1607,7 +1607,7 @@ const addToInterest = async (req, res, next) => {
 
     if (!userResult[0] || !propertyResult[0]) {
       await con.rollback();
-      return res.json({ result: "User or Property not found" });
+      return res.status(404).json({ result: "User or Property not found" });
     }
 
     // Check if the user is already interested in the property
@@ -1615,7 +1615,7 @@ const addToInterest = async (req, res, next) => {
 
     if (existingInterest.length > 0) {
       await con.rollback();
-      return res.json({ result: "User is already interested in this property" });
+      return res.status(200).json({ result: "User is already interested in this property" });
     }
 
     // Retrieve the owner's user_id from the tbl_prop table
@@ -1623,7 +1623,7 @@ const addToInterest = async (req, res, next) => {
 
     if (!ownerResult[0]) {
       await con.rollback();
-      return res.json({ result: "Owner not found for this property" });
+      return res.status(404).json({ result: "Owner not found for this property" });
     }
 
     const ownerID = ownerResult[0].user_id;
@@ -1851,7 +1851,7 @@ const addAnswer = async (req, res, next) => {
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
     if (!user) {
       await con.rollback();
-      return res.json({ result: "User not found" });
+      return res.status(404).json({ result: "User not found" });
     }
 
     // Fetch all questions to validate answers
@@ -1882,7 +1882,7 @@ const invalidAnswers = answers.filter(answer => {
 
     if (invalidAnswers.length > 0) {
       await con.rollback();
-      return res.json({ result: "failed", message: "Invalid question or answer", invalidAnswers });
+      return res.status(400).json({ result: "failed", message: "Invalid question or answer", invalidAnswers });
     }
 
     // Insert or update answers
@@ -1956,7 +1956,7 @@ const obtainToken = async (req, res, next) => {
       if (result) {
         res.json({ "result": "success" });
       } else {
-        res.json({ "result": "failed" });
+        res.status(500).json({ "result": "failed" });
       }
     } else {
       console.log("New DeviceID");
@@ -1972,7 +1972,7 @@ const obtainToken = async (req, res, next) => {
       if (result) {
         res.json({ "result": "success" });
       } else {
-        res.json({ "result": "failed" });
+        res.status(500).json({ "result": "failed" });
       }
     }
 
@@ -2010,7 +2010,7 @@ const contactUs = async (req, res, next) => {
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
     if (!user) {
       await con.rollback();
-      return res.json({ result: 'User not found' });
+      return res.status(404).json({ result: 'User not found' });
     }
 
     // Generate a random 4-digit number
@@ -2047,7 +2047,7 @@ const myTickets = async (req, res, next) => {
     // Validate if the user exists
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
     if (!user) {
-      return res.json({ result: 'User not found' });
+      return res.status(404).json({ result: 'User not found' });
     }
 
     // Fetch tickets for the specified user
