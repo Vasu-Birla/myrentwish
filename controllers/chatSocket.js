@@ -373,7 +373,7 @@ export default function initializeChatService(server) {
 
   })  
   
-    console.log(chatHistory);
+    //console.log(chatHistory);
     
   socket.emit('chatHistory', chatHistory);              
     
