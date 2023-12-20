@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 15, 2023 at 01:53 PM
+-- Generation Time: Dec 20, 2023 at 01:20 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -46,10 +46,12 @@ CREATE TABLE `messages` (
 --
 
 INSERT INTO `messages` (`id`, `user_from`, `user_to`, `message`, `filename`, `filePath`, `mimetype`, `thumbnail`, `timestamp`, `userStatus`, `readStaus`) VALUES
-(7, '8', '12', 'Hello, user 12 kya haal chal?', '', '', 'txt', '', '2023-12-15 04:36 PM', 'online', 'true'),
-(8, '8', '12', 'Hello, user 12 kya haal chal?', '', '', 'txt', '', '2023-12-15 04:36 PM', 'online', 'true'),
-(9, '8', '12', 'Hello, user 12 kya haal chal?', '', '', 'txt', '', '2023-12-15 04:52 PM', 'online', 'true'),
-(10, '8', '12', 'Hello, user 12 kya haal chal?', '', '', 'txt', '', '2023-12-15 05:01 PM', 'online', 'false');
+(143, '12', '8', 'guii', '', '', 'txt', '', '2023-12-20 05:28 PM', 'online', 'true'),
+(144, '12', '8', 'jinga lala', '', '', 'txt', '', '2023-12-20 05:28 PM', 'online', 'true'),
+(145, '8', '12', 'Hello, vishu from 8 kilvish', '', '', 'txt', '', '2023-12-20 05:29 PM', 'online', 'true'),
+(146, '8', '12', 'juuii', '', '', 'txt', '', '2023-12-20 05:31 PM', 'online', 'true'),
+(147, '12', '8', 'ghdd', '', '', 'txt', '', '2023-12-20 05:34 PM', 'online', 'true'),
+(148, '8', '12', 'jiii', '', '', 'txt', '', '2023-12-20 05:43 PM', 'online', 'true');
 
 -- --------------------------------------------------------
 
@@ -98,7 +100,7 @@ CREATE TABLE `tbl_apppass` (
 --
 
 INSERT INTO `tbl_apppass` (`id`, `appEmail`, `appPassword`, `created_at`, `updated_at`) VALUES
-(1, 'vasubirla@gmail.com', 'mtvrqzmxlarnrgzh', '2023-12-13 13:10:10', '2023-12-13 13:23:24');
+(1, 'vasubirla@gmail.com', 'phjwptaxdnaunqol', '2023-12-13 13:10:10', '2023-12-18 06:08:05');
 
 -- --------------------------------------------------------
 
@@ -232,8 +234,10 @@ CREATE TABLE `tbl_otp` (
 --
 
 INSERT INTO `tbl_otp` (`id`, `email`, `otp_code`, `created_at`, `expire_at`) VALUES
-(1, 'kilvishbirla@gmail.com', 282205, '2023-12-14 07:12:45', '2023-12-14 07:22:45'),
-(2, 'admin@gmail.com', 723931, '2023-12-14 08:19:01', '2023-12-14 09:29:31');
+(1, 'kilvishbirla@gmail.com', 690809, '2023-12-14 07:12:45', '2023-12-18 06:44:30'),
+(2, 'admin@gmail.com', 835075, '2023-12-14 08:19:01', '2023-12-18 06:33:00'),
+(3, 'adsfsdmin@gmail.com', 417952, '2023-12-18 06:31:52', '2023-12-18 06:41:52'),
+(4, 'aaaaadmin@gmail.com', 363004, '2023-12-18 06:32:47', '2023-12-18 06:42:47');
 
 -- --------------------------------------------------------
 
@@ -310,12 +314,10 @@ CREATE TABLE `tbl_prop` (
 --
 
 INSERT INTO `tbl_prop` (`prop_id`, `user_id`, `owner_name`, `owner_contact`, `owner_email`, `title`, `prefered_gender`, `description`, `address`, `city`, `country`, `prop_type`, `bedroom_nums`, `bathroom_type`, `parking_type`, `size_sqft`, `rent_amount`, `currency`, `available_date`, `is_available`, `prop_status`, `images`, `created_at`, `updated_at`) VALUES
-(1, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'Women', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', 'CAD', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701416919081.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701416919100.jpg\"}]', '2023-12-01 07:48:39', '2023-12-12 10:42:13'),
-(3, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmal.com', '2BHK', 'Women', 'very Stylish Moder Age 2BHK villa ', 'Sairam plaza ', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', 'CAD', '2023-11-30 18:30:00', 'false', 'rented', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_aa.jpg_1701417946319.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_image01.jpg_1701417946336.jpg\"}]', '2023-12-01 08:05:46', '2023-12-12 10:42:13'),
 (5, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '4BHK', 'Women', 'Very good 4BHK', 'Vijay Nagar', 'Bhopal', 'India', 'Villa', '2', 'Private', 'Dedicated', '1000', '1000', 'CAD', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_female12.jpeg_1702548559794.jpeg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_female13.jpeg_1702548559795.jpeg\"}]', '2023-12-01 08:30:30', '2023-12-14 10:09:19'),
-(6, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '4BHK', 'Women', 'Very good 4BHK', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', 'CAD', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_female5.jpeg_1701432210023.jpeg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_female6.jpeg_1701432210024.jpeg\"}]', '2023-12-01 08:31:47', '2023-12-12 10:42:13'),
+(6, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '4BHK', 'Women', 'Very good 4BHK', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000.00', '200.00', 'CAD', '2023-11-30 18:30:00', 'false', 'rented', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_female5.jpeg_1701432210023.jpeg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_female6.jpeg_1701432210024.jpeg\"}]', '2023-12-01 08:31:47', '2023-12-19 08:15:58'),
 (7, 12, 'Vishnu', '1234567890', 'vishnuprajapati1@gmail.com', '3BHK', 'Women', 'very Stylish Moder Age 3BHK villa ', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', 'CAD', '2023-11-30 18:30:00', 'true', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_1.jpg_1701502945996.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_11.jpg_1701502946017.jpg\"}]', '2023-12-02 07:42:26', '2023-12-12 10:42:13'),
-(12, 26, 'User26', '9039568219', 'user26@gmail.com', '3BHK', 'Women', 'Banglow', 'Vijay Nagar', 'Indore', 'India', 'Home', '2', 'Private', 'Dedicated', '2000', '200', 'CAD', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_472613970.jpg_1702368026543.jpg\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_images.jpg_1702368026544.jpg\"}]', '2023-12-12 08:00:26', '2023-12-12 10:42:13');
+(15, 8, 'Kilvish', '9039568219', 'kilvishbirla@gmail.com', 'red house 55', 'Man', 'Very good 4BHK', 'Vijay Nagar', 'Bhopal', 'India', 'Villa', '2', 'Private', 'Dedicated', '1000', '1000', 'CAD', '2023-11-30 18:30:00', '1', 'available', '[{\"path\":\"http://195.35.23.27:3008/uploads/img_redh.webp_1702973019141.webp\"},{\"path\":\"http://195.35.23.27:3008/uploads/img_red-house.jpg_1702973019150.jpg\"}]', '2023-12-19 07:15:51', '2023-12-19 08:03:39');
 
 -- --------------------------------------------------------
 
@@ -370,7 +372,7 @@ INSERT INTO `tbl_queries` (`id`, `user_id`, `subject`, `email`, `message`, `comp
 CREATE TABLE `tbl_questions` (
   `question_id` int(11) NOT NULL,
   `question_text` varchar(255) NOT NULL,
-  `question_type` enum('options_2','options_3','dropdown') NOT NULL,
+  `question_type` enum('options_2','options_3','dropdown','Text') NOT NULL,
   `answer_options` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`answer_options`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -382,23 +384,7 @@ INSERT INTO `tbl_questions` (`question_id`, `question_text`, `question_type`, `a
 (1, 'what is your fvt color ?', 'options_2', '[\"yellow\",\"green\"]'),
 (2, 'which is your fvt Game?', 'options_3', '[\"Cricket\",\"Football\",\"Hockey\"]'),
 (3, 'which is your places ?', 'dropdown', '[\"Indore\",\"Bhopal\",\"Goa\",\"USA\",\"England\",\"Itly\",\"Mumbai\"]'),
-(5, 'What is your Prefered Gender ? ', 'options_2', '[\"male\",\"female\"]'),
-(6, 'With whom do you want to Live ? ', 'options_2', '[\"male \",\"female\"]'),
-(7, 'jsdkfjsdf', 'options_2', '[\"sfd\",\"sdfd\"]'),
-(8, 'sdfsdfsd', 'options_2', '[\"sfsdf\",\"sdfsdfsd\"]'),
-(9, ' Quest 8', 'options_2', '[\"sfsd\",\"sfsdf\"]'),
-(10, ' Quest 9 ', 'options_3', '[\"sfsdf\",\"sdfsdf\",\"sfdf\"]'),
-(11, ' Quest 11', 'dropdown', '[\"sfd\",\"sfdsfsd\",\"ssdfsfd\",\"sfsfd\",\"sfsdf\"]'),
-(12, ' Quest 13', 'options_2', '[\"sfsdf\",\"sdfsdf\"]'),
-(13, ' Quest 14', 'options_2', '[\"ssd\",\"sfsdf\"]'),
-(14, ' Quest 15', 'options_2', '[\"sfsdf\",\"ssdf\"]'),
-(15, ' Quest 16', 'options_2', '[\"sdfds\",\"sfsdf\"]'),
-(16, ' Quest 17', 'options_2', '[\"sdfsd\",\"ssfd\"]'),
-(17, ' Quest 18', 'options_2', '[\"sdfsd\",\"sdfsdf\"]'),
-(18, ' Quest 19', 'dropdown', '[\"sfsdf\",\"sdfsd\",\"sfsdf\",\"sfsdf\"]'),
-(19, ' Quest 20', 'options_3', '[\"sdfds\",\"sfsd\",\"sfsd\"]'),
-(20, ' Quest 21', 'options_2', '[\"sdfsdf\",\"sdfsdfds\"]'),
-(21, 'Question 21 ', 'options_2', '[\"mahen\",\"netaji\"]');
+(26, 'Describe yourself in one Word ? ', 'Text', '[\"\"]');
 
 -- --------------------------------------------------------
 
@@ -701,7 +687,7 @@ ALTER TABLE `tbl_user_answers`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
 
 --
 -- AUTO_INCREMENT for table `tbl_admin`
@@ -749,7 +735,7 @@ ALTER TABLE `tbl_notifications`
 -- AUTO_INCREMENT for table `tbl_otp`
 --
 ALTER TABLE `tbl_otp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_pandp`
@@ -767,7 +753,7 @@ ALTER TABLE `tbl_prefer`
 -- AUTO_INCREMENT for table `tbl_prop`
 --
 ALTER TABLE `tbl_prop`
-  MODIFY `prop_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `prop_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `tbl_proptype`
@@ -785,7 +771,7 @@ ALTER TABLE `tbl_queries`
 -- AUTO_INCREMENT for table `tbl_questions`
 --
 ALTER TABLE `tbl_questions`
-  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `tbl_register`
@@ -809,13 +795,13 @@ ALTER TABLE `tbl_tandc`
 -- AUTO_INCREMENT for table `tbl_users`
 --
 ALTER TABLE `tbl_users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `tbl_user_answers`
 --
 ALTER TABLE `tbl_user_answers`
-  MODIFY `answer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `answer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
