@@ -330,8 +330,15 @@ export default function initializeChatService(server) {
   socket.on('chatHistory', async (data) =>{  console.log(".........",data.sourceId)
 
   const con = await connection();
-  const [chats] = await con.query("SELECT * FROM messages WHERE (user_from = '" + data.sourceId+ "' AND  user_to = '" + data.targetId + "' ) OR (user_from = '" + data.targetId + "' AND  user_to = '" + data.sourceId+ "')  ORDER BY timestamp ASC")
+  //const [chats] = await con.query("SELECT * FROM messages WHERE (user_from = '" + data.sourceId+ "' AND  user_to = '" + data.targetId + "' ) OR (user_from = '" + data.targetId + "' AND  user_to = '" + data.sourceId+ "')  ORDER BY timestamp ASC")
   
+  const [chats] = await con.query(`
+  SELECT *
+  FROM messages
+  WHERE (user_from = ? AND user_to = ?) OR (user_from = ? AND user_to = ?)
+  ORDER BY timestamp ASC, id ASC
+`, [data.sourceId, data.targetId, data.targetId, data.sourceId]);
+
 
   //--- here userFrom value will be userTO actually
   const [readALL] = await con.query('UPDATE messages SET readStaus = ? WHERE user_from =? AND user_to = ?', ['true',data.targetId, data.sourceId]);
@@ -352,6 +359,8 @@ export default function initializeChatService(server) {
     const [hours, minutes] = hoursMinutes.split(":");
     var amPm = hours >= 12 ? 'PM' : 'AM';
      row.timestamp = `${hours}:${minutes} ${amPm}`;
+
+     
   }
 
  
@@ -359,9 +368,12 @@ export default function initializeChatService(server) {
   var chatHistory = chats.map(row => { 
     row.id =  ""+ row.id +""      
     return { ...row };    
+
+
+
   })  
   
-  //  console.log(chatHistory);
+    console.log(chatHistory);
     
   socket.emit('chatHistory', chatHistory);              
     
@@ -385,6 +397,9 @@ socket.on('chatList', async (userID) =>{
   const [chats] = await con.query('SELECT * FROM messages WHERE user_from = ? ORDER BY timestamp ASC', [userID ]);  
   const [chats1] = await con.query('SELECT * FROM messages WHERE user_to = ? ORDER BY timestamp ASC', [userID ]);  
  
+
+
+
  for (let row of chats1){
 
   row.user_to = row.user_from;
