@@ -330,14 +330,14 @@ export default function initializeChatService(server) {
   socket.on('chatHistory', async (data) =>{  console.log(".........",data.sourceId)
 
   const con = await connection();
-  //const [chats] = await con.query("SELECT * FROM messages WHERE (user_from = '" + data.sourceId+ "' AND  user_to = '" + data.targetId + "' ) OR (user_from = '" + data.targetId + "' AND  user_to = '" + data.sourceId+ "')  ORDER BY timestamp ASC")
+  const [chats] = await con.query("SELECT * FROM messages WHERE (user_from = '" + data.sourceId+ "' AND  user_to = '" + data.targetId + "' ) OR (user_from = '" + data.targetId + "' AND  user_to = '" + data.sourceId+ "')  ORDER BY timeorder ASC")
   
-  const [chats] = await con.query(`
-  SELECT *
-  FROM messages
-  WHERE (user_from = ? AND user_to = ?) OR (user_from = ? AND user_to = ?)
-  ORDER BY timeorder ASC, id ASC;  
-`, [data.sourceId, data.targetId, data.targetId, data.sourceId]);
+//   const [chats] = await con.query(`
+//   SELECT *
+//   FROM messages
+//   WHERE (user_from = ? AND user_to = ?) OR (user_from = ? AND user_to = ?)
+//   ORDER BY timeorder ASC, id ASC;  
+// `, [data.sourceId, data.targetId, data.targetId, data.sourceId]);
 
 
 // SELECT *
