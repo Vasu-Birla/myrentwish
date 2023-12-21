@@ -1135,6 +1135,8 @@ const getSkills = async (req, res, next) => {
 
     returnedData.message = 'Skills retrieved successfully';
     returnedData.data = skills;
+
+    res.setHeader('Content-Type', 'application/json');
     res.json(returnedData);
 
   } catch (error) {
