@@ -1093,11 +1093,12 @@ const propTypes = async (req, res, next) => {
 
 
 
-const getSkills = async (req, res, next) => {
+const getSkills1 = async (req, res, next) => {
   const con = await connection();
 
   try {
 
+   
     const selectSql = 'SELECT * FROM tbl_skills';
     const [skills] = await con.query(selectSql);  
 
@@ -1113,6 +1114,40 @@ const getSkills = async (req, res, next) => {
     }
   }
 };
+
+
+
+
+const getSkills = async (req, res, next) => {
+
+
+        let returnedData = {
+          message: 'Unexpected error',
+          data: {},
+          error: {},
+        };
+
+  try {
+    const con = await connection();
+   
+    const selectSql = 'SELECT * FROM tbl_skills';
+    const [skills] = await con.query(selectSql);
+
+    returnedData.message = 'Skills retrieved successfully';
+    returnedData.data = skills;
+    res.json(returnedData);
+
+  } catch (error) {
+    console.error('Error in getSkills:', error);
+    returnedData.error = error.message || 'Internal Server Error';
+    res.status(404).json(returnedData);
+
+  } finally {   
+      con.release();    
+  }
+};
+
+
 
 
 
