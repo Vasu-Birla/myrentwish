@@ -6,26 +6,7 @@ import {isAuthenticatedUser} from '../middleware/auth.js'
 
 import { register ,Login, Logout,  ForgotPassword ,
     resetpassword,
-    getProducts,
-    prodcutDetails,  
-    fvtList,
-    addtoFVT,
-    addtocol,
-    colList,
-    removeFromCol,
-    updloadBYUser,
     profile,
-    profilePost,
-    similarColl,
-    aboutUs,
-    TC_User,
-    UserPrivacy,
-    contactUS,
-    aboutUs1,
-    createPayment,
-    successPayment,
-    cancelPayment,
-    paymentStatus,
     obtainToken,
     updateProfile,
     updatePreference,
@@ -35,8 +16,6 @@ import { register ,Login, Logout,  ForgotPassword ,
     myProperties,
     updateProperty,
     deleteProperty,
-    addtestUser,
-    logintestUser,
     addToInterest,
     getQuestions,
     addAnswer,
@@ -55,7 +34,7 @@ const router = express.Router();
 //router.use(upload.none());
 
 
-//------------- API Routing Start -----------------------
+//=================================  API Routing Start ==================================
 
 
 
@@ -78,8 +57,6 @@ router.route('/profile').post(upload.none(),profile)
 router.route('/updateprofile').post(upload.single('image'),updateProfile)
 
 
-
-router.route('/updateUser').post(upload.single('image'),profilePost)
 
 
 router.route('/removeAccount').post(upload.none(),removeAccount)
@@ -155,84 +132,10 @@ router.route('/faqs').get(upload.none(),faqs)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//------------- Product Secttion -----------------
-
-router.route('/products').post(upload.none(),getProducts);
-
-router.route('/product').post( upload.none(),prodcutDetails);
-
-
-router.route('/addtofvt').post( upload.none(),addtoFVT);
-
-router.route('/fvtlist').post( upload.none(),fvtList);
-
-router.route('/addtocol').post( upload.none(),addtocol);
-
-router.route('/collist').post( upload.none(),colList);
-
-router.route('/removefromCol').post( upload.none(),removeFromCol);
-
-router.route('/uploadToyImg').post( upload.single('image'),updloadBYUser);
-
-
-
-router.route('/similarColl').post(upload.none(), similarColl )
-
-
-router.route('/aboutus').get(upload.none(), aboutUs )
-
-router.route('/aboutus1').get(upload.none(), aboutUs1 )
-
-router.route('/tandc').get(upload.none(), TC_User )
-
-router.route('/userPrivacy').get(upload.none(), UserPrivacy )
-
-
-router.route('/contactus').post(upload.none(), contactUS )
-
-//--------payment --
-
-router.route('/create-payment').post(upload.none(), createPayment )
-router.route('/success').get(upload.none(), successPayment )
-router.route('/cancel').get(upload.none(), cancelPayment )
-
-router.route('/isPaid').post(upload.none(), paymentStatus )
-
-
-
-
-
-
 //----------------- Push Notification Section ------------------- 
 
 
 router.route('/getToken').post(upload.none(), obtainToken )
-
-
-
-//----- test apis machine test 
-
-router.route('/addtestUser').post(upload.none(), addtestUser )
-
-router.route('/logintestUser').post(upload.none(), logintestUser )
 
 
 
