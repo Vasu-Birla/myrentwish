@@ -1520,7 +1520,14 @@ const addAnswer = async (req, res, next) => {
 
 //==============================================  NOTIFICATION SECTOIN =========================
 
+
 const obtainToken = async (req, res, next) => {
+  let returnedData = {
+    message: 'Unexpected error',
+    data: {},
+    error: {},
+  };
+
   const con = await connection();
 
   try {
@@ -1533,12 +1540,9 @@ const obtainToken = async (req, res, next) => {
     const created_at = new Date(timestamp);
     const updated_at = new Date(timestamp);
 
-    console.log("--------------------")
-
-    console.log(device_token)
-
-    console.log("--------------------")
-
+    console.log("--------------------");
+    console.log(device_token);
+    console.log("--------------------");
 
     // Check if a record already exists for this user and device token
     const [existingRecords] = await con.query('SELECT * FROM tbl_fcm WHERE user_id = ? AND device_token = ?', [userID, device_token]);
@@ -1551,9 +1555,11 @@ const obtainToken = async (req, res, next) => {
       const [result] = await con.query('UPDATE tbl_fcm SET device_status = ?, updated_at = ? WHERE user_id = ? AND device_token = ?', [device_status, updated_at, userID, device_token]);
 
       if (result) {
-        res.json({ "result": "success" });
+        returnedData = { message: "success", data: {}, error: {} };
+        res.json(returnedData);
       } else {
-        res.status(500).json({ "result": "failed" });
+        returnedData = { message: "failed", data: {}, error: {} };
+        res.status(500).json(returnedData);
       }
     } else {
       console.log("New DeviceID");
@@ -1567,9 +1573,11 @@ const obtainToken = async (req, res, next) => {
       const [result] = await con.query('INSERT INTO tbl_fcm (user_id, device_token, device_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?)', [userID, device_token, device_status, created_at, updated_at]);
 
       if (result) {
-        res.json({ "result": "success" });
+        returnedData = { message: "success", data: {}, error: {} };
+        res.json(returnedData);
       } else {
-        res.status(500).json({ "result": "failed" });
+        returnedData = { message: "failed", data: {}, error: {} };
+        res.status(500).json(returnedData);
       }
     }
 
@@ -1577,7 +1585,8 @@ const obtainToken = async (req, res, next) => {
   } catch (error) {
     await con.rollback();
     console.error('Error in obtainToken API:', error);
-    res.status(500).json({ "result": "Internal Server Error" });
+    returnedData = { message: 'Internal Server Error', data: {}, error };
+    res.status(500).json(returnedData);
   } finally {
     if (con) {
       con.release();
@@ -1587,15 +1596,16 @@ const obtainToken = async (req, res, next) => {
 
 
 
-
-
-
-
 //===========================  Contact US  Section  ================================ 
 
 
-
 const contactUs = async (req, res, next) => {
+  let returnedData = {
+    message: 'Unexpected error',
+    data: {},
+    error: {},
+  };
+
   const con = await connection();
 
   try {
@@ -1607,7 +1617,8 @@ const contactUs = async (req, res, next) => {
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
     if (!user) {
       await con.rollback();
-      return res.status(404).json({ result: 'User not found' });
+      returnedData = { message: 'User not found', data: {}, error: {} };
+      return res.status(404).json(returnedData);
     }
 
     // Generate a random 4-digit number
@@ -1622,11 +1633,13 @@ const contactUs = async (req, res, next) => {
 
     await con.commit();
 
-    res.json({ result: 'success', message: 'Contact query added successfully', complain_number });
+    returnedData = { message: 'success', data: { complain_number }, error: {} };
+    res.json(returnedData);
   } catch (error) {
     await con.rollback();
     console.error('Error in contactUs API:', error);
-    res.status(500).json({ result: 'Internal Server Error' });
+    returnedData = { message: 'Internal Server Error', data: {}, error };
+    res.status(500).json(returnedData);
   } finally {
     if (con) {
       con.release();
@@ -1635,7 +1648,16 @@ const contactUs = async (req, res, next) => {
 };
 
 
+
+
+
 const myTickets = async (req, res, next) => {
+  let returnedData = {
+    message: 'Unexpected error',
+    data: {},
+    error: {},
+  };
+
   const con = await connection();
 
   try {
@@ -1644,16 +1666,19 @@ const myTickets = async (req, res, next) => {
     // Validate if the user exists
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
     if (!user) {
-      return res.status(404).json({ result: 'User not found' });
+      returnedData = { message: 'User not found', data: {}, error: {} };
+      return res.status(404).json(returnedData);
     }
 
     // Fetch tickets for the specified user
     const [tickets] = await con.query('SELECT * FROM tbl_queries WHERE user_id = ?', [user_id]);
 
-    res.json(tickets);
+    returnedData = { message: 'success', data: tickets, error: {} };
+    res.json(returnedData);
   } catch (error) {
     console.error('Error in myTickets API:', error);
-    res.status(500).json({ result: 'Internal Server Error' });
+    returnedData = { message: 'Internal Server Error', data: {}, error };
+    res.status(500).json(returnedData);
   } finally {
     if (con) {
       con.release();
@@ -1669,7 +1694,14 @@ const myTickets = async (req, res, next) => {
 
 //======================   Terms & Condition  Webview ================== 
 
+
 const tandc = async (req, res, next) => {
+  let returnedData = {
+    message: 'Unexpected error',
+    data: {},
+    error: {},
+  };
+
   const con = await connection();
 
   try {
@@ -1679,19 +1711,24 @@ const tandc = async (req, res, next) => {
     if (result.length > 0) {
       const termsContent = result[0].terms;
 
+      returnedData = { message: 'success', data: termsContent, error: {} };
       // Return the HTML content as a response
-      res.send(termsContent);
+      res.send(returnedData);
     } else {
       // If terms and conditions not found, you can send an appropriate response
-      res.status(404).send('Terms and conditions not found');
+      returnedData = { message: 'Terms and conditions not found', data: {}, error: {} };
+      res.status(404).json(returnedData);
     }
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Internal Server Error');
+    console.error('Error in tandc API:', error);
+    returnedData = { message: 'Internal Server Error', data: {}, error };
+    res.status(500).json(returnedData);
   } finally {
     con.release();
   }
 };
+
+
 
 
 
@@ -1700,29 +1737,37 @@ const tandc = async (req, res, next) => {
 
 
 const pandp = async (req, res, next) => {
+  let returnedData = {
+    message: 'Unexpected error',
+    data: {},
+    error: {},
+  };
+
   const con = await connection();
 
   try {
-    // Fetch the terms and conditions from the database
+    // Fetch the privacy and policy from the database
     const [result] = await con.query('SELECT * FROM tbl_pandp where id = ?', [1]);
 
     if (result.length > 0) {
       const policyContent = result[0].policy;
 
+      returnedData = { message: 'success', data: policyContent, error: {} };
       // Return the HTML content as a response
-      res.send(policyContent);
+      res.send(returnedData);
     } else {
-      // If terms and conditions not found, you can send an appropriate response
-      res.status(404).send('User Privacy not found');
+      // If privacy and policy not found, you can send an appropriate response
+      returnedData = { message: 'User Privacy not found', data: {}, error: {} };
+      res.status(404).json(returnedData);
     }
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Internal Server Error');
+    console.error('Error in pandp API:', error);
+    returnedData = { message: 'Internal Server Error', data: {}, error };
+    res.status(500).json(returnedData);
   } finally {
     con.release();
   }
 };
-
 
 
 
@@ -1733,6 +1778,12 @@ const pandp = async (req, res, next) => {
 
 
 const faqs = async (req, res, next) => {
+  let returnedData = {
+    message: 'Unexpected error',
+    data: {},
+    error: {},
+  };
+
   const con = await connection();
 
   try {
@@ -1741,25 +1792,27 @@ const faqs = async (req, res, next) => {
 
     if (results.length > 0) {
       // Generate HTML for FAQs with index
-      const faqHTML = results.map((result, index) => `
-        <p><strong>Q.${index + 1}: ${result.faq}</strong></p>
-        <p>${result.answer}</p>
-      `).join('');
+      const faqHTML = results.map((result, index) => ({
+        question: `Q.${index + 1}: ${result.faq}`,
+        answer: result.answer,
+      }));
 
+      returnedData = { message: 'success', data: faqHTML, error: {} };
       // Return the HTML as a response
-      res.send(faqHTML);
+      res.json(returnedData);
     } else {
       // If no FAQs found, you can send an appropriate response
-      res.status(404).send('No FAQs found');
+      returnedData = { message: 'No FAQs found', data: {}, error: {} };
+      res.status(404).json(returnedData);
     }
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).send('Internal Server Error');
+    console.error('Error in faqs API:', error);
+    returnedData = { message: 'Internal Server Error', data: {}, error };
+    res.status(500).json(returnedData);
   } finally {
     con.release();
   }
 };
-
 
 
 
