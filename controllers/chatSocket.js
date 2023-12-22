@@ -349,28 +349,26 @@ export default function initializeChatService(server) {
     console.log("readALL updated");
   }
 
+
+
   for (let row of chats ){
 
-    var timestamp = row.timestamp
+    var timestamp = row.timestamp;
+    // Convert the timestamp to a Date object
+    const date = new Date(timestamp);
+    // Extract the time part
+    const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    const [, timePart] = timestamp.split(" ");
-  
-    // Split the time part into hours, minutes, and AM/PM
-    const [hoursMinutes, ampm] = timePart.split(" ");
-    const [hours, minutes] = hoursMinutes.split(":");
-    var amPm = hours >= 12 ? 'PM' : 'AM';
-     row.timestamp = `${hours}:${minutes} ${amPm}`;
+    row.timestamp = time
 
-     
   }
+
 
  
  
   var chatHistory = chats.map(row => { 
     row.id =  ""+ row.id +""      
     return { ...row };    
-
-
 
   })  
   
