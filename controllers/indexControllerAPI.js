@@ -1093,7 +1093,7 @@ const propTypes = async (req, res, next) => {
 
 
 
-const getSkills1 = async (req, res, next) => {
+const getSkills = async (req, res, next) => {
   const con = await connection();
 
   try {
@@ -1118,7 +1118,7 @@ const getSkills1 = async (req, res, next) => {
 
 
 
-const getSkills = async (req, res, next) => {
+const getSkills1 = async (req, res, next) => {
 
 
         let returnedData = {
@@ -1660,7 +1660,11 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      updatePreference, addProperty, property, Properties , myProperties , 
      updateProperty , deleteProperty , addToInterest , getQuestions,
      addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets ,tandc , pandp , faqs,
-     checkPreferenceAvailability
+     checkPreferenceAvailability  , 
+
+
+
+     getSkills1
 }
 
 

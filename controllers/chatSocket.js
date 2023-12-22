@@ -103,6 +103,8 @@ export default function initializeChatService(server) {
           
             var data = msg;  
 
+            console.log("time from user -> ",data.timestamp); 
+
             //console.log(data); 
            // console.log(data)
             
@@ -168,7 +170,7 @@ export default function initializeChatService(server) {
   var main = "INSERT INTO `messages` (`user_from`, `user_to`, `message`, `filename`, `filePath`, `mimetype`, `thumbnail`, `timestamp`,`userStatus`, `readStaus`) VALUES (?, ?, ?, ?, ?, ?, ?,?,?,?)"
             //con.query("INSERT INTO `messages` (`user_from`,`user_to`,`message`,`image`,`base64`,`timestamp`) VALUES ('"+data.sourceId+"','"+data.targetId+"','"+data.message+"','"+data.image+"','"+data.base64+"','"+formattedDateTime+"')");
             
-        const [insertedResult] =  await  con.query(main,[data.sourceId, data.targetId, data.message, data.filename, kil , data.mimetype, data.thumbnail , formattedDateTime,userStatus, readStaus])
+        const [insertedResult] =  await  con.query(main,[data.sourceId, data.targetId, data.message, data.filename, kil , data.mimetype, data.thumbnail , data.timestamp ,userStatus, readStaus])
                  
 
         if(insertedResult){
@@ -179,34 +181,25 @@ export default function initializeChatService(server) {
 
                     const insertedRowId = insertedResult.insertId;
 
-                  
-                   var [latestMsg] = await con.query("SELECT * FROM messages WHERE id = '" +insertedRowId+ "'")
+                    var [latestMsg] = await con.query("SELECT * FROM messages WHERE id = ?", [insertedRowId]);
+                    latestMsg = latestMsg.map(row => {
+                 // row.message = row.message.toString();
+                  // row.timestamp = formattedTime;
 
-                    for( let row of latestMsg){
+                  var timestamp = row.timestamp;
+                  // Convert the timestamp to a Date object
+                  const date = new Date(timestamp);
+                  // Extract the time part
+                  const time = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              
+                  row.timestamp = time
 
-                      row.timestamp = formattedTime;
-                    }      
-                  
-                           
-                    // const targetUserSocket = [...onlineUsers.values()].find(
-                    //   (user) => user.userId == data.targetId
-                    // );
-                    //   console.log("online Users - ->  ",onlineUsers)
-                    //   console.log("targetUserSocket - ->  ",targetUserSocket)
+                  console.log("lattest msg time --> ", row.timestamp)
+                return row;
+        });
 
-                    // if (targetUserSocket) {
-                    //   targetUserSocket.unreadMsgCount += 1;
-                    //   // Emit the updated unread message count to the target user
-                    //   io.to(targetUserSocket.id).emit("unreadMsgCount", targetUserSocket.unreadMsgCount);
-
-                    //   console.log("unread msg count -. ,",targetUserSocket.unreadMsgCount)
-                    // }           
                   
-          
-          
-                 // latestMsg =   JSON.stringify(latestMsg);
-                  
-                //  console.log(latestMsg)
+               console.log("latest Msg --> ",latestMsg)
                   if(clients[targetId]){                
                     console.log("Online TargetID ",targetId); 
                    // sendPushNotification(targetId,latestMsg[0].message)                
