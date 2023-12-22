@@ -11,6 +11,7 @@ import http from 'http';
 import AdminRouter from './routes/adminRoute.js'
 import IndexRouter from './routes/IndexRoute.js';
 import IndexRouterAPI from './routes/IndexRouteAPI.js';
+import ApiRouter from './routes/apiRoute.js'
 import ChatRouter from './routes/ChatRoute.js';
 
 import initializeChatService from './controllers/chatSocket.js'; 
@@ -55,6 +56,7 @@ app.use(async (req, res, next) => {
 
 
 
+app.use('/api1', ApiRouter);
 app.use('/api', IndexRouterAPI);
 app.use('/admin',AdminRouter)
 

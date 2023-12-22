@@ -70,6 +70,46 @@ const sendTokenUser = (user, statusCode, res)=>{
        
 }
 
+
+const sendTokenUser1 = (user, statusCode, res) => {
+    let returnedData = {
+      message: 'Unexpected error',
+      data: {},
+      error: {},
+    };
+  
+    try {
+      returnedData.message = 'Login success';
+      returnedData.data = {
+        user_id: user.user_id,
+        JWT: getJWTToken(user.user_id),
+      };
+  
+      // Options for tokens
+      const options = {
+        expires: new Date(Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+        httpOnly: true,
+      };
+  
+      // Log in success
+      console.log('Login success', user.user_id);
+  
+      res
+        .status(statusCode)
+        .cookie('token', returnedData.data.JWT, options)
+        .json(returnedData);
+    } catch (error) {
+      console.error('Error in sendTokenUser:', error);
+      returnedData.error = error.message || 'Unexpected error';
+      res.status(500).json(returnedData);
+    }
+  };
+  
+
+
+
+
+
 function getJWTToken(id){ 
    
     return jwt.sign({id:id},process.env.JWT_SECRET,{ expiresIn: process.env.JWT_EXPIRE })
@@ -77,4 +117,4 @@ function getJWTToken(id){
 
 
 
-export {sendTokenUser , sendTokenAdmin , sendTokenCompany  }
+export {sendTokenUser , sendTokenAdmin , sendTokenCompany , sendTokenUser1  }
