@@ -26,20 +26,20 @@ const updloadinChat  = async(req,res,next)=>{
       const thumb = files.thumbnail[0];
       
            
-              const filePath = `http://${process.env.Host}/chatUploads/${file.filename}`;
-              //const filePath = `http://192.168.1.7:3005/chatUploads/${file.filename}`;
+              const filePath = `http://${process.env.Host1}/chatUploads/${file.filename}`;
+              //const filePath = `http://192.168.1.29:3008/chatUploads/${file.filename}`;
               const filename = file.filename
               const mimetype = file.mimetype
               const result =  'success';
-               const thumbnail = `http://${process.env.Host}/chatUploads/${thumb.filename}`;
-             //  const thumbnail = `http://192.168.1.7:3005/chatUploads/${thumb.filename}`;
+               const thumbnail = `http://${process.env.Host1}/chatUploads/${thumb.filename}`;
+             //  const thumbnail = `http://192.168.1.29:3008/chatUploads/${thumb.filename}`;
               res.json({ result,filePath,  filename, mimetype ,thumbnail });
 
 
    }
    else{  
-                const filePath = `http://${process.env.Host}/chatUploads/${file.filename}`;
-              //const filePath = `http://192.168.1.7:3005/chatUploads/${file.filename}`;
+                const filePath = `http://${process.env.Host1}/chatUploads/${file.filename}`;
+              //const filePath = `http://192.168.1.29:3005/chatUploads/${file.filename}`;
               const filename = file.filename
               const mimetype = file.mimetype
               const result =  'success';
