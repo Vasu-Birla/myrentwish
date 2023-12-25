@@ -27,7 +27,9 @@ import { register ,Login, Logout,  ForgotPassword ,
     tandc,
     pandp,
     faqs,
-    checkPreferenceAvailability} from '../controllers/indexControllerAPI.js';
+    checkPreferenceAvailability,
+    agreements,
+    createPDFWithSignatureField} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -128,6 +130,17 @@ router.route('/pandp').get(upload.none(),pandp)
 
 router.route('/faqs').get(upload.none(),faqs)
 
+router.route('/agreements').get(upload.none(),agreements)
+
+
+
+
+//--------------- rent agreement pdf ------------
+
+
+router.route('/pdf').get(upload.none(),createPDFWithSignatureField)
+
+
 
 
 
@@ -136,6 +149,10 @@ router.route('/faqs').get(upload.none(),faqs)
 
 
 router.route('/getToken').post(upload.none(), obtainToken )
+
+
+
+
 
 
 

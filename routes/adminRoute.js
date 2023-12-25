@@ -1,5 +1,6 @@
 import express from 'express'
 import { Deleteskill, ForgotPassword, NotifyPost, Profile, ProfilePost, QueriesPost, SupportPost, addFAQ, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, appPass, appPassPost, changepass, checkPass, 
+    deleteAgreement, 
     deleteFAQ, 
     deleteProperty, 
     deleteSkill, 
@@ -12,7 +13,7 @@ import { Deleteskill, ForgotPassword, NotifyPost, Profile, ProfilePost, QueriesP
     editFAQ, 
     faq,  
     homePage, loginAdmin, loginPage, logout, notification,
-     propType, propTypePost, properties, queries, resetpassword, sendMailtoUser, sendOTP, skills, skillsPost, tandc, 
+     propType, propTypePost, properties, queries, rentAgreement, rentAgreementPost, resetpassword, sendMailtoUser, sendOTP, skills, skillsPost, tandc, 
      tandcPost, 
      updatePropertyStatus, updateUserStatus, updateadminpic,
       updatepropType, userPrivacy, userPrivacyPost, verifyOTP, viewQuestion, viewQuestionPost, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
@@ -236,6 +237,16 @@ router.route('/appPass').get(appPass)
 router.route('/appPass').post(appPassPost)
 
 
+//=======================  Rend Agreement Section ==========
+
+
+router.route('/agreement').get(rentAgreement)
+
+router.route('/agreement').post(rentAgreementPost)
+
+deleteAgreement
+
+router.route('/deleteAgreement').get(deleteAgreement)
 
 
 

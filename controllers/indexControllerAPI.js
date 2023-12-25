@@ -8,6 +8,8 @@ import upload from '../middleware/upload.js';
 import paypal from 'paypal-rest-sdk';
 import { parse, format } from 'date-fns';
 
+import PDFDocument from 'pdf-lib';
+
 import { sendPushNotification } from '../middleware/helper.js';
 
 
@@ -1648,7 +1650,137 @@ const faqs = async (req, res, next) => {
 
 
 
+//======================   Terms & Condition  Webview ================== 
 
+// const agreements = async (req, res, next) => {
+//   const con = await connection();
+
+//   try {
+ 
+//     const [result] = await con.query('SELECT * FROM tbl_addagreement');
+
+//     if (result.length > 0) {
+//       const agreementContent = result[0].agreementContent;
+
+//       // Return the HTML content as a response
+//       res.send(agreementContent);
+//     } else {
+//       // If terms and conditions not found, you can send an appropriate response
+//       res.status(404).send('Terms and conditions not found');
+//     }
+//   } catch (error) {
+//     console.error('Error:', error);
+//     res.status(500).send('Internal Server Error');
+//   } finally {
+//     con.release();
+//   }
+// };
+
+
+
+
+const agreements = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    const [result] = await con.query('SELECT * FROM tbl_addagreement');
+
+    if (result.length > 0) {
+      // Extract the agreement content from each result
+      const agreementContents = result.map(row => row.agreementContent);
+
+      // Return the array of HTML contents as a response
+      res.json(result);
+    } else {
+      // If agreements not found, you can send an appropriate response
+      res.status(404).json({ error: 'Agreements not found' });
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    con.release();
+  }
+};
+
+
+
+
+const agreements1 = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    // Fetch FAQs from the database
+    const [results] = await con.query('SELECT * FROM tbl_addagreement');
+
+    if (results.length > 0) {
+      // Generate HTML for FAQs with index
+      const AgreementHTML = results.map((result, index) => `
+       
+        <p><strong>Template Number.${index + 1}: ${result.agreementContent}</p>
+      `).join('');
+
+      // Return the HTML as a response
+      res.send(AgreementHTML);
+    } else {
+      // If no FAQs found, you can send an appropriate response
+      res.status(404).send('No FAQs found');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
+  } finally {
+    con.release();
+  }
+};
+
+
+
+
+
+
+//---------------------- Create Rent Agreement Pdf ----------------
+
+
+const createPDFWithSignatureField = async (req, res, next) => {
+  try {
+    const agreementData = "This is the agreement text from the frontend.";
+
+    // Create a new PDF document
+    const pdfDoc = await PDFDocument.load();
+
+    // Add a page to the document
+    const page = pdfDoc.addPage();
+
+    // Add text to the page (you can replace this with your agreement data)
+    const { width, height } = page.getSize();
+    const fontSize = 12;
+    page.drawText(agreementData, { x: 50, y: height - 50, fontSize });
+
+    // Add a digital signature field
+    const signatureField = page.createSignatureField();
+    const widget = signatureField.createWidget({ x: 50, y: 50, width: 200, height: 50 });
+    page.addWidget(widget);
+
+    // Add the signature field to the document
+    pdfDoc.addSignature(signatureField);
+
+    // Save the PDF to a file
+    const pdfBytes = await pdfDoc.save();
+    await fs.writeFile('agreement_with_signature.pdf', pdfBytes);
+
+    console.log('PDF document created with a signature field.');
+    res.status(200).json({ result: 'PDF document created with a signature field.' });
+  } catch (error) {
+    console.error('Error creating PDF:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {
+    // Clean up resources (optional)
+    if (pdfDoc) {
+      pdfDoc.destroy();
+    }
+  }
+};
 
 
 //===================Break Point for Duplicate APIS  =============================================
@@ -1662,7 +1794,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      updatePreference, addProperty, property, Properties , myProperties , 
      updateProperty , deleteProperty , addToInterest , getQuestions,
      addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets ,tandc , pandp , faqs,
-     checkPreferenceAvailability  , 
+     checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
 
 

@@ -1735,6 +1735,120 @@ const appPassPost = async (req, res, next) => {
 
 
 
+
+
+//======================== Rent Agreement Start ================================= 
+
+
+
+
+  const rentAgreement = async(req,res,next)=>{   
+    const con = await connection(); 
+   
+        try {
+          const [agreements] = await con.query('SELECT * FROM tbl_addagreement');   
+
+
+          if(agreements.length > 0){
+              
+            res.render('admin/rentAgreement',{'output':'ALL Agreements Fetched','agreements':agreements})
+          }else{
+            res.render('admin/rentAgreement',{'output':'No Agreement found','agreements':agreements})
+          }
+
+        
+        } catch (error) {
+          res.render('admin/kilvish500')
+        }
+   
+    }
+
+
+
+    const rentAgreementPost = async (req, res, next) => {
+      const con = await connection();
+    
+      try {
+        await con.beginTransaction();
+    
+        const agreementContent = decodeURIComponent(req.body.agreementContent);
+    
+        const agreementID = decodeURIComponent(req.body.agreementID);   //  For multiple agreements if required in Future 
+    
+
+
+        const [result] = await con.query('SELECT * FROM tbl_addagreement where id = ?', [agreementID]);
+    
+        if (result.length > 0) {              
+
+          const [results] = await con.query('UPDATE tbl_addagreement SET agreementContent = ? WHERE id = ?', [agreementContent, agreementID]);
+    
+          const [agreements] = await con.query('SELECT * FROM tbl_addagreement');
+    
+          if (results) {
+            await con.commit();
+            res.render('admin/rentAgreement', { output: 'Agreement Content Updated Successfully !!', agreements: agreements });
+          } else {
+            await con.rollback();
+            res.render('admin/rentAgreement', { output: 'Failed to update Agreement Content', agreements: agreements });
+          }
+        } else {     
+        
+          const sql = 'INSERT INTO `tbl_addagreement` ( agreementContent ) VALUES (?)';
+          const values = [agreementContent];
+          const [results] = await con.query(sql, values);
+          const [agreements] = await con.query('SELECT * FROM tbl_addagreement');
+    
+          if (results) {
+            await con.commit();
+            res.render('admin/rentAgreement', { output: 'Agreement Content Added Successfully !!', agreements: agreements });
+          } else {
+            await con.rollback();
+            res.render('admin/rentAgreement', { output: 'Failed to add Agreement Content', agreements: agreements });
+          }
+        }
+      } catch (error) {
+        await con.rollback();
+        console.error('Error:', error);
+        res.status(500).send('Internal Server Error');
+      } finally {
+        con.release();
+      }
+    };
+
+
+
+    const  deleteAgreement= async (req, res)=>{
+    
+      const con = await connection();
+      const agreementID = req.query.agreementID; 
+      try {  
+    
+        await con.query('DELETE FROM tbl_addagreement WHERE id = ?', [agreementID]);
+        const [agreements] = await con.query('SELECT * FROM tbl_addagreement');
+    
+        res.render('admin/rentAgreement', {'agreements':agreements,'output':'Agreement Sample Deleted'});
+        
+      } catch (error) {
+    
+        const [agreements] = await con.query('SELECT * FROM tbl_addagreement');
+    
+        res.render('admin/rentAgreement', {'agreements':agreements,'output':'Failed to Delete'});
+        
+      }finally{
+    
+        con.release();
+      }
+    
+    
+       
+      }
+    
+  
+    
+  
+
+
   
 
 
@@ -1750,7 +1864,9 @@ export {homePage,
       updatePropertyStatus, addQuestionPost , viewQuestion, viewQuestionPost , skills , skillsPost , Deleteskill,
       deletepQues , editFAQ , deleteFAQ , addFAQ , SupportPost , tandcPost,
        userPrivacyPost, deleteuserPrivacy, deleteSkill , sendMailtoUser , QueriesPost ,
-        deletetandc , appPass, appPassPost , ForgotPassword , sendOTP , verifyOTP , resetpassword , NotifyPost }
+        deletetandc , appPass, appPassPost , ForgotPassword , sendOTP , verifyOTP , resetpassword , NotifyPost ,
+      
+        rentAgreement  , rentAgreementPost , deleteAgreement }
 
 
          
