@@ -524,7 +524,7 @@ const sendAgreement = async function (agreementNumber,email, pdfData, agreementD
         <div class="signature-instructions">
             <p>Please review the agreement and provide your electronic signature:</p>
         <ul>
-            <li>Click on the following link to access the document: <a href="http://${process.env.Host}/agreements/${agreementNumber}">Sign Agreement</a></li>
+            <li>Click on the following link to access the document: <a href="http://${process.env.Host1}/agreements/${agreementNumber}">Sign Agreement</a></li>
             <li>Follow the instructions to add your electronic signature.</li>
         </ul>
         </div>
