@@ -53,6 +53,7 @@ const openAgreement = async(req,res,next)=>{
     }
 
     const addSign = async (req, res, next) => {
+        const con = await connection();
         try {
             const { agreementNumber, signature } = req.body;
     
@@ -80,12 +81,20 @@ const openAgreement = async(req,res,next)=>{
             // Save the updated PDF
             const updatedPdfBytes = await pdfDoc.save();
             fs.writeFileSync(filePath, updatedPdfBytes);
+
+           
+        
+             await con.query('UPDATE tbl_rentagreements SET tenantSignStatus = true WHERE agreement_number = ?', [agreementNumber]);
+            
+            res.redirect(`/agreements/${agreementNumber}/success`);
     
             // Redirect to a success page or send a success response
-            res.json({ result: 'success', message: 'Signature added successfully' });
+            //res.json({ result: 'success', message: 'Signature added successfully' });
         } catch (error) {
             console.error('Error adding signature:', error);
             res.status(500).json({ result: 'Internal Server Error' });
+        }finally{
+            con.release()
         }
     };
     

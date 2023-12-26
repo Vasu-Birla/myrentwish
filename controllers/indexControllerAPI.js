@@ -13,6 +13,8 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 
 import { sendPushNotification , sendAgreement } from '../middleware/helper.js';
 
+import pdf from 'html-pdf';
+
 
 
 paypal.configure({
@@ -1745,7 +1747,7 @@ const agreements1 = async (req, res, next) => {
 
 
 
-const createPDFWithSignatureField = async (req, res, next) => {
+const createPDFWithSignatureField1  = async (req, res, next) => {
      const con = await connection();
 
 
@@ -1812,7 +1814,7 @@ const createPDFWithSignatureField = async (req, res, next) => {
 };
 
 
-function generateAgreementNumber() {
+function generateAgreementNumber1() {
   const timestamp = new Date().getTime();
   const randomSuffix = Math.floor(Math.random() * 10000); 
   return `AG-${timestamp}-${randomSuffix}`;
@@ -1820,6 +1822,79 @@ function generateAgreementNumber() {
 
 //===================Break Point for Duplicate APIS  =============================================
 
+
+
+
+const createPDFWithSignatureField = async (req, res, next) => {
+    const con = await connection();
+
+    try {
+
+      await con.beginTransaction();
+
+      const { owner_id, agreement, tenant_id } = req.body;
+      const agreementData = agreement;
+
+      const [tenantQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [tenant_id]);
+      const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
+
+      const tenantEmail = tenantQuery[0].user_email;
+      const tenant = tenantQuery[0].firstname + ' ' + tenantQuery[0].lastname;
+      const owner = ownerQuery[0].firstname + ' ' + ownerQuery[0].lastname;
+
+      const agreementNumber = generateAgreementNumber();
+
+      // Convert HTML to PDF using html-pdf
+      const pdfOptions = {
+          format: 'Letter',
+          border: {
+              top: '0.5in',
+              right: '0.5in',
+              bottom: '0.5in',
+              left: '0.5in',
+          },
+      };
+
+      pdf.create(agreementData, pdfOptions).toFile(`public/agreements/${agreementNumber}.pdf`, async (err, response) => {
+          if (err) {
+              console.error('Error creating PDF:', err);
+              res.status(500).json({ result: 'Internal Server Error' });
+              return;
+          }
+
+          // Send the PDF to the tenant's email
+          await sendAgreement(agreementNumber, tenantEmail, response.filename, {
+              agreement: agreementData,
+              owner: owner,
+              tenant: tenant,
+          });
+
+          // Insert data into tbl_rentagreements
+          const insertQuery = 'INSERT INTO tbl_rentagreements (agreement_number, owner_id, tenant_id) VALUES (?, ?, ?)';
+          await con.query(insertQuery, [agreementNumber, owner_id, tenant_id]);
+
+          await con.commit();
+
+          res.json({ result: 'success', message: 'Rent Agreement Document Has Been Sent' });
+      });
+
+    } catch (error) {
+        await con.rollback();
+        console.error('Error creating PDF:', error);
+        res.status(500).json({ result: 'Internal Server Error' });
+    }
+};
+
+
+
+function generateAgreementNumber() {
+  const timestamp = new Date().getTime();
+  const randomSuffix = Math.floor(Math.random() * 10000); 
+  return `AG-${timestamp}-${randomSuffix}`;
+}
+
+
+// Function to convert HTML content to PDF text
 
 
 
