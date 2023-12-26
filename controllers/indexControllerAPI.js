@@ -13,7 +13,12 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 
 import { sendPushNotification , sendAgreement } from '../middleware/helper.js';
 
-import pdf from 'html-pdf';
+// import pdf from 'html-pdf';
+
+import Module from "node:module";
+const require = Module.createRequire(import.meta.url);
+
+const pdf = require('html-pdf');
 
 
 
