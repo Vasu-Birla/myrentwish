@@ -4,13 +4,14 @@ import connection from '../config.js';
 
 const con = await connection();
 import * as path from 'path';
+import fs from 'fs';
 import upload from '../middleware/upload.js';
 import paypal from 'paypal-rest-sdk';
 import { parse, format } from 'date-fns';
 
-import PDFDocument from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 
-import { sendPushNotification } from '../middleware/helper.js';
+import { sendPushNotification , sendAgreement } from '../middleware/helper.js';
 
 
 
@@ -1742,46 +1743,80 @@ const agreements1 = async (req, res, next) => {
 //---------------------- Create Rent Agreement Pdf ----------------
 
 
+
+
 const createPDFWithSignatureField = async (req, res, next) => {
+     const con = await connection();
+
+
   try {
-    const agreementData = "This is the agreement text from the frontend.";
+
+    await con.beginTransaction();
+
+
+
+    const { owner_id, agreement, tenant_id } = req.body;
+
+    const agreementData = agreement
+
+    const [tenantQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [tenant_id]);
+
+    const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
+
+    const tenantEmail = tenantQuery[0].user_email; 
+    
+    const tenant = tenantQuery[0].firstname +' '+tenantQuery[0].lastname; 
+    const owner = ownerQuery[0].firstname+' '+ownerQuery[0].lastname; 
+
+    const agreementNumber = generateAgreementNumber(); 
+
 
     // Create a new PDF document
-    const pdfDoc = await PDFDocument.load();
-
-    // Add a page to the document
+    const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage();
 
-    // Add text to the page (you can replace this with your agreement data)
+    // Set font and text color
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const { width, height } = page.getSize();
     const fontSize = 12;
-    page.drawText(agreementData, { x: 50, y: height - 50, fontSize });
+    page.drawText(agreementData, { x: 50, y: height - 50, font, fontSize, color: rgb(0, 0, 0) });
 
-    // Add a digital signature field
-    const signatureField = page.createSignatureField();
-    const widget = signatureField.createWidget({ x: 50, y: 50, width: 200, height: 50 });
-    page.addWidget(widget);
-
-    // Add the signature field to the document
-    pdfDoc.addSignature(signatureField);
-
-    // Save the PDF to a file
+    // Save the PDF to the "agreements" folder in the "public" folder
     const pdfBytes = await pdfDoc.save();
-    await fs.writeFile('agreement_with_signature.pdf', pdfBytes);
+    const pdfFileName = `${agreementNumber}.pdf`;
+    const filePath = path.join( 'public', 'agreements', pdfFileName);
+    fs.writeFileSync(filePath, pdfBytes);
 
-    console.log('PDF document created with a signature field.');
-    res.status(200).json({ result: 'PDF document created with a signature field.' });
+       // Send the PDF to the tenant's email
+       await sendAgreement(agreementNumber, tenantEmail, pdfBytes, {
+        agreement: agreementData,
+        owner: owner,
+        tenant: tenant,
+    });
+
+    // Insert data into tbl_rentagreements
+
+    const insertQuery = 'INSERT INTO tbl_rentagreements (agreement_number, owner_id, tenant_id) VALUES (?, ?, ?)';
+    await con.query(insertQuery, [agreementNumber, owner_id, tenant_id]);
+
+
+    await con.commit(); 
+
+    res.json({ result: "success", message:"Rent Agreement Document Has Been Sent" });
+
   } catch (error) {
+    await con.rollback();
     console.error('Error creating PDF:', error);
     res.status(500).json({ result: 'Internal Server Error' });
-  } finally {
-    // Clean up resources (optional)
-    if (pdfDoc) {
-      pdfDoc.destroy();
-    }
   }
 };
 
+
+function generateAgreementNumber() {
+  const timestamp = new Date().getTime();
+  const randomSuffix = Math.floor(Math.random() * 10000); 
+  return `AG-${timestamp}-${randomSuffix}`;
+}
 
 //===================Break Point for Duplicate APIS  =============================================
 

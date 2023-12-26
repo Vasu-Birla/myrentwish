@@ -138,7 +138,7 @@ router.route('/agreements').get(upload.none(),agreements)
 //--------------- rent agreement pdf ------------
 
 
-router.route('/pdf').get(upload.none(),createPDFWithSignatureField)
+router.route('/pdf').post(upload.none(),createPDFWithSignatureField)
 
 
 

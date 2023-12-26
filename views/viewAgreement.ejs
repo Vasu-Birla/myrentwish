@@ -1,0 +1,176 @@
+
+<style>
+    #signature-pad {
+        border: 1px solid #ccc;
+        width: 100%;
+        max-width: 400px; /* Set a maximum width for better readability on larger screens */
+        margin: 10px 0;
+        touch-action: none; /* Disable default touch gestures on the canvas */
+    }
+</style>
+
+
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <section class="section">
+
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+
+
+
+                <% if (tenantSignStatus) { %>
+
+                    <div>
+                        <h2>You have already Singnaterd </h2>
+                        <embed src="<%= filePath %>" type="application/pdf" width="100%" height="800px" />
+                    </div>
+                   
+                 
+                    <% } else  { %>  
+                        
+                        <div>
+                            <h2>View Agreement</h2>
+                            <embed src="<%= filePath %>" type="application/pdf" width="100%" height="800px" />
+                        </div>
+                    
+                        <div>
+                            <h2>Electronic Signature</h2>
+                            <p>Please use the options below to sign the agreement:</p>
+                    
+                            <!-- Include signature_pad HTML element -->
+                            <canvas id="signature-pad" width="400" height="200"></canvas>
+                    
+                            <form action="/sign" method="post">
+                                <input type="hidden" name="agreementNumber" value="<%= agreementNumber %>" />
+                    
+                                <!-- Include signature data in a hidden input -->
+                                <input type="hidden" id="signature" name="signature" />
+                    
+                                <button type="submit">Sign Agreement</button>
+                            </form>
+                        </div>
+                       
+             
+                    <% } %>
+              
+
+              
+               
+              
+                              
+           
+
+        
+
+              </div>
+
+
+            </div>
+          </div>
+          </div>
+        </section>
+
+      </div>
+      <footer class="main-footer">
+        <div class="footer-left">
+          COPYRIGHT MIE RIDE, 2023 Design & Developed by
+          <a href="https://cyberimpulses.com/">CISS</a></a>
+        </div>
+        <div class="footer-right">
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/signature_pad"></script>
+
+  <!-- General JS Scripts -->
+  <script src="../assets/js/app.min.js"></script>
+  <!-- JS Libraies -->
+  <script src="../assets/bundles/apexcharts/apexcharts.min.js"></script>
+  <!-- Page Specific JS File -->
+  <script src="../assets/js/page/index.js"></script>
+  <!-- Template JS File -->
+  <script src="../assets/js/scripts.js"></script>
+  <!-- Custom JS File -->
+  <script src="../assets/js/custom.js"></script>
+  <!-- DATA TABLES SCRIPT START -->
+
+</body>
+
+
+<!-- index  21 Nov 2019 03:47:04 GMT -->
+</html>
+
+ <!-- Include signature_pad library -->
+
+
+<!-- Include script to initialize signature pad -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var canvas = document.getElementById('signature-pad');
+        var signaturePad = new SignaturePad(canvas, {
+            // Adjust settings for better touch input responsiveness
+            backgroundColor: 'rgba(255, 255, 255, 0)',
+            penColor: 'black',
+            velocityFilterWeight: 0.7,
+            onBegin: function () {
+                // Clear the canvas when a new signature begins
+                signaturePad.clear();
+            },
+        });
+
+        // Handle form submission to update the hidden input with the signature data
+        var form = document.querySelector('form');
+        form.addEventListener('submit', function (event) {
+            var signatureInput = document.getElementById('signature');
+            signatureInput.value = signaturePad.toDataURL(); // Store signature as data URL
+        });
+
+        // Enable touch events on the canvas for mobile devices
+        canvas.addEventListener('touchstart', function (event) {
+            event.preventDefault();
+            var touch = event.changedTouches[0];
+            var simulatedEvent = new MouseEvent('mousedown', {
+                bubbles: true,
+                cancelable: true,
+                screenX: touch.screenX,
+                screenY: touch.screenY,
+            });
+            canvas.dispatchEvent(simulatedEvent);
+        });
+
+        canvas.addEventListener('touchmove', function (event) {
+            event.preventDefault();
+            var touch = event.changedTouches[0];
+            var simulatedEvent = new MouseEvent('mousemove', {
+                bubbles: true,
+                cancelable: true,
+                screenX: touch.screenX,
+                screenY: touch.screenY,
+            });
+            canvas.dispatchEvent(simulatedEvent);
+        });
+
+        canvas.addEventListener('touchend', function (event) {
+            event.preventDefault();
+            var simulatedEvent = new MouseEvent('mouseup', {
+                bubbles: true,
+                cancelable: true,
+            });
+            canvas.dispatchEvent(simulatedEvent);
+        });
+
+        canvas.addEventListener('touchcancel', function (event) {
+            event.preventDefault();
+            var simulatedEvent = new MouseEvent('mouseup', {
+                bubbles: true,
+                cancelable: true,
+            });
+            canvas.dispatchEvent(simulatedEvent);
+        });
+    });
+</script>

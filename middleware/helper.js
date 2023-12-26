@@ -464,25 +464,28 @@ var transporter = nodemailer.createTransport({
 
 };
 
-const sendInvoice = async function (email, pdfData) {
-  try {
-      var transporter = nodemailer.createTransport({
-          service: 'gmail',
-          auth: {
-              user: 'vasubirla@gmail.com',
-              pass: 'phjwptaxdnaunqol'
-          }
-      });
 
-      var mailOptions = {
-        from: 'vasubirla@gmail.com',
-        to: email,
-        subject: 'Welcome to Credx Invoice Management System',
-        html: `
-            <html>
-            <head>
-                <style>
-                    /* Add your CSS styles here */
+
+const sendAgreement = async function (agreementNumber,email, pdfData, agreementDetails) {
+    try {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'vasubirla@gmail.com',
+                pass: 'phjwptaxdnaunqol'
+            }
+        });
+
+        const { agreement, owner, tenant } = agreementDetails;
+
+        const mailOptions = {
+            from: 'vasubirla@gmail.com',
+            to: email,
+            subject: 'Rent Agreement from MyrentWish',
+            html: `
+                <html>
+                <head>
+                    <style>
                     body {
                         font-family: Arial, sans-serif;
                         background-color: #f5f5f5;
@@ -503,41 +506,56 @@ const sendInvoice = async function (email, pdfData) {
                         line-height: 1.5;
                         color: #666;
                     }
-                </style>
-            </head>
-            <body>
+                    .signature-instructions {
+                        margin-top: 20px;
+                    }
+                    .signature-instructions p {
+                        color: #333;
+                        font-weight: bold;
+                    }
+                    </style>
+                </head>
+                <body>
                 <div class="container">
-                    <h1> invoice From Credx Invoice Management System</h1>
-                    <p>Dear User,</p>
-                    <p>We Have sent the Invoice Regarding your purchase .</p>
-                    <p>With our system, you can easily create, manage, and track your invoices, ensuring smooth financial transactions.</p>
-                    <p>If you have any questions or need assistance, please don't hesitate to reach out to our support team.</p>
-                    <p>Thank you for choosing Credx!</p>
-                    <p>Best regards,</p>
-                    <p>Your Credx Team</p>
-                    <p>Kilvish Birla</p>
-                </div>
-            </body>
-            </html>
-        `,
-        attachments: [
-         {
-             filename: 'invoice.pdf',
-             content: pdfData,
-             encoding: 'base64'
-         }
-     ]
-      };
+        <h1>Agreement From MyRentWish's Property Owner</h1>
+        <p>Dear ${tenant},</p>
+        <p>${owner} has sent you the following agreement:</p>
+        <p>${agreement}</p>
+        <div class="signature-instructions">
+            <p>Please review the agreement and provide your electronic signature:</p>
+        <ul>
+            <li>Click on the following link to access the document: <a href="http://${process.env.Host}/agreements/${agreementNumber}">Sign Agreement</a></li>
+            <li>Follow the instructions to add your electronic signature.</li>
+        </ul>
+        </div>
+        <p>If you have any questions or need assistance, please don't hesitate to reach out to our support team.</p>
+        <p>Thank you for choosing MyrentWish!</p>
+        <p>Best regards,</p>
+        <p>Your MyRentWish Team</p>
+        <p>Kilvish Birla</p>
+    </div>
+                </body>
+                </html>
+            `,
+            attachments: [
+                {
+                    filename: 'Agreement.pdf',
+                    content: pdfData,
+                    encoding: 'base64'
+                }
+            ]
+        };
 
-      const info = await transporter.sendMail(mailOptions);
-      console.log("Email sent successfully:", info.response);
-      return info;
-  } catch (error) {
-      console.log("Error in sending mail:", error);
-      throw error;
-  }
+        const info = await transporter.sendMail(mailOptions);
+        console.log("Email sent successfully:", info.response);
+        return info;
+    } catch (error) {
+        console.log("Error in sending mail:", error);
+        throw error;
+    }
 };
 
+  
 
 
 const sendOTPFornewPass = async function (email,otp) {   
@@ -622,5 +640,5 @@ const sendOTPFornewPass = async function (email,otp) {
 
 export { hashPassword , comparePassword ,sendWelcomeMsg, sendMailOTP , 
   responsetoQuery, sendNotification , sendPushNotification, 
- sendInvoice , sendOTPFornewPass };
+  sendAgreement , sendOTPFornewPass };
 

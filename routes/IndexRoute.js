@@ -2,56 +2,21 @@ import express from 'express'
 
 
 
-import upload from '../middleware/upload.js';
-import {  imageUpload, fileUpload } from '../middleware/uploader.js'
-import { isAuthenticatedCompany } from '../middleware/Companyauth.js' ;
-
-import {comapnyHome,  login, loginCompany,  logout, ForgotPassword,sendOTP,verifyOTP,resetpassword,
-   changepass, err500, profile, updateCompanypic, ProfilePost,
-
-    } from '../controllers/indexController.js';
+import {addSign, err500, openAgreement, successSingature  } from '../controllers/indexController.js';
 
 const router = express.Router(); 
 
 
 //------------- Routing Start -----------------------
 
-router.route('/').get(comapnyHome)
 
+router.route('/err500').get(err500)
 
-router.route('/login').get(login)
+router.route('/agreements/:agreementNumber').get(openAgreement)
 
-router.route('/login').post(loginCompany)
+router.route('/sign').post(addSign)
 
-router.route('/logout').get(logout)
-
-
-
-//------------------------- Forgot Reset Password ----------------
-
-router.route('/sendOTP').post(sendOTP)
-
-router.route('/verify-otp').post(verifyOTP)
-
-router.route('/reset-password').post(resetpassword)
-
-
-
-
-// Company Profile Section 
-
-router.route('/profile').get(isAuthenticatedCompany,profile)
-
-router.route('/profile').post(isAuthenticatedCompany,upload.single('image'),ProfilePost)
-
-router.route('/changepass').post(isAuthenticatedCompany ,changepass)
-
-router.route('/updateCompanypic').post(isAuthenticatedCompany,upload.single('image'),updateCompanypic)
-
-router.route('/ForgotPassword').get(ForgotPassword)
-
-router.route('/err500').get(isAuthenticatedCompany,err500)
-
+router.route('/agreements/:agreementNumber/success').get(successSingature)
 
 export default router
 
