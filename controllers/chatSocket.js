@@ -489,6 +489,8 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
   
  } 
 
+ console.log("receivers---------------------------->>>> ",receivers)
+
  socket.emit('chatList', receivers);   
 
 });

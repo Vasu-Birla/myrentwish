@@ -10,15 +10,9 @@ import paypal from 'paypal-rest-sdk';
 import { parse, format } from 'date-fns';
 
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
+import { createCanvas, loadImage } from 'canvas';
 
 import { sendPushNotification , sendAgreement } from '../middleware/helper.js';
-
-// import pdf from 'html-pdf';
-
-import Module from "node:module";
-const require = Module.createRequire(import.meta.url);
-
-const pdf = require('html-pdf');
 
 
 
@@ -1830,59 +1824,64 @@ function generateAgreementNumber1() {
 
 
 
+
+
 const createPDFWithSignatureField = async (req, res, next) => {
     const con = await connection();
 
     try {
+        await con.beginTransaction();
 
-      await con.beginTransaction();
+        const { owner_id, agreement, tenant_id } = req.body;
 
-      const { owner_id, agreement, tenant_id } = req.body;
-      const agreementData = agreement;
+        const agreementData = agreement;
 
-      const [tenantQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [tenant_id]);
-      const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
+        const [tenantQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [tenant_id]);
+        const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
 
-      const tenantEmail = tenantQuery[0].user_email;
-      const tenant = tenantQuery[0].firstname + ' ' + tenantQuery[0].lastname;
-      const owner = ownerQuery[0].firstname + ' ' + ownerQuery[0].lastname;
+        const tenantEmail = tenantQuery[0].user_email;
+        const tenant = tenantQuery[0].firstname + ' ' + tenantQuery[0].lastname;
+        const owner = ownerQuery[0].firstname + ' ' + ownerQuery[0].lastname;
 
-      const agreementNumber = generateAgreementNumber();
+        const agreementNumber = generateAgreementNumber();
 
-      // Convert HTML to PDF using html-pdf
-      const pdfOptions = {
-          format: 'Letter',
-          border: {
-              top: '0.5in',
-              right: '0.5in',
-              bottom: '0.5in',
-              left: '0.5in',
-          },
-      };
+        // Create a new PDF document
+        const pdfDoc = await PDFDocument.create();
+        const page = pdfDoc.addPage();
 
-      pdf.create(agreementData, pdfOptions).toFile(`public/agreements/${agreementNumber}.pdf`, async (err, response) => {
-          if (err) {
-              console.error('Error creating PDF:', err);
-              res.status(500).json({ result: 'Internal Server Error' });
-              return;
-          }
+        // Set font and text color
+       // const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        const font = await pdfDoc.embedFont(StandardFonts.Courier); // Example of using Courier font
 
-          // Send the PDF to the tenant's email
-          await sendAgreement(agreementNumber, tenantEmail, response.filename, {
-              agreement: agreementData,
-              owner: owner,
-              tenant: tenant,
-          });
+        const { width, height } = page.getSize();
+        const fontSize = 12;
 
-          // Insert data into tbl_rentagreements
-          const insertQuery = 'INSERT INTO tbl_rentagreements (agreement_number, owner_id, tenant_id) VALUES (?, ?, ?)';
-          await con.query(insertQuery, [agreementNumber, owner_id, tenant_id]);
+        // Convert HTML content to PDF
+        const pdfText = await htmlToPdf(agreementData, font, fontSize, width - 100);
 
-          await con.commit();
+        // Draw the PDF content on the page
+        page.drawText(pdfText, { x: 50, y: height - 50, font, fontSize, color: rgb(0, 0, 0) });
 
-          res.json({ result: 'success', message: 'Rent Agreement Document Has Been Sent' });
-      });
+        // Save the PDF to the "agreements" folder in the "public" folder
+        const pdfBytes = await pdfDoc.save();
+        const pdfFileName = `${agreementNumber}.pdf`;
+        const filePath = path.join('public', 'agreements', pdfFileName);
+        fs.writeFileSync(filePath, pdfBytes);
 
+        // Send the PDF to the tenant's email
+        await sendAgreement(agreementNumber, tenantEmail, pdfBytes, {
+            agreement: agreementData,
+            owner: owner,
+            tenant: tenant,
+        });
+
+        // Insert data into tbl_rentagreements
+        const insertQuery = 'INSERT INTO tbl_rentagreements (agreement_number, owner_id, tenant_id) VALUES (?, ?, ?)';
+        await con.query(insertQuery, [agreementNumber, owner_id, tenant_id]);
+
+        await con.commit();
+
+        res.json({ result: 'success', message: 'Rent Agreement Document Has Been Sent' });
     } catch (error) {
         await con.rollback();
         console.error('Error creating PDF:', error);
@@ -1890,6 +1889,56 @@ const createPDFWithSignatureField = async (req, res, next) => {
     }
 };
 
+
+// Function to convert HTML content to PDF text
+async function htmlToPdf(htmlContent, font, fontSize, maxWidth) {
+  // Use a dedicated library or service to convert HTML to PDF
+  // For simplicity, you can use a basic approach using a dummy canvas
+  const canvas = createCanvas(1000, 1000);
+  const context = canvas.getContext('2d');
+
+  // Draw HTML content on the canvas
+  context.font = `${fontSize}px ${font.name}`;
+  context.fillStyle = 'black';
+
+  // Use a dummy SVG image for simplicity (replace with actual image handling logic)
+  const img = await loadImage('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"></svg>');
+  context.drawImage(img, 0, 0);
+
+  // Break lines based on the maxWidth
+  const lines = breakLines(context, maxWidth);
+
+  // Concatenate lines with line breaks
+  const pdfText = lines.join('\n');
+
+  return pdfText;
+}
+
+
+// Function to break lines based on maxWidth
+function breakLines(context, maxWidth) {
+    const lines = [];
+    let currentLine = '';
+    const words = context.measureText('A').width;
+
+    // Iterate through each word and add to lines
+    for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+        const width = context.measureText(currentLine + word).width;
+
+        if (width < maxWidth) {
+            currentLine += word;
+        } else {
+            lines.push(currentLine);
+            currentLine = word;
+        }
+    }
+
+    // Add the last line
+    lines.push(currentLine);
+
+    return lines;
+}
 
 
 function generateAgreementNumber() {
@@ -1899,7 +1948,6 @@ function generateAgreementNumber() {
 }
 
 
-// Function to convert HTML content to PDF text
 
 
 
