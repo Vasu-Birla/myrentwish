@@ -5,20 +5,17 @@ import connection from '../config.js';
 const con = await connection();
 import * as path from 'path';
 import fs from 'fs';
-import upload from '../middleware/upload.js';
 import paypal from 'paypal-rest-sdk';
 import { parse, format } from 'date-fns';
 
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
-import { createCanvas, loadImage } from 'canvas';
 import puppeteer from 'puppeteer';
 
-import domino from 'domino';
+
 import jsdom from 'jsdom';
 
 
-import { jsPDF } from 'jspdf';
-import html2pdf from 'html2pdf.js';
+
 import 'jspdf-autotable'; // If you want to use autotable for better table support
 
 import { sendPushNotification , sendAgreement } from '../middleware/helper.js';
