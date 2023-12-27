@@ -36,10 +36,13 @@ const openAgreement = async(req,res,next)=>{
         const [[result]] = await con.query('SELECT tenantSignStatus FROM tbl_rentagreements WHERE agreement_number = ?', [agreementNumber]);
 
        if(result.tenantSignStatus == 'true'){
+        console.log("ALready Signed Agreement -->  ", agreementNumber)
 
         res.render('viewAgreement', { filePath, agreementNumber , tenantSignStatus:true });
        
        }else{
+
+        console.log("Yet to Sign -->  ", agreementNumber)
         res.render('viewAgreement', { filePath, agreementNumber , tenantSignStatus:false});
        }
        

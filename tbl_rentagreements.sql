@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 26, 2023 at 12:40 PM
+-- Generation Time: Dec 27, 2023 at 06:46 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -43,8 +43,7 @@ CREATE TABLE `tbl_rentagreements` (
 --
 
 INSERT INTO `tbl_rentagreements` (`id`, `agreement_number`, `owner_id`, `tenant_id`, `status`, `tenantSignStatus`, `ownerSignStatus`, `created_at`) VALUES
-(1, 'AG-1703576595748-4097', 12, 8, 'open', 'true', 'true', '2023-12-26 07:43:19'),
-(2, 'AG-1703588103226-1153', 12, 8, 'open', 'true', 'true', '2023-12-26 10:55:07');
+(14, 'AG-1703655906489-7733', 12, 8, 'open', 'false', 'true', '2023-12-27 05:45:10');
 
 --
 -- Indexes for dumped tables
@@ -64,7 +63,7 @@ ALTER TABLE `tbl_rentagreements`
 -- AUTO_INCREMENT for table `tbl_rentagreements`
 --
 ALTER TABLE `tbl_rentagreements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
