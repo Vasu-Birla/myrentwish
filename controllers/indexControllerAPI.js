@@ -1849,8 +1849,6 @@ const createPDFWithSignatureField = async (req, res, next) => {
 
     const agreementNumber = generateAgreementNumber();
 
-    // Launch a headless browser
-    // const browser = await puppeteer.launch();
       // Launch a headless browser with --no-sandbox flag
       const browser = await puppeteer.launch({
         args: ['--no-sandbox'],

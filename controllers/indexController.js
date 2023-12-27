@@ -87,9 +87,10 @@ const openAgreement = async(req,res,next)=>{
 
            
         
-             await con.query('UPDATE tbl_rentagreements SET tenantSignStatus = true WHERE agreement_number = ?', [agreementNumber]);
+             await con.query('UPDATE tbl_rentagreements SET tenantSignStatus = ? WHERE agreement_number = ?', ['true',agreementNumber]);
             
-            res.redirect(`/agreements/${agreementNumber}/success`);
+            res.redirect(`/agreements/${agreementNumber}`);
+            
     
             // Redirect to a success page or send a success response
             //res.json({ result: 'success', message: 'Signature added successfully' });
