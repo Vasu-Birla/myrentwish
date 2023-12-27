@@ -13,6 +13,9 @@ import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 import { createCanvas, loadImage } from 'canvas';
 import puppeteer from 'puppeteer';
 
+import domino from 'domino';
+import jsdom from 'jsdom';
+
 
 import { jsPDF } from 'jspdf';
 import html2pdf from 'html2pdf.js';
@@ -20,7 +23,7 @@ import 'jspdf-autotable'; // If you want to use autotable for better table suppo
 
 import { sendPushNotification , sendAgreement } from '../middleware/helper.js';
 
-
+const { JSDOM } = jsdom;
 
 paypal.configure({
     mode: 'sandbox', // Replace with 'live' for production
@@ -1830,33 +1833,37 @@ function generateAgreementNumber1() {
 
 
 const createPDFWithSignatureField = async (req, res, next) => {
-
+  const con = await connection();
 
   try {
+    await con.beginTransaction();
 
     const { owner_id, agreement, tenant_id } = req.body;
 
-    const agreementData = agreement
+    const agreementData = agreement;
 
     const [tenantQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [tenant_id]);
 
     const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
 
-    const tenantEmail = tenantQuery[0].user_email; 
-    
-    const tenant = tenantQuery[0].firstname +' '+tenantQuery[0].lastname; 
-    const owner = ownerQuery[0].firstname+' '+ownerQuery[0].lastname; 
+    const tenantEmail = tenantQuery[0].user_email;
+    const tenant = tenantQuery[0].firstname + ' ' + tenantQuery[0].lastname;
+    const owner = ownerQuery[0].firstname + ' ' + ownerQuery[0].lastname;
 
-    const agreementNumber = generateAgreementNumber(); 
+    const agreementNumber = generateAgreementNumber();
 
+    // Launch a headless browser
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    // Set the page content with the HTML
-    await page.setContent(agreement);
+    // Set content of the page to the HTML data
+    await page.setContent(agreementData);
 
     // Generate PDF from the HTML content
-    const pdfBuffer = await page.pdf({ format: 'A4' });
+    const pdfBuffer = await page.pdf();
+
+    // Close the browser
+    await browser.close();
 
     // Save the PDF to the "agreements" folder in the "public" folder
     const pdfFileName = `${agreementNumber}.pdf`;
@@ -1865,7 +1872,7 @@ const createPDFWithSignatureField = async (req, res, next) => {
 
     // Send the PDF to the tenant's email
     await sendAgreement(agreementNumber, tenantEmail, pdfBuffer, {
-      agreement: agreement,
+      agreement: agreementData,
       owner: owner,
       tenant: tenant,
     });
@@ -1874,17 +1881,15 @@ const createPDFWithSignatureField = async (req, res, next) => {
     const insertQuery = 'INSERT INTO tbl_rentagreements (agreement_number, owner_id, tenant_id) VALUES (?, ?, ?)';
     await con.query(insertQuery, [agreementNumber, owner_id, tenant_id]);
 
-    // Close the browser
-    await browser.close();
+    await con.commit();
 
     res.json({ result: 'success', message: 'Rent Agreement Document Has Been Sent' });
-  }  catch (error) {
+  } catch (error) {
+    await con.rollback();
     console.error('Error creating PDF:', error);
     res.status(500).json({ result: 'Internal Server Error' });
   }
 };
-
-
 
 
 
