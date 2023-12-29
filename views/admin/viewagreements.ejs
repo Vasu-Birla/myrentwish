@@ -60,7 +60,7 @@
 
                       
                         
-                        <td>   <%- agreements[i].owner_id %>                             
+                        <td>   <%- agreements[i].owner_fullname %>                             
                             <p>
                         
                             <% if (agreements[i].ownerSignStatus == 'true') { %>
@@ -76,7 +76,7 @@
                         </td>
 
                         
-                        <td> <%- agreements[i].tenant_id %> 
+                        <td> <%- agreements[i].tenant_fullname %> 
                             <p>
                         
                             <% if (agreements[i].tenantSignStatus == 'true') { %>
