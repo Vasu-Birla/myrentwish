@@ -13,7 +13,7 @@ import { PdfReader } from "pdfreader";
 import { PDFDocument, degrees, rgb } from 'pdf-lib'
 
 
-
+import puppeteer from 'puppeteer';
 
 
 
@@ -61,10 +61,11 @@ const openAgreement = async(req,res,next)=>{
   
     }
 
-    const addSign1 = async (req, res, next) => {
+    const addSign = async (req, res, next) => {
         const con = await connection();
         try {
             const { agreementNumber, signature } = req.body;
+
     
             // Load the existing PDF
             const filePath = path.join('public', 'agreements', `${agreementNumber}.pdf`);
@@ -77,15 +78,26 @@ const openAgreement = async(req,res,next)=>{
             // Embed the signature image into the PDF
             const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
     
-            // Get the first page and add the signature image
-            const page = pdfDoc.getPages()[0];
-            const { width, height } = page.getSize();
-            page.drawImage(signatureImage, {
-                x: width - 150, // Adjust the position based on your PDF layout
-                y: 50, // Adjust the position based on your PDF layout
-                width: 100,
-                height: 50,
-            });
+            // // Get the first page and add the signature image
+            // const page = pdfDoc.getPages()[0];
+            // const { width, height } = page.getSize();
+            // page.drawImage(signatureImage, {
+            //     x: width - 150, // Adjust the position based on your PDF layout
+            //     y: 50, // Adjust the position based on your PDF layout
+            //     width: 100,
+            //     height: 50,
+            // });
+
+
+            const lastPageIndex = pdfDoc.getPageCount() - 1;
+const lastPage = pdfDoc.getPages()[lastPageIndex];
+const { width, height } = lastPage.getSize();
+lastPage.drawImage(signatureImage, {
+  x: width - 150, // Adjust the position based on your PDF layout
+  y: 50, // Adjust the position based on your PDF layout
+  width: 100,
+  height: 50,
+});
     
             // Save the updated PDF
             const updatedPdfBytes = await pdfDoc.save();
@@ -93,7 +105,7 @@ const openAgreement = async(req,res,next)=>{
 
            
         
-             await con.query('UPDATE tbl_rentagreements SET tenantSignStatus = ? WHERE agreement_number = ?', ['true',agreementNumber]);
+           //  await con.query('UPDATE tbl_rentagreements SET tenantSignStatus = ? WHERE agreement_number = ?', ['true',agreementNumber]);
             
             res.redirect(`/agreements/${agreementNumber}`);
             
@@ -110,96 +122,7 @@ const openAgreement = async(req,res,next)=>{
     
 
 
-
-
     
-    const addSign = async (req, res, next) => {
-      const con = await connection();
-    
-      try {
-        await con.beginTransaction();
-    
-        // Extract data from the request
-        const { agreementNumber, signature } = req.body;
-    
-        // Load the existing PDF document
-        const filePath = path.join('public', 'agreements', `${agreementNumber}.pdf`);
-        const existingPdfBytes = fs.readFileSync(filePath);
-        const pdfDoc = await PDFDocument.load(existingPdfBytes);
-    
-        // Get the first page of the PDF document
-        const page = pdfDoc.getPages()[0];
-    
-        // Extract text content using pdfreader
-        const textContent = await extractTextContent(filePath);
-    
-        // Add the signature image under the specified text (assuming text "Tenant Signature:")
-        const tenantSignatureText = 'Tenant Signature:';
-    
-        // Use a regular expression to find the position of the text
-        const match = new RegExp(tenantSignatureText).exec(textContent);
-    
-        if (match) {
-          const startIndex = match.index;
-    
-          // Assuming you have the signature image data URL stored in the request body
-          const signatureImage = await pdfDoc.embedPng(signature);
-    
-          // Add the image to the page
-          const { width, height } = signatureImage.image;
-          const scale = 0.5; // You may need to adjust the scale
-          page.drawImage(signatureImage, {
-            x: 10, // Adjust the x-coordinate as needed
-            y: 10, // Adjust the y-coordinate as needed
-            width: width * scale,
-            height: height * scale,
-            rotate: degrees(0),
-          });
-    
-          // Update the text content by removing the original text
-          const updatedTextContent = textContent.substring(0, startIndex) + 'Signature Added:' + textContent.substring(startIndex + tenantSignatureText.length);
-    
-          // Set the modified text content to the page
-          await page.drawText(updatedTextContent, { x: 10, y: 10 }); // Adjust coordinates as needed
-        }
-    
-        // Save the modified PDF
-        const modifiedPdfBytes = await pdfDoc.save();
-        fs.writeFileSync(filePath, modifiedPdfBytes);
-    
-    
-    
-        await con.commit();
-    
-        res.redirect(`/agreements/${agreementNumber}`);
-      } catch (error) {
-        await con.rollback();
-        console.error('Error adding signature:', error);
-        res.status(500).json({ result: 'Internal Server Error' });
-      } finally {
-        con.release();
-      }
-    };
-    
-    async function extractTextContent(filePath) {
-      return new Promise((resolve, reject) => {
-        const textContent = [];
-        const reader = new PdfReader();
-    
-        reader.parseFileItems(filePath, (err, item) => {
-          if (err) {
-            reject(err);
-          } else if (!item) {
-            resolve(textContent.join(' '));
-          } else if (item.text) {
-            textContent.push(item.text);
-          }
-        });
-      });
-    }
-
-    
-
     
     // Convert a data URL to a buffer
     async function convertDataUrlToBuffer(dataUrl) {

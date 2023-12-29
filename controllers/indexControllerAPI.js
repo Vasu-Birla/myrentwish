@@ -1755,91 +1755,13 @@ const agreements1 = async (req, res, next) => {
 
 
 
-
-const createPDFWithSignatureField1  = async (req, res, next) => {
-     const con = await connection();
-
-
-  try {
-
-    await con.beginTransaction();
-
-
-
-    const { owner_id, agreement, tenant_id } = req.body;
-
-    const agreementData = agreement
-
-    const [tenantQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [tenant_id]);
-
-    const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
-
-    const tenantEmail = tenantQuery[0].user_email; 
-    
-    const tenant = tenantQuery[0].firstname +' '+tenantQuery[0].lastname; 
-    const owner = ownerQuery[0].firstname+' '+ownerQuery[0].lastname; 
-
-    const agreementNumber = generateAgreementNumber(); 
-
-
-    // Create a new PDF document
-    const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage();
-
-    // Set font and text color
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const { width, height } = page.getSize();
-    const fontSize = 12;
-    page.drawText(agreementData, { x: 50, y: height - 50, font, fontSize, color: rgb(0, 0, 0) });
-
-    // Save the PDF to the "agreements" folder in the "public" folder
-    const pdfBytes = await pdfDoc.save();
-    const pdfFileName = `${agreementNumber}.pdf`;
-    const filePath = path.join( 'public', 'agreements', pdfFileName);
-    fs.writeFileSync(filePath, pdfBytes);
-
-       // Send the PDF to the tenant's email
-       await sendAgreement(agreementNumber, tenantEmail, pdfBytes, {
-        agreement: agreementData,
-        owner: owner,
-        tenant: tenant,
-    });
-
-    // Insert data into tbl_rentagreements
-
-    const insertQuery = 'INSERT INTO tbl_rentagreements (agreement_number, owner_id, tenant_id) VALUES (?, ?, ?)';
-    await con.query(insertQuery, [agreementNumber, owner_id, tenant_id]);
-
-
-    await con.commit(); 
-
-    res.json({ result: "success", message:"Rent Agreement Document Has Been Sent" });
-
-  } catch (error) {
-    await con.rollback();
-    console.error('Error creating PDF:', error);
-    res.status(500).json({ result: 'Internal Server Error' });
-  }
-};
-
-
-function generateAgreementNumber1() {
-  const timestamp = new Date().getTime();
-  const randomSuffix = Math.floor(Math.random() * 10000); 
-  return `AG-${timestamp}-${randomSuffix}`;
-}
-
-
-
-
-
 const createPDFWithSignatureField = async (req, res, next) => {
   const con = await connection();
 
   try {
     await con.beginTransaction();
 
-    const { owner_id, agreement, tenant_id } = req.body;
+    const { owner_id, agreement, tenant_id, signature } = req.body;
 
     const agreementData = agreement;
 
@@ -1847,31 +1769,37 @@ const createPDFWithSignatureField = async (req, res, next) => {
 
     const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
 
-
-    
-
     const tenantEmail = tenantQuery[0].user_email;
     const tenant = tenantQuery[0].firstname + ' ' + tenantQuery[0].lastname;
     const owner = ownerQuery[0].firstname + ' ' + ownerQuery[0].lastname;
 
     const agreementNumber = generateAgreementNumber();
 
-      // // Launch a headless browser with --no-sandbox flag
-      // const browser = await puppeteer.launch({
-      //   args: ['--no-sandbox'],
-      // });
-
-      const browser = await puppeteer.launch({
-        args: ['--no-sandbox'],
-        headless: 'new', // Opt in to the new Headless mode
-      });
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox'],
+      headless: 'new',
+    });
     const page = await browser.newPage();
+
+     // Set professional margins for the entire PDF
+     const margin = {
+      top: '0.5in',
+      right: '0.5in',
+      bottom: '0.5in',
+      left: '0.5in',
+    };
+
 
     // Set content of the page to the HTML data
     await page.setContent(agreementData);
 
     // Generate PDF from the HTML content
-    const pdfBuffer = await page.pdf();
+    //const pdfBuffer = await page.pdf();
+
+    const pdfBuffer = await page.pdf({
+      margin,
+    });
+
 
     // Close the browser
     await browser.close();
@@ -1881,8 +1809,64 @@ const createPDFWithSignatureField = async (req, res, next) => {
     const filePath = path.join('public', 'agreements', pdfFileName);
     fs.writeFileSync(filePath, pdfBuffer);
 
+    // Load the existing PDF to add the signature
+    const existingPdfBytes = fs.readFileSync(filePath);
+    const pdfDoc = await PDFDocument.load(existingPdfBytes);
+
+    // Convert the signature data URL to a buffer
+    const signatureImageBytes = await convertDataUrlToBuffer(signature);
+
+    // Embed the signature image into the PDF
+    const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
+
+
+
+        // Get the last page and add the signature only to the last page
+        const lastPageIndex = pdfDoc.getPageCount() - 1;
+        const lastPage = pdfDoc.getPages()[lastPageIndex];
+        const { width, height } = lastPage.getSize();
+    
+        // Set professional margins
+        const marginLeft = 50;
+        const marginBottom = 50;
+    
+        // Add the signature image to the bottom left corner
+        lastPage.drawImage(signatureImage, {
+          x: marginLeft,
+          y: marginBottom,
+          width: 100, // Adjust the width based on your requirements
+          height: 50, // Adjust the height based on your requirements
+        });
+    
+
+    // // each page and add the signature to the bottom left corner
+    // for (let i = 0; i < pdfDoc.getPageCount(); i++) {
+    //   const currentPage = pdfDoc.getPages()[i];
+    //   const { width, height } = currentPage.getSize();
+
+    //   // Set professional margins
+    //   const marginLeft = 50;
+    //   const marginBottom = 50;
+
+    //   // Add the signature image to the bottom left corner
+    //   currentPage.drawImage(signatureImage, {
+    //     x: marginLeft,
+    //     y: marginBottom,
+    //     width: 100, // Adjust the width based on your requirements
+    //     height: 50, // Adjust the height based on your requirements
+    //   });
+    // }
+
+
+
+    
+
+    // Save the updated PDF
+    const updatedPdfBytes = await pdfDoc.save();
+    fs.writeFileSync(filePath, updatedPdfBytes);
+
     // Send the PDF to the tenant's email
-    await sendAgreement(agreementNumber, tenantEmail, pdfBuffer, {
+    await sendAgreement(agreementNumber, tenantEmail, updatedPdfBytes, {
       agreement: agreementData,
       owner: owner,
       tenant: tenant,
@@ -1902,6 +1886,13 @@ const createPDFWithSignatureField = async (req, res, next) => {
   }
 };
 
+
+
+// Function to convert a base64-encoded data URL to a buffer
+const convertDataUrlToBuffer = (dataUrl) => {
+  const base64Data = dataUrl.split(';base64,').pop();
+  return Buffer.from(base64Data, 'base64');
+};
 
 
 
