@@ -2,7 +2,7 @@ import express from 'express'
 
 
 
-import {addSign, err500, fetchprofile, openAgreement, successSingature  } from '../controllers/indexController.js';
+import {addSign, err500, fetchprofile, home, openAgreement, successSingature  } from '../controllers/indexController.js';
 import { getOnlyFansProfile } from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
@@ -10,6 +10,10 @@ const router = express.Router();
 
 //------------- Routing Start -----------------------
 
+
+
+
+router.route('/').get(home)
 
 router.route('/err500').get(err500)
 

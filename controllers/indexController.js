@@ -14,6 +14,21 @@ import { PDFDocument, degrees, rgb } from 'pdf-lib'
 
 
 
+
+
+
+
+
+
+const home = async(req,res,next)=>{
+
+      res.redirect('/admin')
+
+
+  }
+
+
+
 const openAgreement = async(req,res,next)=>{
   console.log("Openning Agreement ....")
     const con = await connection();
@@ -242,7 +257,7 @@ const err500 = async(req,res,next)=>{
 
 
   //--------------------- Export Start ------------------------------------------
-export {err500  , openAgreement ,addSign , successSingature , fetchprofile }
+export {err500  , openAgreement ,addSign , successSingature , fetchprofile , home }
 
 
          
