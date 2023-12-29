@@ -15,8 +15,9 @@ import { Deleteskill, ForgotPassword, NotifyPost, Profile, ProfilePost, QueriesP
     homePage, loginAdmin, loginPage, logout, notification,
      propType, propTypePost, properties, queries, rentAgreement, rentAgreementPost, resetpassword, sendMailtoUser, sendOTP, skills, skillsPost, tandc, 
      tandcPost, 
+     updateAgreementStatus, 
      updatePropertyStatus, updateUserStatus, updateadminpic,
-      updatepropType, userPrivacy, userPrivacyPost, verifyOTP, viewQuestion, viewQuestionPost, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
+      updatepropType, userPrivacy, userPrivacyPost, verifyOTP, viewAgreements, viewQuestion, viewQuestionPost, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
 
 
 import upload from '../middleware/upload.js';
@@ -244,9 +245,16 @@ router.route('/agreement').get(rentAgreement)
 
 router.route('/agreement').post(rentAgreementPost)
 
-deleteAgreement
-
 router.route('/deleteAgreement').get(deleteAgreement)
+
+
+
+//------ user's official Rent Agreement --------
+
+router.route('/useragreements').get(viewAgreements)
+
+router.route('/updateAgreementStatus').post(updateAgreementStatus)
+
 
 
 

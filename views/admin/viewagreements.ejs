@@ -1,0 +1,222 @@
+
+<%- include ("header.ejs") %>
+<%- include ("navbar.ejs") %>
+
+
+      <!-- Main Content -->
+      <div class="main-content">
+    <section class="section">
+          <div class="row">
+           <div class="fully-tables">
+            <div class="cards-headers">
+                  <h4> User's Official Rent Agreements</h4>
+                  <div class="card-header-form">
+                  </div>
+                </div>
+
+               
+
+                <div id="successMessage" class="alert alert-success d-none">
+                
+                </div>
+                  
+                  <div id="errorMessage" class="alert alert-danger d-none">
+                        Failed to Update Status
+                  </div>
+
+          <div class="table-reponsive box">
+                <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                  <div class="row">
+                  <table id="example" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="example_info">
+                <thead>
+                     <tr role="row">
+                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 30.0781px;">Id</th>
+                      <!-- <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Date: activate to sort column descending" style="width: 30.156px;">box</th> -->
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Dc Id: activate to sort column ascending" style="width: 167.953px;">Agreement </th>
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 80.0781px;"> Landlord Name </th>
+
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Gross: activate to sort column ascending" style="width: 100.922px;">Tenant Name</th>
+
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Net: activate to sort column ascending" style="width: 75.5625px;">Status</th>
+                      
+                    </tr>
+                </thead>
+                   <div class="table-responsive">
+                      </div>
+                      <tbody>
+
+
+                        <% for(var i = 0; i < agreements.length; i++) { %>
+                      <tr>
+                          <td><%= i + 1 %></td>
+                      
+                        <td><%- agreements[i].agreement_number %> 
+
+                            <a class="custom-control custom-switchAging " href="#" onclick="downloadagreement('<%- agreements[i].agreement_number %>')">
+                                <img   src="/images/download.png" alt="Download" width="50" height="50">
+                                </a>
+                        
+                        </td>
+
+                      
+                        
+                        <td>   <%- agreements[i].owner_id %>                             
+                            <p>
+                        
+                            <% if (agreements[i].ownerSignStatus == 'true') { %>
+                                Signature Done 
+                                <img src="../images/done.png" alt="Done Signature" width="20" height="20">
+                              
+                              <% } else  { %>
+                                No Signature
+                                <img src="../images/notdone.png" alt="Not Done Signature" width="20" height="20">
+                               
+                              <% } %>
+                            </p>
+                        </td>
+
+                        
+                        <td> <%- agreements[i].tenant_id %> 
+                            <p>
+                        
+                            <% if (agreements[i].tenantSignStatus == 'true') { %>
+                                Signature Done 
+                                <img src="../images/done.png" alt="Done Signature" width="20" height="20">
+                                
+                               <% } else  { %>
+                                No Signature
+                                <img src="../images/notdone.png" alt="Not Done Signature" width="20" height="20">
+                                
+                               <% } %>
+                            </p>
+                        </td>
+                        
+                       
+                       
+                   <td>
+        
+                        <div id="refreshDiv" class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                          <!-- Append the company's ID as data attribute -->
+                          <input type="checkbox" onchange="updateStatus('<%= agreements[i].id %>','<%= agreements[i].status %>')" class="custom-control-input" id="customSwitch<%= i %>"  data-company-id="<%= agreements[i].user_id %>" <% if (agreements[i].status === 'open') { %>checked<% } %>>
+
+                          
+                          <label style="color: black;" id="<%= agreements[i].id %>" class="custom-control-label" for="customSwitch<%= i %>"><%= agreements[i].status %></label>
+                          
+                      </div>                 
+                                                 
+                    </td>
+
+                
+
+                      </tr>
+
+
+                      <% } %>
+                 
+
+                      </tbody>
+                    </table>
+                </div>
+              </div>
+          </div>
+         </div>
+      </div>
+  </section>
+
+      </div>
+      <footer class="main-footer">
+        <div class="footer-left">
+          Copyright by 
+          <a href="https://www.myamberinnovations.com/"> Amber Innovations </a>
+        </div>
+        <div class="footer-right">
+        </div>
+      </footer>
+    </div>
+  </div>
+  <!-- General JS Scripts -->
+  <script src="../assets/js/app.min.js"></script>
+  <!-- JS Libraies -->
+  <script src="../assets/bundles/apexcharts/apexcharts.min.js"></script>
+  <!-- Page Specific JS File -->
+  <script src="../assets/js/page/index.js"></script>
+  <!-- Template JS File -->
+  <script src="../assets/js/scripts.js"></script>
+  <!-- Custom JS File -->
+  <script src="../assets/js/custom.js"></script>
+  
+
+  <!-- All PAGE DATA TABLEC SCRIPT START All PAGE DATA TABLEC SCRIPT START -->
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.js"></script> -->
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#example').DataTable();
+} );
+</script>
+
+
+</body>
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+<script>
+  async function updateStatus(id,status){
+
+   
+
+          var newStatus ;
+
+          if(status=='open'){
+            newStatus = 'closed';
+          }else{
+              newStatus = 'open';
+          }
+
+
+              try {
+                  const response = await fetch('/admin/updateAgreementStatus', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ id, status: newStatus }),
+                  });
+
+                  if (response.ok) { 
+                                 
+                      window.location.href = '/admin/useragreements';  
+         
+                        
+                  } else {
+                      // Handle errors
+                      console.error('database Error:', error);
+
+                      $("#errorMessage").removeClass("d-none");
+                      $("#successMessage").addClass("d-none");
+                  }
+              } catch (error) {
+                  console.error('Error:', error);
+              }
+
+}
+
+
+
+function downloadagreement(agreement) {
+
+const AgreementURL = `/agreements/${agreement}.pdf`;
+const link = document.createElement('a');
+link.href = AgreementURL;
+link.download = `${agreement}`;
+link.click();
+}
+
+
+
+
+
+</script>

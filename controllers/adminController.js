@@ -1857,8 +1857,66 @@ const appPassPost = async (req, res, next) => {
     
   
 
+     //------ view user's official Rent Agreement --------
+
+
+
+      const viewAgreements = async(req,res,next)=>{   
+        const con = await connection(); 
+       
+            try {
+              const [agreements] = await con.query('SELECT * FROM tbl_rentagreements');   
+    
+    
+              if(agreements.length > 0){
+                  
+                res.render('admin/viewagreements',{'output':'ALL Agreements Fetched','agreements':agreements})
+              }else{
+                res.render('admin/viewagreements',{'output':'No Agreement found','agreements':agreements})
+              }
+    
+            
+            } catch (error) {
+              res.render('admin/kilvish500')
+            }
+       
+      }
+    
+
 
   
+
+      
+
+      const updateAgreementStatus = async(req,res,next)=>{ 
+
+        console.log(req.body)
+
+
+        const con = await connection(); 
+        try {
+      
+          await con.beginTransaction();     
+      
+          
+          const { id, status } = req.body;
+          const [result] = await con.query('UPDATE tbl_rentagreements SET status = ? WHERE id = ?', [status, id]);
+            
+          
+      await con.commit();
+          res.status(200).json({ kilvish:'active'});
+        } catch (error) {
+          await con.rollback();
+          console.error("Database error:", error);
+          res.status(500).json({ error: 'Internal Server Error' });
+        }finally {
+          con.release(); 
+        }
+        
+      
+      
+      }
+      
 
 
 
@@ -1875,7 +1933,7 @@ export {homePage,
        userPrivacyPost, deleteuserPrivacy, deleteSkill , sendMailtoUser , QueriesPost ,
         deletetandc , appPass, appPassPost , ForgotPassword , sendOTP , verifyOTP , resetpassword , NotifyPost ,
       
-        rentAgreement  , rentAgreementPost , deleteAgreement }
+        rentAgreement  , rentAgreementPost , deleteAgreement , viewAgreements ,updateAgreementStatus }
 
 
          
