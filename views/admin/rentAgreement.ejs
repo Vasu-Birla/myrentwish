@@ -36,7 +36,7 @@
                <!--  Tect Editor End   -->
 
                	<!-- alert msgs  -->
-                 <% if (output === 'Failed to update Agreement Content' || output === 'Failed to add Agreement Content' || output === 'Failed to Delete') { %>
+                 <% if (output == 'You can only add upto 3 Samples' || output === 'Failed to update Agreement Content' || output === 'Failed to add Agreement Content' || output === 'Failed to Delete') { %>
                
                   <div class="alert alert-danger">
                     <%= output %>

@@ -1771,10 +1771,18 @@ const appPassPost = async (req, res, next) => {
     
       try {
         await con.beginTransaction();
+
+        const [agreements] = await con.query('SELECT * FROM tbl_addagreement');   
+
+
+        if(agreements.length >= 3 ){
+
+          return res.render('admin/rentAgreement', { output: 'You can only add upto 3 Samples', agreements: agreements });
+        }
     
         const agreementContent = decodeURIComponent(req.body.agreementContent);
     
-        const agreementID = decodeURIComponent(req.body.agreementID);   //  For multiple agreements if required in Future 
+        const agreementID = decodeURIComponent(req.body.agreementID); 
     
 
 

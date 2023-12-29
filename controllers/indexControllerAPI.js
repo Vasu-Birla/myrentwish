@@ -2,6 +2,10 @@
 import { sendTokenAdmin, sendTokenUser } from '../utils/jwtToken.js';
 import connection from '../config.js';
 
+import axios from 'axios';
+import cheerio from 'cheerio';
+
+
 const con = await connection();
 import * as path from 'path';
 import fs from 'fs';
@@ -11,7 +15,7 @@ import { parse, format } from 'date-fns';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 import puppeteer from 'puppeteer';
 
-
+import { ApifyClient } from 'apify-client';
 import jsdom from 'jsdom';
 
 
@@ -1843,6 +1847,9 @@ const createPDFWithSignatureField = async (req, res, next) => {
 
     const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
 
+
+    
+
     const tenantEmail = tenantQuery[0].user_email;
     const tenant = tenantQuery[0].firstname + ' ' + tenantQuery[0].lastname;
     const owner = ownerQuery[0].firstname + ' ' + ownerQuery[0].lastname;
@@ -1898,9 +1905,6 @@ const createPDFWithSignatureField = async (req, res, next) => {
 
 
 
-
-
-
 function generateAgreementNumber() {
   const timestamp = new Date().getTime();
   const randomSuffix = Math.floor(Math.random() * 10000); 
@@ -1908,6 +1912,170 @@ function generateAgreementNumber() {
 }
 //===================Break Point for Duplicate APIS  =============================================
 
+
+
+
+
+const getOnlyFansProfile1 = async (req, res, next) => {
+  const { profile_url } = req.body; // Assuming the profile link is passed in the request body
+
+  const con = await connection();
+
+  try {
+    await con.beginTransaction();
+
+    // Fetch HTML content from the OnlyFans profile link
+    const response = await axios.get(profile_url);
+    const html = response.data;
+
+    // Use cheerio to parse the HTML
+    const $ = cheerio.load(html);
+
+      // Extract data from the HTML using selectors
+      const avatar = $('meta[property="og:image"]').attr('content');
+      const header = $('meta[property="og:image"]').attr('content');
+      
+      // Additional fields
+      const name = $('.g-user-name').text().trim();
+      const username = $('.g-user-name').contents().first().text().trim(); // Extracting text before the <svg>
+      const about = $('meta[property="og:description"]').attr('content');
+      const website = $('meta[property="og:url"]').attr('content');
+      const joinDate = $('.g-user-name').contents().last().text().trim(); // Extracting text after the <svg>
+  
+      // Prepare the JSON response
+      const onlyFansProfileData = {
+        avatar,
+        header,
+        name,
+        username,
+        about,
+        website,
+        joinDate,
+        // Add other fields here...
+      };
+
+
+      console.log("onlyFansProfileData",onlyFansProfileData)
+  
+    // Send the JSON response
+    res.json(onlyFansProfileData);
+  } catch (error) {
+    console.error('Error:', error);
+    con.rollback();
+  } finally {
+    con.release();
+  }
+};
+
+
+
+
+
+
+const getOnlyFansProfile11 = async (req, res, next) => {
+    const con = await connection(); // Assuming you have a 'connection' function for database connection
+
+    const { profile_url } = req.body; // A
+    try {
+        await con.beginTransaction();
+
+
+        // Initialize the ApifyClient with API token
+const client = new ApifyClient({
+  token: 'apify_api_UYPOXqqjbtEkdFZzUi79yFxnc189TA4z4Lia',
+});
+
+// Prepare Actor input
+// const input = {
+//   "profileUrls": [
+//       "https://onlyfans.com/rebecavegaofficial"
+//   ]
+// };
+
+const input = {
+  profileUrls: [profile_url],
+};
+
+const run = await client.actor("hnCZKiaPQdBhjh5En").call(input);
+
+// Fetch and print Actor results from the run's dataset (if any)
+console.log('Results from dataset');
+const { items } = await client.dataset(run.defaultDatasetId).listItems();
+items.forEach((item) => {
+    console.dir(item);
+});
+
+
+       
+
+        await con.commit(); // Commit the transaction
+        res.status(200).json({ success: true, data : items });
+    } catch (error) {
+        console.error(error.message);
+        await con.rollback(); // Rollback the transaction in case of an error
+        res.status(500).json({ success: false, message: 'Error processing OnlyFans profile data' });
+    } finally {
+        con.release();
+    }
+};
+
+
+
+
+
+const getOnlyFansProfile = async (req, res, next) => {
+ 
+  const con = await connection(); 
+
+  const  profile_url  = req.body.profile_url; 
+  try {
+      await con.beginTransaction();
+
+
+      // Initialize the ApifyClient with API token
+const client = new ApifyClient({
+token: 'apify_api_UYPOXqqjbtEkdFZzUi79yFxnc189TA4z4Lia',
+});
+
+// Prepare Actor input
+// const input = {
+//   "profileUrls": [
+//       "https://onlyfans.com/rebecavegaofficial"
+//   ]
+// };
+
+const input = {
+profileUrls: [profile_url],
+};
+
+const run = await client.actor("hnCZKiaPQdBhjh5En").call(input);
+
+// Fetch and print Actor results from the run's dataset (if any)
+console.log('Results from dataset');
+const { items } = await client.dataset(run.defaultDatasetId).listItems();
+items.forEach((item) => {
+  console.dir(item);
+});
+
+
+     
+
+      await con.commit(); // Commit the transaction
+      // res.status(200).json({ success: true, data : items });
+
+      res.render('fetchprofile',{profileData:items})
+
+  
+  } catch (error) {
+
+    res.render('fetchprofile',{profileData:error.message})
+      console.error(error.message);
+      await con.rollback(); // Rollback the transaction in case of an error
+     // res.status(500).json({ success: false, message: 'Error processing OnlyFans profile data' });      
+  } finally {
+      con.release();
+  }
+};
 
 
 
@@ -1921,6 +2089,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets ,tandc , pandp , faqs,
      checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
+     getOnlyFansProfile,
 
 
      getSkills1

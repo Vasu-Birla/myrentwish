@@ -5,33 +5,23 @@ import fs from 'fs';
 import path from 'path';
 import Excel from 'exceljs'
 
-import {hashPassword, comparePassword, sendMailOTP,  sendOTPFornewPass} from '../middleware/helper.js'
-import { ok } from 'assert';
 
+//import fs from 'fs/promises';
 
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
+import { PdfReader } from "pdfreader";
 
-import { createCanvas, loadImage } from 'canvas';
-
-import SignaturePad from 'signature_pad';
-import html2canvas from 'html2canvas';
-
-const con = await connection();
-
-
-
-
+import { PDFDocument, degrees, rgb } from 'pdf-lib'
 
 
 
 const openAgreement = async(req,res,next)=>{
-
+  console.log("Openning Agreement ....")
     const con = await connection();
 
     try {
 
         const { agreementNumber } = req.params;
-        const filePath = `http://${process.env.Host1}/agreements/${agreementNumber}.pdf`   
+        const filePath = `http://${process.env.Host}/agreements/${agreementNumber}.pdf`   
 
         const [[result]] = await con.query('SELECT tenantSignStatus FROM tbl_rentagreements WHERE agreement_number = ?', [agreementNumber]);
 
@@ -48,6 +38,7 @@ const openAgreement = async(req,res,next)=>{
        
         
     } catch (error) {
+        console.log("Error in Opening Agrement --- > ", error)
         res.render('kilvish500', {'output':'Internal Server Error'});
     }finally{
         con.release()
@@ -55,7 +46,7 @@ const openAgreement = async(req,res,next)=>{
   
     }
 
-    const addSign = async (req, res, next) => {
+    const addSign1 = async (req, res, next) => {
         const con = await connection();
         try {
             const { agreementNumber, signature } = req.body;
@@ -102,6 +93,99 @@ const openAgreement = async(req,res,next)=>{
         }
     };
     
+
+
+
+
+    
+    const addSign = async (req, res, next) => {
+      const con = await connection();
+    
+      try {
+        await con.beginTransaction();
+    
+        // Extract data from the request
+        const { agreementNumber, signature } = req.body;
+    
+        // Load the existing PDF document
+        const filePath = path.join('public', 'agreements', `${agreementNumber}.pdf`);
+        const existingPdfBytes = fs.readFileSync(filePath);
+        const pdfDoc = await PDFDocument.load(existingPdfBytes);
+    
+        // Get the first page of the PDF document
+        const page = pdfDoc.getPages()[0];
+    
+        // Extract text content using pdfreader
+        const textContent = await extractTextContent(filePath);
+    
+        // Add the signature image under the specified text (assuming text "Tenant Signature:")
+        const tenantSignatureText = 'Tenant Signature:';
+    
+        // Use a regular expression to find the position of the text
+        const match = new RegExp(tenantSignatureText).exec(textContent);
+    
+        if (match) {
+          const startIndex = match.index;
+    
+          // Assuming you have the signature image data URL stored in the request body
+          const signatureImage = await pdfDoc.embedPng(signature);
+    
+          // Add the image to the page
+          const { width, height } = signatureImage.image;
+          const scale = 0.5; // You may need to adjust the scale
+          page.drawImage(signatureImage, {
+            x: 10, // Adjust the x-coordinate as needed
+            y: 10, // Adjust the y-coordinate as needed
+            width: width * scale,
+            height: height * scale,
+            rotate: degrees(0),
+          });
+    
+          // Update the text content by removing the original text
+          const updatedTextContent = textContent.substring(0, startIndex) + 'Signature Added:' + textContent.substring(startIndex + tenantSignatureText.length);
+    
+          // Set the modified text content to the page
+          await page.drawText(updatedTextContent, { x: 10, y: 10 }); // Adjust coordinates as needed
+        }
+    
+        // Save the modified PDF
+        const modifiedPdfBytes = await pdfDoc.save();
+        fs.writeFileSync(filePath, modifiedPdfBytes);
+    
+    
+    
+        await con.commit();
+    
+        res.redirect(`/agreements/${agreementNumber}`);
+      } catch (error) {
+        await con.rollback();
+        console.error('Error adding signature:', error);
+        res.status(500).json({ result: 'Internal Server Error' });
+      } finally {
+        con.release();
+      }
+    };
+    
+    async function extractTextContent(filePath) {
+      return new Promise((resolve, reject) => {
+        const textContent = [];
+        const reader = new PdfReader();
+    
+        reader.parseFileItems(filePath, (err, item) => {
+          if (err) {
+            reject(err);
+          } else if (!item) {
+            resolve(textContent.join(' '));
+          } else if (item.text) {
+            textContent.push(item.text);
+          }
+        });
+      });
+    }
+
+    
+
+    
     // Convert a data URL to a buffer
     async function convertDataUrlToBuffer(dataUrl) {
         const [, base64Data] = dataUrl.match(/^data:image\/png;base64,(.*)$/);
@@ -122,6 +206,28 @@ const openAgreement = async(req,res,next)=>{
                 
       
         }
+
+
+
+    
+        
+
+const fetchprofile = async(req,res,next)=>{
+
+      try {
+
+        res.render('fetchprofile',{"profileData":""})
+        
+      } catch (error) {
+
+        console.log(error)
+      res.render('kilvish500', {'output':'Internal Server Error'});
+        
+      }
+
+
+
+  }
     
   
 const err500 = async(req,res,next)=>{
@@ -136,7 +242,7 @@ const err500 = async(req,res,next)=>{
 
 
   //--------------------- Export Start ------------------------------------------
-export {err500  , openAgreement ,addSign , successSingature }
+export {err500  , openAgreement ,addSign , successSingature , fetchprofile }
 
 
          

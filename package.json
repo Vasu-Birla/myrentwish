@@ -15,8 +15,11 @@
     "@babel/core": "^7.23.3",
     "@babel/node": "^7.22.19",
     "@babel/preset-env": "^7.23.3",
+    "apify-client": "^2.8.4",
+    "axios": "^1.6.3",
     "bcryptjs": "^2.4.3",
     "canvas": "^2.11.2",
+    "cheerio": "^1.0.0-rc.12",
     "cookie": "^0.6.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -43,9 +46,12 @@
     "paypal-rest-sdk": "^1.8.1",
     "pdf-creator-node": "^2.3.5",
     "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1",
     "pdfkit": "^0.14.0",
+    "pdfreader": "^3.0.2",
     "puppeteer": "^21.6.1",
     "signature_pad": "^4.1.7",
-    "socket.io": "^4.7.2"
+    "socket.io": "^4.7.2",
+    "tesseract.js": "^5.0.4"
   }
 }

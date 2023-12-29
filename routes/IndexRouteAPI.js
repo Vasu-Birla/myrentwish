@@ -29,7 +29,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     faqs,
     checkPreferenceAvailability,
     agreements,
-    createPDFWithSignatureField} from '../controllers/indexControllerAPI.js';
+    createPDFWithSignatureField,
+    getOnlyFansProfile} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -152,6 +153,8 @@ router.route('/getToken').post(upload.none(), obtainToken )
 
 
 
+
+router.route('/scrape_onlyfans_profile').get(upload.none(), getOnlyFansProfile )
 
 
 
