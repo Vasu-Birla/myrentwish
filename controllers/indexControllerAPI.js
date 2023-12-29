@@ -1875,6 +1875,7 @@ const createPDFWithSignatureField = async (req, res, next) => {
     // Insert data into tbl_rentagreements
     const insertQuery = 'INSERT INTO tbl_rentagreements (agreement_number, owner_id, tenant_id) VALUES (?, ?, ?)';
     await con.query(insertQuery, [agreementNumber, owner_id, tenant_id]);
+    
 
     await con.commit();
 

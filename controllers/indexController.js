@@ -105,7 +105,7 @@ lastPage.drawImage(signatureImage, {
 
            
         
-           //  await con.query('UPDATE tbl_rentagreements SET tenantSignStatus = ? WHERE agreement_number = ?', ['true',agreementNumber]);
+   await con.query('UPDATE tbl_rentagreements SET tenantSignStatus = ? WHERE agreement_number = ?', ['true',agreementNumber]);
             
             res.redirect(`/agreements/${agreementNumber}`);
             
