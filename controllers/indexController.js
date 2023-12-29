@@ -21,7 +21,7 @@ const openAgreement = async(req,res,next)=>{
     try {
 
         const { agreementNumber } = req.params;
-        const filePath = `http://${process.env.Host}/agreements/${agreementNumber}.pdf`   
+        const filePath = `http://${process.env.Host1}/agreements/${agreementNumber}.pdf`   
 
         const [[result]] = await con.query('SELECT tenantSignStatus FROM tbl_rentagreements WHERE agreement_number = ?', [agreementNumber]);
 
