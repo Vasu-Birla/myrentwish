@@ -490,6 +490,7 @@ const sendAgreement = async function (agreementNumber,email, pdfData, agreementD
                         font-family: Arial, sans-serif;
                         background-color: #f5f5f5;
                     }
+            
                     .container {
                         max-width: 600px;
                         margin: 0 auto;
@@ -498,41 +499,78 @@ const sendAgreement = async function (agreementNumber,email, pdfData, agreementD
                         border: 1px solid #e0e0e0;
                         border-radius: 5px;
                     }
+            
                     h1 {
                         color: #333;
                     }
+            
                     p {
                         font-size: 16px;
                         line-height: 1.5;
                         color: #666;
                     }
+            
                     .signature-instructions {
                         margin-top: 20px;
                     }
+            
                     .signature-instructions p {
                         color: #333;
                         font-weight: bold;
                     }
+            
+                    .button-container {
+                        margin-top: 20px;
+                    }
+            
+                    .green-button {
+                        display: inline-block;
+                        padding: 10px 20px;
+                        background-color: #4CAF50; /* Green color */
+                        color: #fff;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        transition: background-color 0.3s ease;
+                    }
+            
+                    .green-button:hover {
+                        background-color: #45a049; /* Darker green on hover */
+                    }
+            
+                    .gif-container {
+                        margin-top: 20px;
+                    }
+            
+                    .sign-gif {
+                        max-width: 100%;
+                        height: auto;
+                        display: block;
+                        margin: 0 auto;
+                    }
                     </style>
                 </head>
                 <body>
-                <div class="container">
-        <h1>Agreement From MyRentWish's Property Owner</h1>
-        <p>Dear ${tenant},</p>
-        <p>${owner} has sent you the following agreement:</p>
-        <p>${agreement}</p>
-        <div class="signature-instructions">
-            <p>Please review the agreement and provide your electronic signature:</p>
-        <ul>
-            <li>Click on the following link to access the document: <a href="http://${process.env.Host1}/agreements/${agreementNumber}">Sign Agreement</a></li>
-            <li>Follow the instructions to add your electronic signature.</li>
-        </ul>
-        </div>
-        <p>If you have any questions or need assistance, please don't hesitate to reach out to our support team.</p>
-        <p>Thank you for choosing MyrentWish!</p>
-        <p>Best regards,</p>
-        <p>Your MyRentWish Team</p>
-        <p>Kilvish Birla</p>
+ <div class="container">
+ <h1>Agreement From MyRentWish's Property Owner</h1>
+ <p>Dear ${tenant},</p>
+ <p>${owner} has sent you the following agreement:</p>
+ <p>${agreement}</p>
+ <div class="signature-instructions">
+     <p>Please review the agreement and provide your electronic signature:</p>
+     <div class="button-container">
+         <a class="green-button" href="http://${process.env.Host}/agreements/${agreementNumber}" target="_blank">Sign Agreement</a>
+     </div>
+     <p>Follow the instructions to add your electronic signature.</p>
+ </div>
+ <div class="gif-container">
+     <img class="sign-gif" src="http://${process.env.Host}/images/sign.gif" alt="Sign GIF">
+ </div>
+ <p>If you have any questions or need assistance, please don't hesitate to reach out to our support team.</p>
+ <p>Thank you for choosing MyrentWish!</p>
+ <p>Best regards,</p>
+ <p>Your MyRentWish Team</p>
+ <p>Kilvish Birla</p>
+              
     </div>
                 </body>
                 </html>
