@@ -22,7 +22,7 @@ import jsdom from 'jsdom';
 
 import 'jspdf-autotable'; // If you want to use autotable for better table support
 
-import { sendPushNotification , sendAgreement } from '../middleware/helper.js';
+import { sendPushNotification , sendAgreement , sendAgreementToOwner } from '../middleware/helper.js';
 
 const { JSDOM } = jsdom;
 
@@ -1770,6 +1770,7 @@ const createPDFWithSignatureField = async (req, res, next) => {
     const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
 
     const tenantEmail = tenantQuery[0].user_email;
+    const ownerEmail = ownerQuery[0].user_email;
     const tenant = tenantQuery[0].firstname + ' ' + tenantQuery[0].lastname;
     const owner = ownerQuery[0].firstname + ' ' + ownerQuery[0].lastname;
 
@@ -1871,6 +1872,14 @@ const createPDFWithSignatureField = async (req, res, next) => {
       owner: owner,
       tenant: tenant,
     });
+
+    await sendAgreementToOwner(ownerEmail, agreementNumber, {
+      agreement: agreementData,
+      owner: owner,
+      tenant: tenant,
+    });
+
+    
 
     // Insert data into tbl_rentagreements
     const insertQuery = 'INSERT INTO tbl_rentagreements (agreement_number, owner_id, tenant_id) VALUES (?, ?, ?)';

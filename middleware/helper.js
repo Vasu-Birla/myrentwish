@@ -561,7 +561,8 @@ const sendAgreement = async function (agreementNumber,email, pdfData, agreementD
  <h1>Agreement From MyRentWish's Property Owner</h1>
  <p>Dear ${tenant},</p>
  <p>${owner} has sent you the following agreement:</p>
- <p>${agreement}</p>
+ <span> Agreement Number - <span> <h3 style="background-color: yellow; display: inline-block;"> ${agreementNumber} </h3>
+
  <div class="signature-instructions">
      <p>Please review the agreement and provide your electronic signature:</p>
      <div class="button-container">
@@ -573,6 +574,7 @@ const sendAgreement = async function (agreementNumber,email, pdfData, agreementD
          </div>
      </div>
      <p>Follow the instructions to add your electronic signature.</p>
+     <span> Use DigitalPad Pen on singature area or you can use Mouse or finger on Mobile Device </span>
  </div>
  <p>If you have any questions or need assistance, please don't hesitate to reach out to our support team.</p>
  <p>Thank you for choosing MyrentWish!</p>
@@ -581,6 +583,136 @@ const sendAgreement = async function (agreementNumber,email, pdfData, agreementD
  <p>Kilvish Birla</p>
               
     </div>
+                </body>
+                </html>
+            `,
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        console.log("Email sent successfully:", info.response);
+        return info;
+    } catch (error) {
+        console.log("Error in sending mail:", error);
+        throw error;
+    }
+};
+
+
+
+
+//---------Send Rent Agreement to Owner -> 
+
+const sendAgreementToOwner = async function (ownerEmail, agreementNumber, agreementDetails) {
+    try {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'vasubirla@gmail.com',
+                pass: 'phjwptaxdnaunqol'
+            }
+        });
+
+        const {  owner, tenant } = agreementDetails;
+
+        const mailOptions = {
+            from: 'vasubirla@gmail.com',
+            to: ownerEmail,
+            subject: 'About your Rent Agreement from MyrentWish',
+            html: `
+                <html>
+                <head>
+                    <!-- Add your styles here -->
+                    <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f5f5f5;
+                    }
+            
+                    .container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        background-color: #ffffff;
+                        border: 1px solid #e0e0e0;
+                        border-radius: 5px;
+                    }
+            
+                    h1 {
+                        color: #333;
+                    }
+            
+                    p {
+                        font-size: 16px;
+                        line-height: 1.5;
+                        color: #666;
+                    }
+            
+                    .signature-instructions {
+                        margin-top: 20px;
+                    }
+            
+                    .signature-instructions p {
+                        color: #333;
+                        font-weight: bold;
+                    }
+            
+                    .button-container {
+                        margin-top: 20px;
+                        display: flex;
+                        align-items: center;
+                    }
+            
+                    .green-button {
+                        padding: 10px 20px;
+                        background-color: #f8bdbd; /* Green color */
+                        color: #fff;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        transition: background-color 0.3s ease, color 0.3s ease;
+                        font-size: large;
+                    }
+                    .green-button a {
+                        color: #fff !important; 
+                        text-decoration: none;
+                    }
+            
+                    .green-button:hover {
+                        background-color: #45a049; /* Darker green on hover */
+                        color: #fff;
+                    }
+            
+                    .gif-container {
+                        margin-left: 10px;
+                        cursor: pointer;
+                    }
+            
+                    .sign-gif {
+                        max-width: 50px;
+                        height: auto;
+                        display: block;
+                    }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <h1>Agreement  Sent to ${owner}</h1>
+                        <span> Agreement Number - <span> <h3 style="background-color: yellow; display: inline-block;"> ${agreementNumber} </h3>
+                        <p>Dear ${owner},</p>
+                        <p>You have sent the following agreement to ${tenant}:</p>
+                       
+                        <div class="signature-instructions">
+                           
+                            <div class="button-container">
+                                <a class="green-button" href="http://${process.env.Host1}/agreements/${agreementNumber}" target="_blank">View Agreement</a>
+                            </div>
+                            <p>Once ${tenant} has signed, you will be notified.</p>
+                        </div>
+                        <p>If you have any questions or need assistance, please contact our support team.</p>
+                        <p>Thank you for using MyrentWish!</p>
+                        <p>Best regards,</p>
+                        <p>Your MyRentWish Team</p>
+                        
+                    </div>
                 </body>
                 </html>
             `,
@@ -680,5 +812,5 @@ const sendOTPFornewPass = async function (email,otp) {
 
 export { hashPassword , comparePassword ,sendWelcomeMsg, sendMailOTP , 
   responsetoQuery, sendNotification , sendPushNotification, 
-  sendAgreement , sendOTPFornewPass };
+  sendAgreement, sendAgreementToOwner , sendOTPFornewPass };
 
