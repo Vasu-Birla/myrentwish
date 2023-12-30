@@ -208,11 +208,18 @@ $(document).ready(function() {
 
 function downloadagreement(agreement) {
 
-const AgreementURL = `/agreements/${agreement}.pdf`;
-const link = document.createElement('a');
-link.href = AgreementURL;
-link.download = `${agreement}`;
-link.click();
+  //-download 
+
+// const AgreementURL = `/agreements/${agreement}.pdf`;
+// const link = document.createElement('a');
+// link.href = AgreementURL;
+// link.download = `${agreement}`;
+// link.click();
+
+
+//- open in new tab
+const agreementURL = `/agreements/${agreement}.pdf`;
+    window.open(agreementURL, '_blank');
 }
 
 
