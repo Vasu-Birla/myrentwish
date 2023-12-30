@@ -1765,20 +1765,6 @@ const createPDFWithSignatureField = async (req, res, next) => {
 
     var agreementData = agreement;
 
-
-    agreementData = agreementData
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&apos;/g, "'")
-    .replace(/&amp;/g, '&');
-  
-  // Use unescaped data as HTML
-  agreementData = `<div>${agreementData}</div>`;
-  
-  console.log(agreementData);
-
-
     const [tenantQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [tenant_id]);
 
     const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
