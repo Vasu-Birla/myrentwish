@@ -1765,6 +1765,26 @@ const createPDFWithSignatureField = async (req, res, next) => {
 
     var agreementData = agreement;
 
+
+
+
+    agreementData = agreementData
+    .replace(/\\u003C/g, '<')
+    .replace(/\\u003E/g, '>')
+    .replace(/\\u0026/g, '&')
+    .replace(/\\u0022/g, '"')
+    .replace(/\\u0027/g, "'")
+    .replace(/\\n/g, '<br>')
+    .replace(/\\t/g, ' ') 
+    .replace(/\s+/g, ' '); 
+
+    // console.log(agreementData)
+    
+
+    // return res.json(agreementData)
+
+
+
     const [tenantQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [tenant_id]);
 
     const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
