@@ -703,7 +703,7 @@ const sendAgreementToOwner = async function (ownerEmail, agreementNumber, agreem
                         <div class="signature-instructions">
                            
                             <div class="button-container">
-                                <a class="green-button" href="http://${process.env.Host1}/agreements/${agreementNumber}" target="_blank">View Agreement</a>
+                                <a class="green-button" href="http://${process.env.Host1}/owneragreements/${agreementNumber}" target="_blank">View Agreement</a>
                             </div>
                             <p>Once ${tenant} has signed, you will be notified.</p>
                         </div>

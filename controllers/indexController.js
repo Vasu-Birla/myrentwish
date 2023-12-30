@@ -61,6 +61,27 @@ const openAgreement = async(req,res,next)=>{
   
     }
 
+    const openAgreementOwner = async(req,res,next)=>{
+      console.log("Openning Agreement by Owner....")
+        const con = await connection();
+    
+        try {
+    
+            const { agreementNumber } = req.params;
+            const filePath = `http://${process.env.Host1}/agreements/${agreementNumber}.pdf` 
+        
+            res.render('viewAgreementowner', { filePath, agreementNumber });           
+            
+        } catch (error) {
+            console.log("Error in Opening Agrement --- > ", error)
+            res.render('kilvish500', {'output':'Internal Server Error'});
+        }finally{
+            con.release()
+        }  
+      
+        }
+    
+
     const addSign = async (req, res, next) => {
         const con = await connection();
         try {
@@ -180,7 +201,7 @@ const err500 = async(req,res,next)=>{
 
 
   //--------------------- Export Start ------------------------------------------
-export {err500  , openAgreement ,addSign , successSingature , fetchprofile , home }
+export {err500  , openAgreement ,addSign , successSingature , fetchprofile , home , openAgreementOwner }
 
 
          
