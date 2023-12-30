@@ -30,7 +30,9 @@
                 <% if (tenantSignStatus) { %>
 
                     <div>
-                        <h2> Signature Successfully Done  </h2>
+                        <h4 style="color: rgb(3, 194, 194);"> <img src="../images/verified.gif" alt="Done Signature" width="60" height="60">  Signature Successfully Done on Agreement - <span style="background-color: yellow; display: inline-block;">  <%= agreementNumber %>  </span>  </h4>
+
+                                                     
                         <embed src="<%= filePath %>" type="application/pdf" width="100%" height="800px" />
                     </div>
                    
@@ -38,11 +40,12 @@
                     <% } else  { %>  
                         
                         <div>
-                            <h2>View Agreement</h2>
+                        
+                         <h4 style="color: rgb(194, 127, 3);"> <img src="../images/sign.gif" alt="Done Signature" width="60" height="60">  Review and Sign Agreement - <span style="background-color: yellow; display: inline-block;">  <%= agreementNumber %>  </span>  </h4>
                             <embed src="<%= filePath %>" type="application/pdf" width="100%" height="800px" />
                         </div>
                     
-                      
+                                             
                     
                         <div>
                             <h2>Electronic Signature</h2>
