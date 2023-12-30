@@ -1763,9 +1763,7 @@ const createPDFWithSignatureField = async (req, res, next) => {
 
     const { owner_id, agreement, tenant_id, signature } = req.body;
 
-    const agreementData = decodeURIComponent(agreement);;
-
-    
+    const agreementData = agreement;
 
     const [tenantQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [tenant_id]);
 
