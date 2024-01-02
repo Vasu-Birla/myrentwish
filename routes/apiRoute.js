@@ -27,7 +27,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     tandc,
     pandp,
     faqs,
-    checkPreferenceAvailability} from '../controllers/apiController.js';
+    checkPreferenceAvailability,
+    createPDFWithSignatureField} from '../controllers/apiController.js';
 
 const router = express.Router(); 
 
@@ -139,6 +140,9 @@ router.route('/getToken').post(upload.none(), obtainToken )
 
 
 
+//---------Agreement Section ------
+
+router.route('/generateagreement').post(upload.none(),createPDFWithSignatureField)
 
 
 export default router

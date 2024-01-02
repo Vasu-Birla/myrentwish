@@ -2427,54 +2427,6 @@ agreementData = `
     const filePath = path.join('public', 'agreements', pdfFileName);
     fs.writeFileSync(filePath, pdfBuffer);
 
-    // Load the existing PDF to add the signature
-    // const existingPdfBytes = fs.readFileSync(filePath);
-    // const pdfDoc = await PDFDocument.load(existingPdfBytes);
-
-    // // Convert the signature data URL to a buffer
-    // const signatureImageBytes = await convertDataUrlToBuffer(signature);
-
-    // // Embed the signature image into the PDF
-    // const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
-
-
-
-    //     // Get the last page and add the signature only to the last page
-    //     const lastPageIndex = pdfDoc.getPageCount() - 1;
-    //     const lastPage = pdfDoc.getPages()[lastPageIndex];
-    //     const { width, height } = lastPage.getSize();
-    
-    //     // Set professional margins
-    //     const marginLeft = 50;
-    //     const marginBottom = 50;
-    
-    //     // Add the signature image to the bottom left corner
-    //     lastPage.drawImage(signatureImage, {
-    //       x: marginLeft,
-    //       y: marginBottom,
-    //       width: 100, // Adjust the width based on your requirements
-    //       height: 50, // Adjust the height based on your requirements
-    //     });
-    
-    
-
-    // // Save the updated PDF
-    // const updatedPdfBytes = await pdfDoc.save();
-    // fs.writeFileSync(filePath, updatedPdfBytes);
-
-    // Send the PDF to the tenant's email
-    // await sendAgreement(agreementNumber, tenantEmail, updatedPdfBytes, {
-    //   agreement: agreementData,
-    //   owner: owner,
-    //   tenant: tenant,
-    // });
-
-    // await sendAgreementToOwner(ownerEmail, agreementNumber, {
-    //   agreement: agreementData,
-    //   owner: owner,
-    //   tenant: tenant,
-    // });
-
     
 
     // Insert data into tbl_rentagreements
