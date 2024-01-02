@@ -626,7 +626,10 @@ const page = await browser.newPage();
      fs.writeFileSync(filePath, pdfBuffer);
    
 
-     await con.query('UPDATE tbl_rentagreements SET tenantSignStatus = ? WHERE agreement_number = ?', ['true',agreementNumber]);
+    // await con.query('UPDATE tbl_rentagreements SET tenantSignStatus = ? WHERE agreement_number = ?', ['true',agreementNumber]);
+
+     await con.query('UPDATE tbl_rentagreements SET tenantSignStatus = ?, ownersigndata = NULL WHERE agreement_number = ?', ['true', agreementNumber]);
+
         
      await con.commit();
      res.redirect(`/agreements/${agreementNumber}`);
