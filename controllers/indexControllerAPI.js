@@ -35,6 +35,7 @@ paypal.configure({
 
 import {hashPassword, comparePassword, sendMailOTP} from '../middleware/helper.js'
 import { type } from 'os';
+import { start } from 'repl';
 
 //-------------------- Register API Start  ------------------------------ 
 
@@ -1927,7 +1928,9 @@ const createPDFWithSignatureField = async (req, res, next) => {
   try {
     await con.beginTransaction();
 
-    const { agreementtext, owner_id, tenant_id, signature , start_date, end_date , monthly_amount , template_num, currency } = req.body;
+ 
+
+    const { agreementtext, owner_id, tenant_id, signature , start_date, end_date , template_num, prop_id } = req.body;
 
     //var agreementData = agreement;
 
@@ -1938,10 +1941,27 @@ const createPDFWithSignatureField = async (req, res, next) => {
 
     const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
 
+    const [propQuery] = await con.query('SELECT * FROM tbl_prop WHERE prop_id = ?', [prop_id]);
+
+
+    if (!propQuery || propQuery.length == 0) {
+      return res.json({ result: 'failed', message: 'Property Not Found' });
+    }
+
+     
+
     const tenantEmail = tenantQuery[0].user_email;
     const ownerEmail = ownerQuery[0].user_email;
     const tenant = tenantQuery[0].firstname + ' ' + tenantQuery[0].lastname;
     const owner = ownerQuery[0].firstname + ' ' + ownerQuery[0].lastname;
+
+    const propName = propQuery[0].title
+
+    const monthly_amount = propQuery[0].rent_amount
+
+    const currency = propQuery[0].currency
+
+    const propAddress = propQuery[0].address + ', ' + propQuery[0].city + ',' + propQuery[0].country ;
 
     const agreementNumber = generateAgreementNumber();
 
@@ -2057,8 +2077,15 @@ if(template_num == '1'){
 
     <div class="terms">
 
+    <p> Thank you for your interest in renting the Property :  <strong> ${propName} </strong> which is located at ${propAddress}.
+    Agreement will be applied from <strong> ${start_date} to ${end_date} </strong> . Please review and sign below to confirm your agreement
+    with the terms and conditions in this House Rental Lease Agreement. Signature by both parties
+    identified in this House Rental Lease Agreement will bind them to a legally enforceable contract
+    so make sure to consult with a lawyer before signing if you want to do so. </p>
+
       <p> ${agreementtext}</p>
-    
+
+       
       <h2>Terms and Conditions</h2>
 
       <p><strong>1. Rent Payment:</strong> The tenant agrees to pay the monthly rent on or before the specified due date. Late payments may incur fees as outlined in this agreement.</p>
@@ -2106,7 +2133,7 @@ agreementData = `
     <style>
       body {
         font-family: 'Arial', sans-serif;
-        margin: 1.25in;
+        margin: 0.5in;
         color: #333;
         line-height: 1.6;
       }
@@ -2170,34 +2197,39 @@ agreementData = `
     </style>
   </head>
   <body>
-    <h1>Rent Agreement</h1>
+    <h1>HOUSE RENTAL LEASE AGREEMENT</h1>
 
     <div class="section">
-      <p class="party">Landlord: ${owner}</p>
-      <p class="party">Tenant: ${tenant}</p>
-    </div>
+    <p class="highlight">Agreement Number: ${agreementNumber}</p>
+  </div>
 
-    <div class="section">
-      <p>Monthly Rent: ${currency}${monthly_amount}</p>
-      <p>Lease Start Date: ${start_date}</p>
-      <p>Lease End Date: ${end_date}</p>
-      <p class="highlight">Agreement Number: ${template_num}</p>
-    </div>
+    <p> Thank you for your interest in renting the Property :  <strong> ${propName} </strong> which is located at ${propAddress}.
+    Agreement will be applied from <strong> ${start_date} to ${end_date} </strong> . Please review and sign below to confirm your agreement
+    with the terms and conditions in this House Rental Lease Agreement. Signature by both parties
+    identified in this House Rental Lease Agreement will bind them to a legally enforceable contract
+    so make sure to consult with a lawyer before signing if you want to do so. </p>
 
-    
-    <h4>ADDITIONAL TERMS: </h4>
+   
     <p class="additional-terms">${agreementtext}</p>
 
     <div class="terms">
       <h2>Terms and Conditions</h2>
 
-      <p><strong>1. Rent Payment:</strong> The tenant agrees to pay the monthly rent on or before the specified due date. Late payments may result in penalties as outlined in this agreement.</p>
+      <p><strong>1. Agreement to rent :</strong> 
+      
+      <strong> ${owner} </strong> (“Owner”) agrees to rent the house located
+      at <strong> ${propName} </strong> to <strong> ${tenant} </strong> (“Renter”) for the term of
+      this House Rental Lease Agreement.</p>
 
       <p><strong>2. Property Maintenance:</strong> The tenant is responsible for keeping the property clean and reporting any damages promptly to the landlord.</p>
 
-      <p><strong>3. Utilities:</strong> The tenant is responsible for the payment of utilities unless otherwise specified in this agreement.</p>
+      <p><strong>3. Term of lease :</strong> The rental term will start on <strong> ${start_date} </strong> and end on <strong> ${end_date} </strong>.</p>
 
-      <p><strong>4. Repairs and Maintenance:</strong> The landlord agrees to address necessary repairs and maintenance promptly, and the tenant agrees to report any issues without delay.</p>
+      <p><strong>4. Rent :</strong> Renter agrees to pay <strong> ${currency}. ${monthly_amount} </strong> in exchange for use of the House under the conditions of
+      this House Rental Lease Agreement, payable as follows: [RENT PAYMENT DUE SCHEDULE].
+      Payments will be made by any PAYMENT METHOD provided by landlord to [RENT PAYEE] on or before the due
+      date(s) set forth above. Late payments will result in [LATE PAYMENT CONSEQUENCE];
+      returned checks will result in[RETURNED CHECK CONSEQUENCE.] </p>
 
       <!-- Add more terms and conditions as needed -->
 
@@ -2300,7 +2332,11 @@ agreementData = `
   <div class="container">
     <h1>Rental Agreement</h1>
 
-    <p>This Rental Agreement (the "Agreement") is entered into on ${start_date}, by and between:</p>
+    <p> Thank you for your interest in renting the Property :  <strong> ${propName} </strong> which is located at ${propAddress}.
+    Agreement will be applied from <strong> ${start_date} to ${end_date} </strong> . Please review and sign below to confirm your agreement
+    with the terms and conditions in this House Rental Lease Agreement. Signature by both parties
+    identified in this House Rental Lease Agreement will bind them to a legally enforceable contract
+    so make sure to consult with a lawyer before signing if you want to do so. </p>
 
     <h2>LANDLORD:</h2>
     <p>${owner}</p>
@@ -2442,8 +2478,8 @@ agreementData = `
     
 
     // Insert data into tbl_rentagreements
-    const insertQuery = 'INSERT INTO tbl_rentagreements (agreement_number, owner_id, tenant_id, ownersigndata, monthly_amount , start_date , end_date , template_num, currency, agreementtext) VALUES (?, ?, ?, ?, ?, ?, ? ,? ,?, ?)';
-    await con.query(insertQuery, [agreementNumber, owner_id, tenant_id, landlordSignature,  monthly_amount , start_date , end_date , template_num, currency , agreementtext]);
+    const insertQuery = 'INSERT INTO tbl_rentagreements (agreement_number, owner_id, tenant_id, prop_id, ownersigndata, monthly_amount , start_date , end_date , template_num, currency, agreementtext) VALUES (?, ?, ?, ?, ?, ?, ? ,? ,?, ?, ?)';
+    await con.query(insertQuery, [agreementNumber, owner_id, tenant_id, prop_id, landlordSignature,  monthly_amount , start_date , end_date , template_num, currency , agreementtext]);
     
      // Send the PDF to the tenant's email
      await sendAgreement(agreementNumber, tenantEmail, pdfBuffer, {

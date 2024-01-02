@@ -151,15 +151,24 @@ lastPage.drawImage(signatureImage, {
         const { agreementNumber, signature } = req.body;
           const [rentAgreementData] = await con.query('SELECT * FROM tbl_rentagreements WHERE agreement_number = ?', [agreementNumber]);
 
-          if (!rentAgreementData || rentAgreementData.length === 0) {
+          if (!rentAgreementData || rentAgreementData.length == 0) {
             throw new Error('Rent agreement not found');
           }
+
+          
 
           const {owner_id, tenant_id, monthly_amount, start_date, end_date, ownersigndata , template_num , currency , agreementtext ,created_at } = rentAgreementData[0];
         
           const [tenantQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [tenant_id]);
 
           const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
+      
+          const [propQuery] = await con.query('SELECT * FROM tbl_prop WHERE prop_id = ?', [prop_id]);
+      
+      
+          if (!propQuery || propQuery.length == 0) {
+            return res.json({ result: 'failed', message: 'Property Not Found' });
+          }
       
           const tenantEmail = tenantQuery[0].user_email;
           const ownerEmail = ownerQuery[0].user_email;
@@ -282,8 +291,14 @@ lastPage.drawImage(signatureImage, {
              </div>
          
              <div class="terms">
-         
-               <p> ${agreementtext}</p>
+
+             <p> Thank you for your interest in renting the Property :  <strong> ${propName} </strong> which is located at ${propAddress}.
+             Agreement will be applied from <strong> ${start_date} to ${end_date} </strong> . Please review and sign below to confirm your agreement
+             with the terms and conditions in this House Rental Lease Agreement. Signature by both parties
+             identified in this House Rental Lease Agreement will bind them to a legally enforceable contract
+             so make sure to consult with a lawyer before signing if you want to do so. </p>
+               
+            <p> ${agreementtext}</p>
              
                <h2>Terms and Conditions</h2>
          
@@ -325,131 +340,134 @@ lastPage.drawImage(signatureImage, {
            console.log("Template 2 selected for Agreement ")
          
          
-          // Create a dynamic HTML template for the rent agreement
-         agreementData = `
-         <html>
-           <head>
-             <style>
-               body {
-                 font-family: 'Arial', sans-serif;
-                 margin: 1.25in;
-                 color: #333;
-                 line-height: 1.6;
-               }
-         
-               h1 {
-                 text-align: center;
-                 text-decoration: underline;
-                 color: #005c99;
-                 margin-bottom: 20px;
-               }
-         
-               .section {
-                 margin-top: 20px;
-               }
-         
-               .party {
-                 font-weight: bold;
-               }
-         
-               .date {
-                 font-style: italic;
-               }
-         
-               .highlight {
-                 background-color: #ffffcc;
-                 padding: 2px 5px;
-                 border-radius: 3px;
-               }
-         
-               .terms {
-                 margin-top: 30px;
-               }
-         
-               .terms h2 {
-                 color: #005c99;
-                 margin-bottom: 10px;
-               }
-         
-               .terms p {
-                 margin-bottom: 15px;
-               }
-         
-               .signature {
-                 margin-top: 40px;
-                 text-align: center;
-               }
-         
-               .signature img {
-                 width: 200px;
-                 height: 100px;
-                 border: 2px solid #005c99;
-                 border-radius: 5px;
-               }
-         
-               .footer {
-                 margin-top: 20px;
-                 font-size: 10px;
-                 text-align: center;
-                 color: #777;
-               }
-             </style>
-           </head>
-           <body>
-             <h1>Rent Agreement</h1>
-         
-             <div class="section">
-               <p class="party">Landlord: ${owner}</p>
-               <p class="party">Tenant: ${tenant}</p>
-             </div>
-         
-             <div class="section">
-               <p>Monthly Rent: ${currency}${monthly_amount}</p>
-               <p>Lease Start Date: ${start_date}</p>
-               <p>Lease End Date: ${end_date}</p>
-               <p class="highlight">Agreement Number: ${template_num}</p>
-             </div>
-
+          //  2 Create a dynamic HTML template for the rent agreement
+          agreementData = `
+          <html>
+            <head>
+              <style>
+                body {
+                  font-family: 'Arial', sans-serif;
+                  margin: 0.5in;
+                  color: #333;
+                  line-height: 1.6;
+                }
+          
+                h1 {
+                  text-align: center;
+                  text-decoration: underline;
+                  color: #005c99;
+                  margin-bottom: 20px;
+                }
+          
+                .section {
+                  margin-top: 20px;
+                }
+          
+                .party {
+                  font-weight: bold;
+                }
+          
+                .date {
+                  font-style: italic;
+                }
+          
+                .highlight {
+                  background-color: #ffffcc;
+                  padding: 2px 5px;
+                  border-radius: 3px;
+                }
+          
+                .terms {
+                  margin-top: 30px;
+                }
+          
+                .terms h2 {
+                  color: #005c99;
+                  margin-bottom: 10px;
+                }
+          
+                .terms p {
+                  margin-bottom: 15px;
+                }
+          
+                .signature {
+                  margin-top: 40px;
+                  text-align: center;
+                }
+          
+                .signature img {
+                  width: 200px;
+                  height: 100px;
+                  border: 2px solid #005c99;
+                  border-radius: 5px;
+                }
+          
+                .footer {
+                  margin-top: 20px;
+                  font-size: 10px;
+                  text-align: center;
+                  color: #777;
+                }
+              </style>
+            </head>
+            <body>
+              <h1>HOUSE RENTAL LEASE AGREEMENT</h1>
+          
+              <div class="section">
+              <p class="highlight">Agreement Number: ${agreementNumber}</p>
+            </div>
+          
+              <p> Thank you for your interest in renting the Property :  <strong> ${propName} </strong> which is located at ${propAddress}.
+              Agreement will be applied from <strong> ${start_date} to ${end_date} </strong> . Please review and sign below to confirm your agreement
+              with the terms and conditions in this House Rental Lease Agreement. Signature by both parties
+              identified in this House Rental Lease Agreement will bind them to a legally enforceable contract
+              so make sure to consult with a lawyer before signing if you want to do so. </p>
+          
              
-    
-    <h4>ADDITIONAL TERMS: </h4>
-    <p class="additional-terms">${agreementtext}</p>
-         
-             <div class="terms">
-               <h2>Terms and Conditions</h2>
-         
-               <p><strong>1. Rent Payment:</strong> The tenant agrees to pay the monthly rent on or before the specified due date. Late payments may result in penalties as outlined in this agreement.</p>
-         
-               <p><strong>2. Property Maintenance:</strong> The tenant is responsible for keeping the property clean and reporting any damages promptly to the landlord.</p>
-         
-               <p><strong>3. Utilities:</strong> The tenant is responsible for the payment of utilities unless otherwise specified in this agreement.</p>
-         
-               <p><strong>4. Repairs and Maintenance:</strong> The landlord agrees to address necessary repairs and maintenance promptly, and the tenant agrees to report any issues without delay.</p>
-         
-               <!-- Add more terms and conditions as needed -->
-         
-             </div>
-         
-             <div class="signature">
-             <p>Date : ${landlordDate}</p>
-               <p>Landlord's Signature</p>
-               <img src="${landlordSignature}" alt="Landlord's Signature">
-             </div>
-         
-             <div class="signature">
-             <p>Date : ${currentDate}</p>
-               <p>Tenant's Signature </p>
+              <p class="additional-terms">${agreementtext}</p>
+          
+              <div class="terms">
+                <h2>Terms and Conditions</h2>
+          
+                <p><strong>1. Agreement to rent :</strong> 
                 
-               <img src="${tenantSignature}" alt="Landlord's Signature">
-             </div>
-         
-             <div class="footer">
-               <p>This agreement is effective as of the date first above written and is entered into by and between the parties identified above.</p>
-             </div>
-           </body>
-         </html>
-         `;
-         
+                <strong> ${owner} </strong> (“Owner”) agrees to rent the house located
+                at <strong> ${propName} </strong> to <strong> ${tenant} </strong> (“Renter”) for the term of
+                this House Rental Lease Agreement.</p>
+          
+                <p><strong>2. Property Maintenance:</strong> The tenant is responsible for keeping the property clean and reporting any damages promptly to the landlord.</p>
+          
+                <p><strong>3. Term of lease :</strong> The rental term will start on <strong> ${start_date} </strong> and end on <strong> ${end_date} </strong>.</p>
+          
+                <p><strong>4. Rent :</strong> Renter agrees to pay <strong> ${currency}. ${monthly_amount} </strong> in exchange for use of the House under the conditions of
+                this House Rental Lease Agreement, payable as follows: [RENT PAYMENT DUE SCHEDULE].
+                Payments will be made by any PAYMENT METHOD provided by landlord to [RENT PAYEE] on or before the due
+                date(s) set forth above. Late payments will result in [LATE PAYMENT CONSEQUENCE];
+                returned checks will result in[RETURNED CHECK CONSEQUENCE.] </p>
+          
+                <!-- Add more terms and conditions as needed -->
+          
+              </div>
+          
+              <div class="signature">
+              <p>Date : ${currentDate}</p>
+                <p>Landlord's Signature</p>
+                <img src="${landlordSignature}" alt="Landlord's Signature">
+              </div>
+          
+              <div class="signature">
+              <p>Date : ${currentDate}</p>
+                <p>Tenant's Signature Pending </p>
+                 
+                <img class="sign-gif" src="http://${process.env.Host1}/images/signature.gif" alt="Sign GIF">
+              </div>
+          
+              <div class="footer">
+                <p>This agreement is effective as of the date first above written and is entered into by and between the parties identified above.</p>
+              </div>
+            </body>
+          </html>
+          `;
          
          
          
@@ -534,6 +552,12 @@ lastPage.drawImage(signatureImage, {
          
              <h2>TENANT:</h2>
              <p>${tenant}</p>
+
+             <p> Thank you for your interest in renting the Property :  <strong> ${propName} </strong> which is located at ${propAddress}.
+             Agreement will be applied from <strong> ${start_date} to ${end_date} </strong> . Please review and sign below to confirm your agreement
+             with the terms and conditions in this House Rental Lease Agreement. Signature by both parties
+             identified in this House Rental Lease Agreement will bind them to a legally enforceable contract
+             so make sure to consult with a lawyer before signing if you want to do so. </p>
          
              <h2>1. PROPERTY DETAILS:</h2>
              <p>The Landlord agrees to rent the property located at [Property Address] (the "Property") to the Tenant for the term of ${start_date} to ${end_date}.</p>
