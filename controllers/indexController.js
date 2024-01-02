@@ -170,6 +170,11 @@ lastPage.drawImage(signatureImage, {
             return res.json({ result: 'failed', message: 'Property Not Found' });
           }
       
+
+          const propName = propQuery[0].title  
+
+        const propAddress = propQuery[0].address + ', ' + propQuery[0].city + ',' + propQuery[0].country ;
+
           const tenantEmail = tenantQuery[0].user_email;
           const ownerEmail = ownerQuery[0].user_email;
           const tenant = tenantQuery[0].firstname + ' ' + tenantQuery[0].lastname;
