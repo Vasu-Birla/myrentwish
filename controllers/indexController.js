@@ -464,7 +464,7 @@ lastPage.drawImage(signatureImage, {
               <p>Date : ${currentDate}</p>
                 <p>Tenant's Signature Pending </p>
                  
-                <img class="sign-gif" src="http://${process.env.Host1}/images/signature.gif" alt="Sign GIF">
+                <img src="${tenantSignature}" alt="Landlord's Signature">
               </div>
           
               <div class="footer">
