@@ -1755,7 +1755,7 @@ const agreements1 = async (req, res, next) => {
 
 
 
-const createPDFWithSignatureField = async (req, res, next) => {
+const createPDFWithSignatureField1 = async (req, res, next) => {
   const con = await connection();
 
   try {
@@ -1915,6 +1915,574 @@ const createPDFWithSignatureField = async (req, res, next) => {
     res.status(500).json({ result: 'Internal Server Error' });
   }
 };
+
+
+
+
+
+
+const createPDFWithSignatureField = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    await con.beginTransaction();
+
+    const { agreementtext, owner_id, tenant_id, signature , start_date, end_date , monthly_amount , template_num, currency } = req.body;
+
+    //var agreementData = agreement;
+
+    var landlordSignature = signature
+
+
+    const [tenantQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [tenant_id]);
+
+    const [ownerQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [owner_id]);
+
+    const tenantEmail = tenantQuery[0].user_email;
+    const ownerEmail = ownerQuery[0].user_email;
+    const tenant = tenantQuery[0].firstname + ' ' + tenantQuery[0].lastname;
+    const owner = ownerQuery[0].firstname + ' ' + ownerQuery[0].lastname;
+
+    const agreementNumber = generateAgreementNumber();
+
+    var currentDate = new Date().toISOString().split('T')[0]
+
+
+var agreementData;
+
+if(template_num == '1'){
+  console.log("Template 1 selected for Agreement ")
+
+
+  
+// 1. Create a dynamic HTML template for the rent agreement
+ agreementData = `
+<html>
+  <head>
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        margin: 0.25in 1in 1in 1in;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      h1 {
+        text-align: center;
+        text-decoration: underline;
+        color: #0066cc;
+      }
+
+      .section {
+        margin-top: 20px;
+      }
+
+      .owner, .tenant {
+        font-weight: bold;
+      }
+
+      .date {
+        font-style: italic;
+      }
+
+      .highlight {
+        background-color: #ffff99;
+        padding: 2px 5px;
+        border-radius: 3px;
+      }
+
+      .terms {
+        margin-top: 30px;
+      }
+
+      .terms h2 {
+        color: #0066cc;
+        margin-bottom: 10px;
+      }
+
+      .terms p {
+        margin-bottom: 15px;
+      }
+
+      .signature {
+        margin-top: 40px;
+      }
+
+      .signature img {
+        width: 200px;
+        height: 100px;
+        border: 2px solid #0066cc;
+        border-radius: 5px;
+      }
+
+      .sign-block {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+      }
+
+      .sign-block .landlord-signature, .sign-block .tenant-signature {
+        text-align: center;
+      }
+
+      .sign-block .landlord-signature img, .sign-block .tenant-signature img {
+        width: 120px;
+        height: 60px;
+        border: 2px solid #0066cc;
+        border-radius: 5px;
+      }
+
+      .footer {
+        margin-top: 20px;
+        font-size: 10px;
+        text-align: center;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Rent Agreement</h1>
+
+    <div class="section">
+      <p class="owner">Landlord: ${owner}</p>
+      <p class="tenant">Tenant: ${tenant}</p>
+    </div>
+
+    <div class="section">
+      <p>Monthly Amount: ${currency}. ${monthly_amount}</p>
+      <p>Start Date: ${start_date}</p>
+      <p>End Date: ${end_date}</p>
+      <p class="highlight">Agreement Number: ${agreementNumber}</p>
+    </div>
+
+    <div class="terms">
+
+      <p> ${agreementtext}</p>
+    
+      <h2>Terms and Conditions</h2>
+
+      <p><strong>1. Rent Payment:</strong> The tenant agrees to pay the monthly rent on or before the specified due date. Late payments may incur fees as outlined in this agreement.</p>
+
+      <p><strong>2. Property Maintenance:</strong> The tenant is responsible for maintaining the property in good condition and promptly reporting any damages to the landlord.</p>
+
+      <p><strong>3. Utilities:</strong> The agreement specifies which utilities are included in the rent and which are the responsibility of the tenant.</p>
+
+      <p><strong>4. Repairs and Maintenance:</strong> The landlord agrees to promptly address necessary repairs and maintenance, and the tenant agrees to report any issues promptly.</p>
+
+      <!-- Add more terms and conditions as needed -->
+
+    </div>
+
+    <div class="sign-block">
+      <div class="landlord-signature">
+      
+        <p>Date : ${currentDate}</p>
+        <p>Landlord Signature</p>
+        <img src="${landlordSignature}" alt="Landlord's Signature">
+      </div>
+      <div class="tenant-signature">
+        <p>Date : </p>
+        <p>Tenant Signature Pending </p>
+        <img class="sign-gif" src="http://${process.env.Host1}/images/signature.gif" alt="Sign GIF">
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>This agreement is effective as of the date first above written and is made by and between the parties identified above.</p>
+    </div>
+  </body>
+</html>
+`;
+
+
+}else if(template_num == '2'){
+  console.log("Template 2 selected for Agreement ")
+
+
+ // Create a dynamic HTML template for the rent agreement
+agreementData = `
+<html>
+  <head>
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        margin: 1.25in;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      h1 {
+        text-align: center;
+        text-decoration: underline;
+        color: #005c99;
+        margin-bottom: 20px;
+      }
+
+      .section {
+        margin-top: 20px;
+      }
+
+      .party {
+        font-weight: bold;
+      }
+
+      .date {
+        font-style: italic;
+      }
+
+      .highlight {
+        background-color: #ffffcc;
+        padding: 2px 5px;
+        border-radius: 3px;
+      }
+
+      .terms {
+        margin-top: 30px;
+      }
+
+      .terms h2 {
+        color: #005c99;
+        margin-bottom: 10px;
+      }
+
+      .terms p {
+        margin-bottom: 15px;
+      }
+
+      .signature {
+        margin-top: 40px;
+        text-align: center;
+      }
+
+      .signature img {
+        width: 200px;
+        height: 100px;
+        border: 2px solid #005c99;
+        border-radius: 5px;
+      }
+
+      .footer {
+        margin-top: 20px;
+        font-size: 10px;
+        text-align: center;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Rent Agreement</h1>
+
+    <div class="section">
+      <p class="party">Landlord: ${owner}</p>
+      <p class="party">Tenant: ${tenant}</p>
+    </div>
+
+    <div class="section">
+      <p>Monthly Rent: ${currency}${monthly_amount}</p>
+      <p>Lease Start Date: ${start_date}</p>
+      <p>Lease End Date: ${end_date}</p>
+      <p class="highlight">Agreement Number: ${template_num}</p>
+    </div>
+
+    
+    <h4>ADDITIONAL TERMS: </h4>
+    <p class="additional-terms">${agreementtext}</p>
+
+    <div class="terms">
+      <h2>Terms and Conditions</h2>
+
+      <p><strong>1. Rent Payment:</strong> The tenant agrees to pay the monthly rent on or before the specified due date. Late payments may result in penalties as outlined in this agreement.</p>
+
+      <p><strong>2. Property Maintenance:</strong> The tenant is responsible for keeping the property clean and reporting any damages promptly to the landlord.</p>
+
+      <p><strong>3. Utilities:</strong> The tenant is responsible for the payment of utilities unless otherwise specified in this agreement.</p>
+
+      <p><strong>4. Repairs and Maintenance:</strong> The landlord agrees to address necessary repairs and maintenance promptly, and the tenant agrees to report any issues without delay.</p>
+
+      <!-- Add more terms and conditions as needed -->
+
+    </div>
+
+    <div class="signature">
+    <p>Date : ${currentDate}</p>
+      <p>Landlord's Signature</p>
+      <img src="${landlordSignature}" alt="Landlord's Signature">
+    </div>
+
+    <div class="signature">
+    <p>Date : ${currentDate}</p>
+      <p>Tenant's Signature Pending </p>
+       
+      <img class="sign-gif" src="http://${process.env.Host1}/images/signature.gif" alt="Sign GIF">
+    </div>
+
+    <div class="footer">
+      <p>This agreement is effective as of the date first above written and is entered into by and between the parties identified above.</p>
+    </div>
+  </body>
+</html>
+`;
+
+
+
+
+}else{
+  console.log("Template 3 selected for Agreement ")
+
+
+ agreementData = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rental Agreement</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    p {
+      text-align: justify;
+      margin-bottom: 10px;
+      color: #555;
+    }
+
+    .signature {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 30px;
+    }
+
+    .signature img {
+      max-width: 150px;
+      height: auto;
+    }
+
+    .signature p {
+      width: 48%;
+      text-align: center;
+    }
+
+    .witness {
+      margin-top: 20px;
+    }
+
+    .witness p {
+      text-align: center;
+    }
+
+    .additional-terms {
+      margin-top: 20px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Rental Agreement</h1>
+
+    <p>This Rental Agreement (the "Agreement") is entered into on ${start_date}, by and between:</p>
+
+    <h2>LANDLORD:</h2>
+    <p>${owner}</p>
+
+    <h2>TENANT:</h2>
+    <p>${tenant}</p>
+
+    <h2>1. PROPERTY DETAILS:</h2>
+    <p>The Landlord agrees to rent the property located at [Property Address] (the "Property") to the Tenant for the term of ${start_date} to ${end_date}.</p>
+
+    <h2>2. MONTHLY RENT:</h2>
+    <p>The Tenant agrees to pay a monthly rent of ${monthly_amount} ${currency} for the duration of this Agreement.</p>
+
+    <h2>3. PAYMENT TERMS:</h2>
+    <p>Rent is due on the [Due Date] of each month. Late payments may incur a [Late Fee] after [Grace Period].</p>
+
+    <div class="signature">
+      <p>LANDLORD:<br>${owner} <br>Date: ${currentDate}</p>
+      <img src="${landlordSignature}" alt="Landlord's Signature">
+      <p>TENANT:<br>${tenant} <br>Date: Pending </p>
+      Pending <img class="sign-gif" src="http://${process.env.Host1}/images/signature.gif" alt="Sign GIF">
+    </div>
+
+    <div class="witness">
+      <p>WITNESS:<br>[Witness's Name] <br>Date: [Date]</p>
+    </div>
+
+    <h2 class="additional-terms">5. ADDITIONAL TERMS:</h2>
+    <p class="additional-terms">${agreementtext}</p>
+
+    <p>This Agreement is governed by the laws of [Your Jurisdiction]. Any disputes arising under or in connection with this Agreement shall be resolved through arbitration in accordance with the rules of the [Arbitration Institution].</p>
+
+    <p>IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first above written.</p>
+
+    <div class="signature">
+    
+ 
+      <p> <br> <img src="${landlordSignature}" alt="Landlord's Signature"> <br> __________________________<br>${owner}<br>Landlord</p>
+      
+         
+      <p> <br> <img class="sign-gif" src="http://${process.env.Host1}/images/signature.gif" alt="Sign GIF"> <br> __________________________<br>${tenant}<br>Tenant</p>
+     
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+
+
+
+}
+
+
+   
+
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox'],
+      headless: 'new',
+    });
+    const page = await browser.newPage();
+
+     // Set professional margins for the entire PDF
+     const margin = {
+      top: '0.5in',
+      right: '0.5in',
+      bottom: '0.5in',
+      left: '0.5in',
+    };
+
+
+    // Set content of the page to the HTML data
+    await page.setContent(agreementData);
+
+    // Generate PDF from the HTML content
+    const pdfBuffer = await page.pdf();
+
+    // const pdfBuffer = await page.pdf({
+    //   margin,
+    // });
+
+
+    // Close the browser
+    await browser.close();
+
+    // Save the PDF to the "agreements" folder in the "public" folder
+    const pdfFileName = `${agreementNumber}.pdf`;
+    const filePath = path.join('public', 'agreements', pdfFileName);
+    fs.writeFileSync(filePath, pdfBuffer);
+
+    // Load the existing PDF to add the signature
+    // const existingPdfBytes = fs.readFileSync(filePath);
+    // const pdfDoc = await PDFDocument.load(existingPdfBytes);
+
+    // // Convert the signature data URL to a buffer
+    // const signatureImageBytes = await convertDataUrlToBuffer(signature);
+
+    // // Embed the signature image into the PDF
+    // const signatureImage = await pdfDoc.embedPng(signatureImageBytes);
+
+
+
+    //     // Get the last page and add the signature only to the last page
+    //     const lastPageIndex = pdfDoc.getPageCount() - 1;
+    //     const lastPage = pdfDoc.getPages()[lastPageIndex];
+    //     const { width, height } = lastPage.getSize();
+    
+    //     // Set professional margins
+    //     const marginLeft = 50;
+    //     const marginBottom = 50;
+    
+    //     // Add the signature image to the bottom left corner
+    //     lastPage.drawImage(signatureImage, {
+    //       x: marginLeft,
+    //       y: marginBottom,
+    //       width: 100, // Adjust the width based on your requirements
+    //       height: 50, // Adjust the height based on your requirements
+    //     });
+    
+    
+
+    // // Save the updated PDF
+    // const updatedPdfBytes = await pdfDoc.save();
+    // fs.writeFileSync(filePath, updatedPdfBytes);
+
+    // Send the PDF to the tenant's email
+    // await sendAgreement(agreementNumber, tenantEmail, updatedPdfBytes, {
+    //   agreement: agreementData,
+    //   owner: owner,
+    //   tenant: tenant,
+    // });
+
+    // await sendAgreementToOwner(ownerEmail, agreementNumber, {
+    //   agreement: agreementData,
+    //   owner: owner,
+    //   tenant: tenant,
+    // });
+
+    
+
+    // Insert data into tbl_rentagreements
+    const insertQuery = 'INSERT INTO tbl_rentagreements (agreement_number, owner_id, tenant_id, ownersigndata, monthly_amount , start_date , end_date , template_num, currency, agreementtext) VALUES (?, ?, ?, ?, ?, ?, ? ,? ,?, ?)';
+    await con.query(insertQuery, [agreementNumber, owner_id, tenant_id, landlordSignature,  monthly_amount , start_date , end_date , template_num, currency , agreementtext]);
+    
+     // Send the PDF to the tenant's email
+     await sendAgreement(agreementNumber, tenantEmail, updatedPdfBytes, {
+      agreement: agreementData,
+      owner: owner,
+      tenant: tenant,
+    });
+
+    await sendAgreementToOwner(ownerEmail, agreementNumber, {
+      agreement: agreementData,
+      owner: owner,
+      tenant: tenant,
+    });
+
+
+
+    await con.commit();
+
+    res.json({ result: 'success', message: 'Rent Agreement Document Has Been Sent' });
+  } catch (error) {
+    await con.rollback();
+    console.error('Error creating PDF:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
