@@ -157,7 +157,7 @@ lastPage.drawImage(signatureImage, {
 
           
 
-          const {owner_id, tenant_id, monthly_amount, start_date, end_date, ownersigndata , template_num , currency , agreementtext ,created_at } = rentAgreementData[0];
+          const {owner_id, tenant_id, monthly_amount, start_date, end_date, ownersigndata , template_num , currency , agreementtext ,created_at, prop_id } = rentAgreementData[0];
         
           const [tenantQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [tenant_id]);
 
