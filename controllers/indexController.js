@@ -565,8 +565,8 @@ lastPage.drawImage(signatureImage, {
           
                <p> <br> <img src="${landlordSignature}" alt="Landlord's Signature"> <br> __________________________<br>${owner}<br>Landlord</p>
                
-                  
-               <img src="${tenantSignature}" alt="Landlord's Signature">
+               <p> <br> <img src="${tenantSignature}" alt="Landlord's Signature"> <br> __________________________<br>${tenant}<br>Tenant</p>
+               
               
              </div>
            </div>
