@@ -2446,7 +2446,7 @@ agreementData = `
     await con.query(insertQuery, [agreementNumber, owner_id, tenant_id, landlordSignature,  monthly_amount , start_date , end_date , template_num, currency , agreementtext]);
     
      // Send the PDF to the tenant's email
-     await sendAgreement(agreementNumber, tenantEmail, updatedPdfBytes, {
+     await sendAgreement(agreementNumber, tenantEmail, pdfBuffer, {
       agreement: agreementData,
       owner: owner,
       tenant: tenant,
