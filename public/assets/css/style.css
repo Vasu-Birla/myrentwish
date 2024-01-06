@@ -953,16 +953,16 @@ option {
 
 
 .custom-switch.custom-switch-on-success .custom-control-input:checked~.custom-control-label::before {
-    background-color: #28a745;
+    background-color: #28a745 !important ;
     border-color: #145523;
-    animation: laserBefore 2s linear infinite;
+    /* animation: laserBefore 2s linear infinite; */
     
 }
 
 .custom-switch.custom-switch-off-danger .custom-control-input~.custom-control-label::before {
     background-color: #dc3545;
     border-color: #921925;
-    animation: laserAfter 2s linear infinite;
+    /* animation: laserAfter 2s linear infinite; */
 }
 
 

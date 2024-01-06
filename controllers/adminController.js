@@ -542,8 +542,15 @@ const viewUserPost = async(req,res,next)=>{
 
   var [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id ]);   
 
+  var [users] =  await con.query('SELECT * FROM tbl_users');
+    
+ 
+
   await con.commit();
-  res.render('admin/viewUser',{'user':user,"output":"Updated "+user.firstname+"'s Details"})
+  //res.render('admin/viewUser',{'user':user,"output":"Updated "+user.firstname+"'s Details"})
+
+  res.redirect('/admin/viewUsers')
+  //res.render('admin/viewUsers',{'users':users,"output":"Updated "+user.firstname+"'s Details"})
 
   }catch(error){
     await con.rollback();
@@ -981,7 +988,7 @@ const viewQuestions = async (req, res, next) => {
 
   try {
     // Fetch questions from the tbl_questions table
-    const [questions] = await con.query('SELECT * FROM tbl_questions');
+    const [questions] = await con.query('SELECT * FROM tbl_questions ORDER BY question_id DESC');
     
     // Render the viewQuestions page and pass the questions data to the template
     res.render('admin/viewQuestions', { questions });
