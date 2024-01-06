@@ -1565,7 +1565,6 @@ const myTickets = async (req, res, next) => {
 
 
 
-
 //======================   Terms & Condition  Webview ================== 
 
 const tandc = async (req, res, next) => {
