@@ -18,10 +18,44 @@ import { response } from 'express';
 
 const homePage = async(req,res,next)=>{ 
 
+  const con = await connection();
+
   try {
-    res.render('admin/index') 
+    var [[users]] = await con.query('SELECT COUNT(*) AS count FROM tbl_users');
+    var [[props]] = await con.query('SELECT COUNT(*) AS count FROM tbl_prop');
+    var [[rentedPropsResult]] = await con.query('SELECT COUNT(*) AS count FROM tbl_prop WHERE prop_status = "rented"');
+
+
+
+    var [interestCounts] = await con.query('SELECT prop_id, COUNT(*) AS count FROM tbl_interest GROUP BY prop_id ORDER BY count DESC LIMIT 8');
+
+
+
+    // Prepare an array to store the dataPoints
+var dataPoints = [];
+for (let i = 0; i < 8; i++) {
+  const interestCount = interestCounts[i] || { prop_id: null, count: 0 };
+
+  const { prop_id, count } = interestCount;
+  var [propertyResult] = await con.query('SELECT * FROM tbl_prop WHERE prop_id = ?', [prop_id]);
+  const propertyName = propertyResult.length > 0 ? propertyResult[0].title : "Unknown Property";
+  const OwnerName = propertyResult.length > 0 ? propertyResult[0].owner_name : "Unknown Owner";
+
+  dataPoints.push({ y: count, label: propertyName , Owner:OwnerName});
+}
+
+    var Data = {
+      usernum: users.count,
+      propsnum: props.count,
+      rentedPropsCount: rentedPropsResult.count,
+      dataPoints:dataPoints
+    };
+    
+
+    res.render('admin/index',{Data}) 
 
   } catch (error) {
+    console.log(error.message)
     res.render('admin/kilvish500', {'output':'Internal Server Error'});
     
   }
