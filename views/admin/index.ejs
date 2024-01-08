@@ -226,7 +226,10 @@
                         <div class="card-content wow zoomin">
                           <h5 class="font-13">Total Users</h5>
                           <h2 class="mb-3 font-14"><%= Data.usernum %></h2>
-                          <p class="mb-0"><span class="col-green"> Read </span> More</p>
+                       
+                          <a href="/admin/viewUsers">
+                            <p class="mb-0"><span class="col-green"> Read  More</span></p>
+                            </a>
                         </div>
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
@@ -242,6 +245,9 @@
             </div>
             <input type="hidden" id="dataPoints"  value="<%= JSON.stringify(Data.dataPoints) %>">
 
+            <input type="hidden" id="clientIp"  value="<%= Data.clientIp %>">
+
+            
             
             <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <div class="card">
@@ -252,7 +258,9 @@
                         <div class="card-content">
                           <h5 class="font-13">Total Property</h5>
                           <h2 class="mb-3 font-14"><%= Data.propsnum %></h2>
-                          <p class="mb-0"><span class="col-orange">Read </span> More</p>
+                          <a href="/admin/properties" class="mb-0">
+                            <p class="mb-0"><span class="col-green"> Read  More</span></p>
+                            </a>
                         </div>
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
@@ -274,7 +282,9 @@
                         <div class="card-content">
                           <h5 class="font-13"> Total Rent</h5>
                           <h2 class="mb-3 font-14"><%= Data.rentedPropsCount %>  </h2>
-                          <p class="mb-0"><span class="col-green">Read </span> More</p>
+                                <a href="/admin/properties" class="mb-0">
+                            <p class="mb-0"><span class="col-green"> Read  More</span></p>
+                            </a>
                         </div>
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
@@ -294,9 +304,12 @@
                     <div class="row ">
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
                         <div class="card-content">
-                          <h5 class="font-13">Total Earning</h5>
-                          <h2 class="mb-3 font-14">1940.00</h2>
-                          <p class="mb-0"><span class="col-green"> Read </span> More </p>
+                          <h5 class="font-13">Last Login </h5>
+                          <!-- <h2 class="mb-3 font-14" id="lastlogin">  </h2> -->
+
+                          <h2 class="mb-3 font-11" id="lastlogin" >     </h2>
+
+                          <p class="mb-0"><span class="col-green"  onclick="toggleReadMore()" > Read More </span>  </p>
                         </div>
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
@@ -349,10 +362,25 @@
   <script src="../assets/js/custom.js"></script>
 <!-- CANVAS CHART JS  SCRIPT START  CANVAS CHART JS  SCRIPT START  CANVAS CHART JS  SCRIPT START  -->
 <script>
+
+readmore = true;
+
+
 window.onload = function () {
 
  DATAPOINTS =  document.getElementById('dataPoints').value; 
  DATAPOINTS = JSON.parse(DATAPOINTS)
+
+ clientIp =  document.getElementById('clientIp').value; 
+
+ const timestamp = new Date().toString();
+   LastLogin = `From IP- ${clientIp} on ${timestamp} `;
+
+    var halfLength = Math.ceil(LastLogin.length / 4);
+
+    document.getElementById('lastlogin').innerText  =  LastLogin.substring(0, halfLength);
+
+   
 
 var chart = new CanvasJS.Chart("chartContainer", {
   animationEnabled: true,
@@ -374,6 +402,24 @@ var chart = new CanvasJS.Chart("chartContainer", {
 chart.render();
 
 }
+
+
+
+
+function toggleReadMore() {  
+    var readMoreContent = document.getElementById('readMoreContent');
+
+    // Toggle the display of the read more content
+    if (readmore == true) { 
+       lastlogin.style.display = 'inline';
+       document.getElementById('lastlogin').innerText  =  LastLogin
+       readmore = false; 
+
+    } else {
+      document.getElementById('lastlogin').innerText  =  LastLogin.substring(0, halfLength);  
+      readmore = true;    
+    }
+  }
 </script>
 </body>
 

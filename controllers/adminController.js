@@ -20,11 +20,24 @@ const homePage = async(req,res,next)=>{
   const con = await connection();
 
   try {
+    await con.beginTransaction();
+
+    var clientIp = req.clientIp;
+      // Remove the IPv6 prefix if present
+            if (clientIp && clientIp.substring(0, 7) === '::ffff:') {
+              clientIp = clientIp.substring(7);        
+                }
+
+                
+    const timestamp = new Date().toString();
+    var LastLogin = `Last login: ${timestamp} from ${clientIp}`;
+    console.log(LastLogin);
+   
 
 
-    const clientIp = req.clientIp;
+      await con.query('INSERT INTO tbl_visitors (ip_address) VALUES (?)', [clientIp]);
 
-    console.log("Visiter's ip address --> ",clientIp )
+    
 
     var [[users]] = await con.query('SELECT COUNT(*) AS count FROM tbl_users');
     var [[props]] = await con.query('SELECT COUNT(*) AS count FROM tbl_prop');
@@ -53,13 +66,16 @@ for (let i = 0; i < 8; i++) {
       usernum: users.count,
       propsnum: props.count,
       rentedPropsCount: rentedPropsResult.count,
-      dataPoints:dataPoints
+      dataPoints:dataPoints,
+      clientIp : clientIp
     };
     
 
+    con.commit()
     res.render('admin/index',{Data}) 
 
   } catch (error) {
+    con.rollback()
     console.log(error.message)
     res.render('admin/kilvish500', {'output':'Internal Server Error'});
     
