@@ -7,6 +7,8 @@ import dotenv from 'dotenv'
 import connection from './config.js'
 
 import http from 'http';
+import requestIp from 'request-ip'
+
 
 import AdminRouter from './routes/adminRoute.js'
 import IndexRouter from './routes/IndexRoute.js';
@@ -33,7 +35,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({limit: '50mb', extended: true })); 
 app.use(express.static(path.join(__dirname,"public")));
 app.use(cookie());
-
+app.use(requestIp.mw());
 
 app.use(async (req, res, next) => {
 

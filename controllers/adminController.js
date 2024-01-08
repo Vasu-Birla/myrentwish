@@ -8,7 +8,6 @@ import * as path from 'path';
 import upload from '../middleware/upload.js';
 
 
-
 import {hashPassword, comparePassword, sendWelcomeMsg , responsetoQuery , sendOTPFornewPass ,sendNotification} from '../middleware/helper.js'
 import { response } from 'express';
 
@@ -21,6 +20,12 @@ const homePage = async(req,res,next)=>{
   const con = await connection();
 
   try {
+
+
+    const clientIp = req.clientIp;
+
+    console.log("Visiter's ip address --> ",clientIp )
+
     var [[users]] = await con.query('SELECT COUNT(*) AS count FROM tbl_users');
     var [[props]] = await con.query('SELECT COUNT(*) AS count FROM tbl_prop');
     var [[rentedPropsResult]] = await con.query('SELECT COUNT(*) AS count FROM tbl_prop WHERE prop_status = "rented"');
