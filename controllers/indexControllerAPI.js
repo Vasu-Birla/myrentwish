@@ -1939,7 +1939,7 @@ const createPDFWithSignatureField = async (req, res, next) => {
 
     var landlordSignature = 'data:image/png;base64,'+signature
 
-    console.log("after converting into Base64 Format--->>>>", req.body)
+    console.log("after converting into Base64 Format--->>>>", landlordSignature)
 
 
     const [tenantQuery] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [tenant_id]);
