@@ -797,6 +797,9 @@ const calculatePreferencesMatchPercentage = (userPreferences, propertyDetails) =
     matchPercentage += weightPreferredType;
   }
 
+
+  
+
   // Calculate match percentage based on rent difference
   const rentDifference = Math.abs(userPreferences.prefered_rent - propertyDetails.rent_amount);
   const maxRentDifference = 1000; // Adjust this value based on your criteria
