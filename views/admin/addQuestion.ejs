@@ -11,6 +11,14 @@
               <h4><i class="fa fa-align-right" aria-hidden="true"></i> Add Question</h4>
             </div>
 
+            <form style="float: right;" action="/admin/viewQuestions" method="GET">
+              <!-- Your form fields go here -->
+              <div class="form-group col-md-12">
+                  <button type="submit" class="btn btn-success">view Questions</button>
+              </div>
+          </form>
+          
+
             <div id="successMessage" class="alert alert-success d-none">
                   Question Added Successfully ! 
             </div>
@@ -112,6 +120,10 @@
           $("#successMessage").removeClass("d-none");           
          $("#errorMessage").addClass("d-none");
          $('#questionForm')[0].reset();
+
+         setTimeout(function () {
+        window.location.href = '/admin/addQuestion';
+    }, 1000);
         },
         error: function (error) {
           console.error(error);
