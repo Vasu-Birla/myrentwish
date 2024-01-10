@@ -1927,6 +1927,7 @@ const createPDFWithSignatureField = async (req, res, next) => {
   try {
     await con.beginTransaction();
 
+    console.log("data from frontend  for agreement--->>>>", req.body)
  
 
     const { agreementtext, owner_id, tenant_id, signature , start_date, end_date , template_num, prop_id } = req.body;
