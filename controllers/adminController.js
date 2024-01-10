@@ -507,7 +507,8 @@ const viewUsers = async(req,res,next)=>{
   const con = await connection();
   try {   
 
-    var [users] =  await con.query('SELECT * FROM tbl_users');
+    var [users] =  await con.query('SELECT * FROM tbl_users ORDER BY created_at DESC');
+    
     
     res.render('admin/viewUsers', {'users':users,'output':'Your users Fetched'});
 
