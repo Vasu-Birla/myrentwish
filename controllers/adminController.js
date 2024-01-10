@@ -637,7 +637,7 @@ const  deleteUser = async(req,res,next)=>{
     await con.beginTransaction();
 
     await con.query('DELETE FROM tbl_users WHERE user_id = ?', [userID]);
-    var [users] =  await con.query('SELECT * FROM tbl_users');
+    var [users] =  await con.query('SELECT * FROM tbl_users ORDER BY created_at DESC');
 
     await con.commit();
     res.render('admin/viewUsers', {'users':users,'output':'User Deleted'});
@@ -711,7 +711,7 @@ const propType = async(req,res,next)=>{
 
   try {
 
-    const [proptypes] = await con.query('SELECT * FROM tbl_proptype');
+    const [proptypes] = await con.query('SELECT * FROM tbl_proptype ORDER BY created_at DESC');
     res.render('admin/propType', { 'proptypes': proptypes, 'output': 'Property Types Fetched!!' });
   } catch (error) {
     res.render('admin/kilvish500')
@@ -826,7 +826,7 @@ const properties = async(req,res,next)=>{
   const con = await connection();
   try {   
 
-    var [props] =  await con.query('SELECT * FROM tbl_prop');
+    var [props] =  await con.query('SELECT * FROM tbl_prop ORDER BY created_at DESC');
     
     res.render('admin/properties', {'props':props,'output':'Your properties Fetched'});
 
@@ -1167,7 +1167,7 @@ const skills = async(req,res,next)=>{
 
   try {
 
-    const [skills] = await con.query('SELECT * FROM tbl_skills');
+    const [skills] = await con.query('SELECT * FROM tbl_skills ORDER BY created_at DESC');
     res.render('admin/skills', { 'skills': skills, 'output': 'skills Fetched!!' });
   } catch (error) {
     res.render('admin/kilvish500')
@@ -1277,7 +1277,7 @@ const Deleteskill = async(req,res,next)=>{
 
   try {
 
-    const [skills] = await con.query('SELECT * FROM tbl_skills');
+    const [skills] = await con.query('SELECT * FROM tbl_skills ORDER BY created_at DESC');
     res.render('admin/skills', { 'skills': skills, 'output': 'Skill Deleted' });
   } catch (error) {
     res.render('admin/kilvish500')
@@ -1304,7 +1304,7 @@ const userPrivacy = async(req,res,next)=>{
   const con = await connection(); 
 
   try {      
-  const [pandps] = await con.query('SELECT * FROM tbl_pandp');
+  const [pandps] = await con.query('SELECT * FROM tbl_pandp ORDER BY id DESC');
   res.render('admin/userPrivacy',{'output':'User Privacy Feched ..!','pandps':pandps})
   } catch (error) {
     res.render('admin/kilvish500',{'output':'Failed to Fetch Privacy','pandps':'pandps'})
@@ -1369,7 +1369,7 @@ const userPrivacy = async(req,res,next)=>{
       try {  
     
         await con.query('DELETE FROM tbl_pandpy WHERE id = ?', [pandpID]);
-        const [pandps] = await con.query('SELECT * FROM tbl_pandp');
+        const [pandps] = await con.query('SELECT * FROM tbl_pandp ORDER BY id DESC');
     
         res.render('userPrivacy', {'pandps':pandps,'output':'User Privacy Deleted'});
         
@@ -1508,7 +1508,7 @@ const tandc = async(req,res,next)=>{
 const faq = async(req,res,next)=>{ 
   const con = await connection(); 
       try {
-            const [faqs] = await con.query('SELECT * FROM tbl_faq'); 
+            const [faqs] = await con.query('SELECT * FROM tbl_faq ORDER BY created_at DESC'); 
 
             console.log(faqs.length )
 
@@ -1541,7 +1541,7 @@ const addFAQ = async (req, res, next) => {
     await con.query('INSERT INTO tbl_faq (faq, answer) VALUES (?, ?)', [faq, answer]);
 
     // Retrieve updated FAQs after insertion
-    const [faqs] = await con.query('SELECT * FROM tbl_faq');
+    const [faqs] = await con.query('SELECT * FROM tbl_faq ORDER BY created_at DESC');
 
     await con.commit();
     res.render('admin/faq', { 'faqs': faqs, 'output': 'FAQ Added Successfully' });
@@ -1564,7 +1564,7 @@ const deleteFAQ = async(req,res,next)=>{
    
     await con.query('DELETE FROM tbl_faq WHERE faq_id = ?', [faqID]);
 
-    const [faqs] = await con.query('SELECT * FROM tbl_faq');
+    const [faqs] = await con.query('SELECT * FROM tbl_faq ORDER BY created_at DESC');
     await con.commit();
     res.render('faq', {'faqs':faqs,'output':'FAQ Deleted'});
     
@@ -1681,7 +1681,7 @@ const deleteFAQ = async(req,res,next)=>{
     const con = await connection(); 
     try {
       
-      const [Queries] = await con.query('SELECT * FROM tbl_queries WHERE status IN (?, ?)', ['opened', 'closed']);
+      const [Queries] = await con.query('SELECT * FROM tbl_queries WHERE status IN (?, ?) ORDER BY id DESC', ['opened', 'closed']);
       res.render('admin/queries',{"output":"","queries":Queries})
     } catch (error) {
       res.render('admin/kilvish500')
@@ -1727,7 +1727,7 @@ const sendMailtoUser = async (req, res, next) => {
       responsetoQuery(email, message, subject);
 
       // Fetch queries from the tbl_queries table
-      const [Queries] = await con.query('SELECT * FROM tbl_queries WHERE status IN (?, ?)', ['opened', 'closed']);
+      const [Queries] = await con.query('SELECT * FROM tbl_queries WHERE status IN (?, ?) ORDER BY id DESC', ['opened', 'closed']);
 
       if (Queries) {
           res.render('queries', { "output": "Email Sent to " + email + " Successfully", "queries": Queries });
@@ -1810,7 +1810,7 @@ const appPassPost = async (req, res, next) => {
     const con = await connection(); 
    
         try {
-          const [agreements] = await con.query('SELECT * FROM tbl_addagreement');   
+          const [agreements] = await con.query('SELECT * FROM tbl_addagreement ORDER BY id DESC');   
 
 
           if(agreements.length > 0){
@@ -1869,7 +1869,7 @@ const appPassPost = async (req, res, next) => {
           const sql = 'INSERT INTO `tbl_addagreement` ( agreementContent ) VALUES (?)';
           const values = [agreementContent];
           const [results] = await con.query(sql, values);
-          const [agreements] = await con.query('SELECT * FROM tbl_addagreement');
+          const [agreements] = await con.query('SELECT * FROM tbl_addagreement ORDER BY id DESC');
     
           if (results) {
             await con.commit();
@@ -1897,13 +1897,13 @@ const appPassPost = async (req, res, next) => {
       try {  
     
         await con.query('DELETE FROM tbl_addagreement WHERE id = ?', [agreementID]);
-        const [agreements] = await con.query('SELECT * FROM tbl_addagreement');
+        const [agreements] = await con.query('SELECT * FROM tbl_addagreement ORDER BY id DESC');
     
         res.render('admin/rentAgreement', {'agreements':agreements,'output':'Agreement Sample Deleted'});
         
       } catch (error) {
     
-        const [agreements] = await con.query('SELECT * FROM tbl_addagreement');
+        const [agreements] = await con.query('SELECT * FROM tbl_addagreement ORDER BY id DESC');
     
         res.render('admin/rentAgreement', {'agreements':agreements,'output':'Failed to Delete'});
         
@@ -1928,7 +1928,7 @@ const appPassPost = async (req, res, next) => {
         const con = await connection(); 
        
             try {
-              const [agreements] = await con.query('SELECT * FROM tbl_rentagreements');   
+              const [agreements] = await con.query('SELECT * FROM tbl_rentagreements ORDER BY created_at DESC');   
     
     
               if(agreements.length > 0){
