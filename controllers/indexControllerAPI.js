@@ -693,12 +693,12 @@ const Properties = async (req, res, next) => {
     // Validate if the user exists
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
     if (!user) {
-      return res.status(404).json({ result: "User not found" });
+       res.status(404).json({ result: "User not found" });
     }
 
     if( user.status != 'active'){
       console.log("Inactivated user")
-      return res.status(403).json({ result: "User is Deactivated" });
+       res.status(403).json({ result: "User is Deactivated" });
     }
 
     
