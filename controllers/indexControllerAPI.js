@@ -2760,7 +2760,7 @@ const  fetchCities= async (req, res)=>{
           const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
            
           if( user.status != 'active'){
-            return res.status(403).json({ result: "failed" , message:"User is Deactivated"});
+            return res.status(200).json({ result: "failed" , message:"User is Deactivated"});
           }
 
           return res.status(200).json({ result: "success" , message:"User is Active"});
