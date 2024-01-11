@@ -327,6 +327,10 @@ const  removeAccount = async(req,res,next)=>{
     try {        
       const userID = req.body.user_id;
       const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+
+      if( user.status != 'active'){
+        return res.status(403).json({ result: "User is Deactivated" });
+      }
   
       if (user && user.status == "active") {
         res.json(user);
@@ -358,6 +362,11 @@ const  removeAccount = async(req,res,next)=>{
         await con.rollback();
         res.status(404).json({ result: "User not found" });
         return;
+      }
+
+
+      if( existingUser.status != 'active'){
+        return res.status(403).json({ result: "User is Deactivated" });
       }
 
 
@@ -839,6 +848,10 @@ const myProperties = async (req, res, next) => {
       if (!user) {
         await con.rollback();
         return res.status(404).json({ result: "User not found" });
+      }
+
+      if( user.status != 'active'){
+        return res.status(403).json({ result: "User is Deactivated" });
       }
   
       const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id = ?';  
@@ -2725,6 +2738,30 @@ const  fetchCities= async (req, res)=>{
    
   }
 
+  const  isActive = async (req, res)=>{
+    
+    const con = await connection();
+  
+    try {      
+          const userID = req.body.user_id;
+
+          // Validate if the user exists
+          const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+           
+          if( user.status != 'active'){
+            return res.status(403).json({ result: "sucess" , message:"User is Deactivated"});
+          }
+            
+    } catch (error) {  
+       
+          return res.status(500).json({message:error.message} );
+      
+    }finally{  
+      con.release();
+    }
+  
+     
+    }
 
 
 
@@ -2735,7 +2772,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets ,tandc , pandp , faqs,
      checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
-     getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries
+     getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive
 }
 
 

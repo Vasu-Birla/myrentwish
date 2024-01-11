@@ -32,7 +32,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     createPDFWithSignatureField,
     getOnlyFansProfile,
     fetchCities,
-    fetchcountries} from '../controllers/indexControllerAPI.js';
+    fetchcountries,
+    isActive} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -154,6 +155,9 @@ router.route('/fetchCities').post(upload.none(),fetchCities)
 
 
 
+//--------- isActive
+
+router.route('/isActive').post(upload.none(),isActive)
 
 
 
