@@ -696,6 +696,8 @@ const Properties = async (req, res, next) => {
       return res.status(404).json({ result: "User not found" });
     }
 
+    console.log(user)
+
     if( user.status == 'inactive'){
       console.log("Inactivated user")
       return res.status(403).json({ result: "User is Deactivated" });
