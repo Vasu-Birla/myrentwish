@@ -79,7 +79,7 @@ function setValue()
         return res.status(409).json({ result: 'Email already exists' });
       } else {
         const sql =
-          'INSERT INTO `tbl_users` ( firstname, lastname, user_email,  password, user_mobile, birthday, location, latitude, longitude, address, country, city, gender, image, imagePath, prefered_gender, prefered_city, prefered_country, bedroom_nums, bathroom_type, parking_type,prefered_type, prefered_rent, about_me, skill) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+          'INSERT INTO `tbl_users` ( firstname, lastname, user_email,  password, user_mobile, country_flag, country_code  birthday, location, latitude, longitude, address, country, city, gender, image, imagePath, prefered_gender, prefered_city, prefered_country, bedroom_nums, bathroom_type, parking_type,prefered_type, prefered_rent, about_me, skill) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   
         const values = [
           req.body.firstname,
@@ -87,6 +87,8 @@ function setValue()
           req.body.user_email,
           req.body.password,
           req.body.user_mobile,
+          req.body.country_flag,
+          req.body.country_code,
           req.body.birthday,
           req.body.location,
           req.body.latitude,
