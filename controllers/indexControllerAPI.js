@@ -697,6 +697,7 @@ const Properties = async (req, res, next) => {
     }
 
     if( user.status != 'active'){
+      console.log("Inactivated user")
       return res.status(403).json({ result: "User is Deactivated" });
     }
 
