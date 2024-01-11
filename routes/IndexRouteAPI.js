@@ -30,7 +30,9 @@ import { register ,Login, Logout,  ForgotPassword ,
     checkPreferenceAvailability,
     agreements,
     createPDFWithSignatureField,
-    getOnlyFansProfile} from '../controllers/indexControllerAPI.js';
+    getOnlyFansProfile,
+    fetchCities,
+    fetchcountries} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -143,6 +145,30 @@ router.route('/pdf').post(upload.none(),createPDFWithSignatureField)
 
 
 
+//-----------------  fetchCities ------------ 
+
+
+router.route('/fetchcountries').get(upload.none(),fetchcountries)
+router.route('/fetchCities').post(upload.none(),fetchCities)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -150,6 +176,10 @@ router.route('/pdf').post(upload.none(),createPDFWithSignatureField)
 
 
 router.route('/getToken').post(upload.none(), obtainToken )
+
+
+
+
 
 
 

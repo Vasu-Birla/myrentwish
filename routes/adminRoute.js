@@ -1,5 +1,5 @@
 import express from 'express'
-import { Deleteskill, ForgotPassword, NotifyPost, Profile, ProfilePost, QueriesPost, SupportPost, addFAQ, addInquiryDetails, addQuestion, addQuestionPost, addSkills, addUser, appPass, appPassPost, changepass, checkPass, 
+import { Deleteskill, ForgotPassword, NotifyPost, Profile, ProfilePost, QueriesPost, SupportPost, addFAQ, addInquiryDetails, addLocations, addLocationsPost, addQuestion, addQuestionPost, addSkills, addUser, appPass, appPassPost, changepass, checkPass, 
     deleteAgreement, 
     deleteFAQ, 
     deleteProperty, 
@@ -254,6 +254,16 @@ router.route('/deleteAgreement').get(deleteAgreement)
 router.route('/useragreements').get(viewAgreements)
 
 router.route('/updateAgreementStatus').post(updateAgreementStatus)
+
+
+
+//------------ Add Location ------------- 
+
+
+
+router.route('/addLocations').get(addLocations)
+
+router.route('/addLocations').post(addLocationsPost)
 
 
 

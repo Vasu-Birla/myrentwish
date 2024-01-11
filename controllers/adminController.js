@@ -1996,6 +1996,67 @@ const appPassPost = async (req, res, next) => {
 
 
 
+
+
+      //---------- add Locations -------- 
+
+
+      
+    const  addLocations= async (req, res)=>{
+    
+      const con = await connection();
+
+      try {  
+            con.beginTransaction()
+
+              res.render('admin/addLocations')
+
+            con.commit()
+        
+      } catch (error) {
+    
+            con.rollback()
+        
+      }finally{
+    
+        con.release();
+      }
+    
+    
+       
+      }
+    
+
+      const addLocationsPost = async (req, res) => {
+        const con = await connection();    
+        try {
+            await con.beginTransaction();    
+            // Assuming req.body contains the country and city data
+            const { country, city } = req.body;    
+            // Insert data into tbl_locations with timestamp
+            const insertQuery = 'INSERT INTO tbl_locations (country, city) VALUES (?, ?)';
+            await con.query(insertQuery, [country, city]);    
+            // Render the 'admin/addLocations' view
+            res.render('admin/addLocations');
+    
+            await con.commit();
+        } catch (error) {
+            await con.rollback();
+            console.error('Error adding location:', error.message);
+            res.status(500).send('Error adding location');
+        } finally {
+            con.release();
+        }
+    };
+    
+    
+    
+    
+
+      
+
+
+
 //--------------------- Export Start ------------------------------------------
 export {homePage,
   loginPage,loginAdmin,logout,Profile,ProfilePost,updateadminpic,
@@ -2009,7 +2070,8 @@ export {homePage,
        userPrivacyPost, deleteuserPrivacy, deleteSkill , sendMailtoUser , QueriesPost ,
         deletetandc , appPass, appPassPost , ForgotPassword , sendOTP , verifyOTP , resetpassword , NotifyPost ,
       
-        rentAgreement  , rentAgreementPost , deleteAgreement , viewAgreements ,updateAgreementStatus }
+        rentAgreement  , rentAgreementPost , deleteAgreement ,
+         viewAgreements ,updateAgreementStatus , addLocations , addLocationsPost }
 
 
          

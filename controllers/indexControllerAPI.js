@@ -2661,6 +2661,64 @@ items.forEach((item) => {
 
 
 
+const  fetchcountries = async (req, res)=>{
+    
+  const con = await connection();
+
+  try {  
+        con.beginTransaction()
+        const { country } = req.body;   
+        
+        const [countries] = await con.query('SELECT DISTINCT country FROM tbl_locations ORDER BY country ASC');
+        
+        con.commit()
+    
+        return res.status(200).json( countries );
+  
+    
+  } catch (error) {
+
+        con.rollback()
+        return res.status(500).json({message:error.message} );
+    
+  }finally{
+
+    con.release();
+  }
+
+   
+  }
+
+
+const  fetchCities= async (req, res)=>{
+    
+  const con = await connection();
+
+  try {  
+        con.beginTransaction()
+        const { country } = req.body;   
+        
+        const [cities] = await con.query('SELECT city FROM tbl_locations WHERE country = ? ORDER BY city ASC', [country]);
+        
+        con.commit()
+    
+        return res.status(200).json( cities );
+
+  
+    
+  } catch (error) {
+
+        con.rollback()
+        return res.status(500).json({message:error.message} );
+    
+  }finally{
+
+    con.release();
+  }
+
+   
+  }
+
 
 
 
@@ -2671,10 +2729,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets ,tandc , pandp , faqs,
      checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
-     getOnlyFansProfile,
-
-
-     getSkills1
+     getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries
 }
 
 
