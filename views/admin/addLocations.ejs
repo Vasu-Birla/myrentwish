@@ -19,28 +19,48 @@
           </form>
           
 
+
+                  <!-- alert msgs  -->
+                  <% if (output === 'Error: Can not add Duplicate City' || output === '') { %>
+                    <div class="alert alert-danger">
+                      <%= output %>
+                    </div>
+      
+                  <% } else { %>
+                    <div class="alert alert-success">
+                      <%= output %>
+                    </div>
+                  <% } %>
+                  <!-- /alert msgs  -->
+
+
             <div id="successMessage" class="alert alert-success d-none">
-                  Location Added Successfully ! 
+                  Location Deleted Successfully ! 
             </div>
               
               <div id="errorMessage" class="alert alert-danger d-none">
-                    Failed to add Location 
+                    Failed to Delete Location
               </div>
 
             <!-- Form Start -->
             <form action="/admin/addLocations" method="post">
               <!-- Location Input -->
               <div class="form-group">
-                <label for="question">Enter Country</label>
-                <input type="text" name="country" class="form-control" placeholder="Enter your question" required>
+                <label for="country">Select Country</label>
+                <select name="country" id="country" class="form-control" required>
+                  <option selected disabled>Select Country</option>
+                  <% Object.keys(jsonData).forEach(function(country) { %>
+                    <option value="<%= country %>"><%= country %></option>
+                  <% }); %>
+                </select>
               </div>
-
-
+            
               <div class="form-group">
-                <label for="question">Enter City</label>
-                <input type="text" name="city" class="form-control" placeholder="Enter your question" required>
+                <label for="city">Select City</label>
+                <select name="city" id="city" class="form-control" required>
+                  <option selected disabled>Select City</option>
+                </select>
               </div>
-
         
               <!-- Submit Button -->
               <div class="form-group add-admin col-md-12" style="margin: 10px 0px;">
@@ -48,6 +68,78 @@
               </div>
             </form>
             <!-- Form End -->
+            
+            <input type="hidden" id="jsonData" name="jsonData" value="<%= JSON.stringify(jsonData) %>">
+
+
+
+            <div class="table-reponsive box">
+              <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                <div class="row">
+                <table id="example" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="example_info">
+              <thead>
+                   <tr role="row">
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 30.0781px;">Id</th>
+                    <!-- <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Date: activate to sort column descending" style="width: 30.156px;">box</th> -->
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 80.0781px;"> Countries </th>
+
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 80.0781px;"> Cities </th>
+
+                    <!-- <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Net: activate to sort column ascending" style="width: 75.5625px;">Status</th> -->
+                    <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 110.156px;">Action</th>
+                  </tr>
+              </thead>
+                 <div class="table-responsive">
+                    </div>
+                    <tbody>
+                      <% let countryIndex = 1; %>
+                      <% for (var i = 0; i < locations.length; i++) { %>
+
+
+                        <tr>
+
+                      
+                          <% if (i === 0 || locations[i].country !== locations[i - 1].country) { %>
+                            <!-- Display the continuous index for the first row of each country -->
+                            <td><%= countryIndex++ %></td>
+                          <% } else { %>
+                            <!-- If the country is the same as the previous row, leave an empty cell for the index -->
+                            <td></td>
+                          <% } %>
+
+
+
+                          <% if (i === 0 || locations[i].country !== locations[i - 1].country) { %>
+                            <!-- Display the country name only once -->
+                            <td><%= locations[i].country %></td>
+                          <% } else { %>
+                            <!-- If the country is the same as the previous row, leave an empty cell -->
+                            <td></td>
+                          <% } %>
+                    
+                          <td>
+                            <!-- Display the city name -->
+                            <span class="display-value"><%= locations[i].city %></span>
+                          </td>
+                    
+                          <td>
+                            <div class="dropdown">
+                              <button class="btn mt-1 mb-1 btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
+                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <!-- <a class="dropdown-item edit-action" data-index="<%= i %>">Edit</a> -->
+                                <a class="delete-user-link dropdown-item" data-user-id="<%= locations[i].id %>" href="#">Delete</a>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      <% } %>
+                    </tbody>
+                    
+                  </table>
+              </div>
+            </div>
+
+
           </div>
         </div>
       </div>
@@ -85,3 +177,84 @@
 </html>
 
 <!-- Your Other Script Tags -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+<script>
+  // Get reference to country and city dropdowns
+  var countryDropdown = document.getElementById('country');
+  var cityDropdown = document.getElementById('city');
+
+
+    // Parse the JSON data from the hidden input
+    var jsonDataInput = document.getElementById('jsonData');
+  var jsonData = JSON.parse(jsonDataInput.value);
+
+
+  countryDropdown.addEventListener('change', function() {
+    // Clear city dropdown options
+    cityDropdown.innerHTML = '<option selected disabled>Select City</option>';
+
+    // Get selected country
+    var selectedCountry = countryDropdown.value;
+
+    // Populate city dropdown with cities of the selected country
+    if (selectedCountry && jsonData[selectedCountry]) {
+      jsonData[selectedCountry].forEach(function(city) {
+        var option = document.createElement('option');
+        option.value = city;
+        option.textContent = city;
+        cityDropdown.appendChild(option);
+      });
+    }
+  });
+
+
+
+
+  $(document).ready(function() {
+    $('.delete-user-link').on('click', function(e) {
+        e.preventDefault();
+
+        var LocationID = $(this).data('user-id');
+        var userElement = $(this).closest('.user');
+
+
+        // Use SweetAlert2 for a stylish confirmation
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Make an AJAX request to delete the user
+                $.ajax({
+                    type: 'DELETE',
+                    url: '/admin/deleteLocation',
+                    data: { LocationID: LocationID },
+                    success: function(response) {
+                      window.location.href = '/admin/addLocations';                           
+                        // Handle success, update UI, etc.
+                    },
+                    error: function(error) {
+                        console.error('Error deleting user', error);
+                       
+                        $("#errorMessage").removeClass("d-none");
+                      $("#successMessage").addClass("d-none");
+                    }
+                });
+            }
+        });
+    });
+});
+
+
+
+
+</script>

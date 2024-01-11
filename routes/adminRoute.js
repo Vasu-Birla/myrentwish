@@ -17,7 +17,8 @@ import { Deleteskill, ForgotPassword, NotifyPost, Profile, ProfilePost, QueriesP
      tandcPost, 
      updateAgreementStatus, 
      updatePropertyStatus, updateUserStatus, updateadminpic,
-      updatepropType, userPrivacy, userPrivacyPost, verifyOTP, viewAgreements, viewQuestion, viewQuestionPost, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers } from '../controllers/adminController.js';
+      updatepropType, userPrivacy, userPrivacyPost, verifyOTP, viewAgreements, 
+      viewQuestion, viewQuestionPost, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers , deleteLocation } from '../controllers/adminController.js';
 
 
 import upload from '../middleware/upload.js';
@@ -264,6 +265,10 @@ router.route('/updateAgreementStatus').post(updateAgreementStatus)
 router.route('/addLocations').get(addLocations)
 
 router.route('/addLocations').post(addLocationsPost)
+
+router.route('/deleteLocation').delete(deleteLocation)
+
+
 
 
 
