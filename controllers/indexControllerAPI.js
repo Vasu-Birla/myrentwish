@@ -685,6 +685,12 @@ const Properties = async (req, res, next) => {
       return res.status(404).json({ result: "User not found" });
     }
 
+    if( user.status != 'active'){
+      return res.status(403).json({ result: "User is Deactivated" });
+    }
+
+    
+
     const page = req.body.page_number || 1; // Default to page 1 if not provided
     const resultsPerPage = 5;
     const offset = (page - 1) * resultsPerPage;
