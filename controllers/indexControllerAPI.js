@@ -541,8 +541,14 @@ const  removeAccount = async(req,res,next)=>{
         existingUser.prefered_rent !== null && existingUser.prefered_rent.trim() !== '' ||
         existingUser.about_me !== null && existingUser.about_me.trim() !== '' ||
         existingUser.skill !== null && existingUser.skill.trim() !== '';
+
+
+        const [userProperties] = await con.query('SELECT * FROM tbl_prop WHERE user_id = ?', [userID]);
+        const hasProperties = userProperties.length > 0;
+
+        
   
-      if (hasUpdatedPreferences) {
+      if (hasUpdatedPreferences || hasProperties) {
         res.json({ result: "success" });
       } else {
         res.status(500).json({ result: "failed" });
