@@ -396,8 +396,8 @@ const  removeAccount = async(req,res,next)=>{
         country: req.body.country || existingUser.country,
         city: req.body.city || existingUser.city,
         gender: req.body.gender || existingUser.gender,
-        gender: req.body.country_flag || existingUser.country_flag,
-        gender: req.body.country_code || existingUser.country_code,
+        country_flag: req.body.country_flag || existingUser.country_flag,
+        country_code: req.body.country_code || existingUser.country_code,
         image: image,
         imagePath: imagePath
       };
