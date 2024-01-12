@@ -959,6 +959,9 @@ const updateProperty = async (req, res, next) => {
       currency,
       available_date,
       prop_status, // Assuming this is part of the request body
+      country_flag,
+      country_code ,
+
     } = req.body;
 
     // Set is_available based on prop_status
@@ -1005,12 +1008,14 @@ const updateProperty = async (req, res, next) => {
       available_date: available_date || property.available_date,
       is_available: is_available || property.is_available,
       prop_status: prop_status || property.prop_status,
+      country_flag: country_flag || property.country_flag,
+      country_code: country_code || property.country_code,
       images: JSON.stringify(images),
     };
 
     // Update property details in the tbl_prop table
     const updateSql =
-      'UPDATE tbl_prop SET owner_name=?, owner_contact=?, owner_email=?, title=?, description=?, address=?, city=?, country=?, prop_type=?, bedroom_nums=?, bathroom_type=?, parking_type=?, size_sqft=?, rent_amount=?,  currency=?, available_date=?, is_available=?, prop_status=?, images=? WHERE prop_id=?';
+      'UPDATE tbl_prop SET owner_name=?, owner_contact=?, owner_email=?, title=?, description=?, address=?, city=?, country=?, prop_type=?, bedroom_nums=?, bathroom_type=?, parking_type=?, size_sqft=?, rent_amount=?,  currency=?, available_date=?, is_available=?, prop_status=?, country_flag=? , country_code=?,  images=? WHERE prop_id=?';
     const updateValues = [
       updatedPropertyDetails.owner_name,
       updatedPropertyDetails.owner_contact,
@@ -1030,6 +1035,8 @@ const updateProperty = async (req, res, next) => {
       updatedPropertyDetails.available_date,
       updatedPropertyDetails.is_available,
       updatedPropertyDetails.prop_status,
+      updatedPropertyDetails.country_flag,
+      updatedPropertyDetails.country_code,
       updatedPropertyDetails.images,
       propertyID,
     ];
