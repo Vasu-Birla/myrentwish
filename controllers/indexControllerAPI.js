@@ -551,7 +551,7 @@ const  removeAccount = async(req,res,next)=>{
       if (hasUpdatedPreferences || hasProperties) {
         res.json({ result: "success" });
       } else {
-        res.status(500).json({ result: "failed" });
+        res.status(200).json({ result: "failed" });
       }
     } catch (error) {
       console.error('Error in checkPreferenceUpdate API:', error);
