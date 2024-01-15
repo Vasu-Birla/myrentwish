@@ -28,7 +28,10 @@ import { register ,Login, Logout,  ForgotPassword ,
     pandp,
     faqs,
     checkPreferenceAvailability,
-    createPDFWithSignatureField} from '../controllers/apiController.js';
+    createPDFWithSignatureField,
+    fetchcountries,
+    fetchCities,
+    isActive} from '../controllers/apiController.js';
 
 const router = express.Router(); 
 
@@ -143,6 +146,18 @@ router.route('/getToken').post(upload.none(), obtainToken )
 //---------Agreement Section ------
 
 router.route('/generateagreement').post(upload.none(),createPDFWithSignatureField)
+
+
+router.route('/fetchcountries').get(upload.none(),fetchcountries)
+
+router.route('/fetchCities').post(upload.none(),fetchCities)
+
+
+
+
+//--------- isActive
+
+router.route('/isActive').post(upload.none(),isActive)
 
 
 export default router

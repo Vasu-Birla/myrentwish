@@ -73,8 +73,11 @@ const register = async (req, res, next) => {
       returnedData.message = 'Email already exists';
       return res.status(409).json(returnedData);
     } else {
+      
       const sql =
-        'INSERT INTO `tbl_users` ( firstname, lastname, user_email,  password, user_mobile, birthday, location, latitude, longitude, address, country, city, gender, image, imagePath, prefered_gender, prefered_city, prefered_country, bedroom_nums, bathroom_type, parking_type,prefered_type, prefered_rent, about_me, skill) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      'INSERT INTO `tbl_users` ( firstname, lastname, user_email,  password, user_mobile, country_flag , country_code, birthday, location, latitude, longitude, address, country, city, gender, image, imagePath, prefered_gender, prefered_city, prefered_country, bedroom_nums, bathroom_type, parking_type,prefered_type, prefered_rent, about_me, skill) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?)';
+
+
 
       const values = [
         req.body.firstname,
@@ -82,6 +85,8 @@ const register = async (req, res, next) => {
         req.body.user_email,
         req.body.password,
         req.body.user_mobile,
+        req.body.country_flag,
+        req.body.country_code,
         req.body.birthday,
         req.body.location,
         req.body.latitude,
@@ -444,13 +449,15 @@ const updateProfile = async (req, res, next) => {
       country: req.body.country || existingUser.country,
       city: req.body.city || existingUser.city,
       gender: req.body.gender || existingUser.gender,
+      country_flag: req.body.country_flag || existingUser.country_flag,
+      country_code: req.body.country_code || existingUser.country_code,
       image: image,
       imagePath: imagePath,
     };
 
     // Update the user details in the database
     const updateSql =
-      'UPDATE tbl_users SET firstname=?, lastname=?, user_email=?, user_mobile=?, birthday=?, location=?, latitude=?, longitude=?, address=?, country=?, city=?, gender=?, image=?, imagePath=? WHERE user_id=?';
+      'UPDATE tbl_users SET firstname=?, lastname=?, user_email=?, user_mobile=?, birthday=?, location=?, latitude=?, longitude=?, address=?, country=?, city=?, gender=?, country_flag=?, country_code=?, image=?, imagePath=? WHERE user_id=?';
     const updateValues = [
       updatedUser.firstname,
       updatedUser.lastname,
@@ -464,6 +471,8 @@ const updateProfile = async (req, res, next) => {
       updatedUser.country,
       updatedUser.city,
       updatedUser.gender,
+      updatedUser.country_flag,
+      updatedUser.country_code,
       updatedUser.image,
       updatedUser.imagePath,
       userID,
@@ -606,7 +615,13 @@ const checkPreferenceAvailability = async (req, res, next) => {
       existingUser.about_me !== null && existingUser.about_me.trim() !== '' ||
       existingUser.skill !== null && existingUser.skill.trim() !== '';
 
-    if (hasUpdatedPreferences) {
+
+      const [userProperties] = await con.query('SELECT * FROM tbl_prop WHERE user_id = ?', [userID]);
+      const hasProperties = userProperties.length > 0;
+
+
+
+    if (hasUpdatedPreferences || hasProperties) {
       returnedData.message = 'success';
       res.json(returnedData);
     } else {
@@ -669,6 +684,8 @@ const addProperty = async (req, res, next) => {
       title,
       prefered_gender,
       description,
+      country_flag,
+      country_code,
       address,
       city,
       country,
@@ -681,6 +698,7 @@ const addProperty = async (req, res, next) => {
       currency,
       available_date,
       prop_status, // Assuming this is part of the request body
+      
     } = req.body;
 
     // Set is_available based on prop_status
@@ -690,7 +708,8 @@ const addProperty = async (req, res, next) => {
 
     // Insert property details into the tbl_prop table
     const insertSql =
-      'INSERT INTO tbl_prop (user_id, owner_name, owner_contact, owner_email, title,prefered_gender, description, address, city, country, prop_type, bedroom_nums, bathroom_type, parking_type, size_sqft, rent_amount, currency, available_date, is_available, prop_status, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      'INSERT INTO tbl_prop (user_id, owner_name, owner_contact, owner_email, title,prefered_gender, description, address,  country_flag, country_code, city, country, prop_type, bedroom_nums, bathroom_type, parking_type, size_sqft, rent_amount, currency, available_date, is_available, prop_status, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+
     const insertValues = [
       userID,
       owner_name,
@@ -700,6 +719,8 @@ const addProperty = async (req, res, next) => {
       prefered_gender,
       description,
       address,
+      country_flag,
+      country_code,
       city,
       country,
       prop_type,
@@ -724,7 +745,7 @@ const addProperty = async (req, res, next) => {
     propertyDetails.available_date = format(new Date(propertyDetails.available_date), 'yyyy-MM-dd');
 
     await con.commit();
-    returnedData.message = 'success';
+    returnedData = { message: 'success', data: { ...propertyDetails }, error: {} };
     res.json(returnedData);
 
   } catch (error) {
@@ -992,122 +1013,155 @@ const myProperties = async (req, res, next) => {
   //------------- Update Property --------------------- 
 
 
-const updateProperty = async (req, res, next) => {
-  let returnedData = {
-    message: 'Unexpected error',
-    data: {},
-    error: {},
-  };
-
-  const con = await connection();
-
-  try {
-    await con.beginTransaction();
-
-    const userID = req.body.user_id;
-    const propertyID = req.body.prop_id;
-
-    // Validate if the user exists
-    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
-    if (!user) {
-      await con.rollback();
-      returnedData.message = 'User not found';
-      res.status(404).json(returnedData);
-      return;
-    }
-
-    // Validate if the property exists and is owned by the user
-    const [[property]] = await con.query('SELECT * FROM `tbl_prop` WHERE prop_id = ? AND user_id = ?', [propertyID, userID]);
-    if (!property) {
-      await con.rollback();
-      returnedData.message = 'Property not found or does not belong to the user';
-      res.json(returnedData);
-      return;
-    }
-
-    let images;
-
-    if (req.files && req.files.length > 0) {
-      console.log('New Images uploaded');
-      images = req.files.map(file => ({ path: `http://${process.env.Host1}/uploads/${file.filename}` }));
-    } else {
-      console.log('Existing Images uploaded');
-      images = JSON.parse(property.images);
-    }
-
-    const updatedPropertyDetails = {
-      owner_name: req.body.owner_name || property.owner_name,
-      owner_contact: req.body.owner_contact || property.owner_contact,
-      owner_email: req.body.owner_email || property.owner_email,
-      title: req.body.title || property.title,
-      description: req.body.description || property.description,
-      address: req.body.address || property.address,
-      city: req.body.city || property.city,
-      country: req.body.country || property.country,
-      prop_type: req.body.prop_type || property.prop_type,
-      bedroom_nums: req.body.bedroom_nums || property.bedroom_nums,
-      bathroom_type: req.body.bathroom_type || property.bathroom_type,
-      parking_type: req.body.parking_type || property.parking_type,
-      size_sqft: req.body.size_sqft || property.size_sqft,
-      rent_amount: req.body.rent_amount || property.rent_amount,
-      currency: req.body.currency || property.currency,
-      available_date: req.body.available_date || property.available_date,
-      prop_status: req.body.prop_status || property.prop_status,
-      is_available: req.body.prop_status === 'available',
-      images: JSON.stringify(images),
+  const updateProperty = async (req, res) => {
+    let returnedData = {
+      message: 'Unexpected error',
+      data: {},
+      error: {},
     };
-
-    const updateSql =
-      'UPDATE tbl_prop SET owner_name=?, owner_contact=?, owner_email=?, title=?, description=?, address=?, city=?, country=?, prop_type=?, bedroom_nums=?, bathroom_type=?, parking_type=?, size_sqft=?, rent_amount=?, currency=?, available_date=?, is_available=?, prop_status=?, images=? WHERE prop_id=?';
-
-    const updateValues = [
-      updatedPropertyDetails.owner_name,
-      updatedPropertyDetails.owner_contact,
-      updatedPropertyDetails.owner_email,
-      updatedPropertyDetails.title,
-      updatedPropertyDetails.description,
-      updatedPropertyDetails.address,
-      updatedPropertyDetails.city,
-      updatedPropertyDetails.country,
-      updatedPropertyDetails.prop_type,
-      updatedPropertyDetails.bedroom_nums,
-      updatedPropertyDetails.bathroom_type,
-      updatedPropertyDetails.parking_type,
-      updatedPropertyDetails.size_sqft,
-      updatedPropertyDetails.rent_amount,
-      updatedPropertyDetails.currency,
-      updatedPropertyDetails.available_date,
-      updatedPropertyDetails.is_available,
-      updatedPropertyDetails.prop_status,
-      updatedPropertyDetails.images,
-      propertyID,
-    ];
-
-    await con.query(updateSql, updateValues);
-
-    const selectUpdatedPropertySql = 'SELECT * FROM `tbl_prop` WHERE prop_id = ?';
-    const [[finalUpdatedPropertyDetails]] = await con.query(selectUpdatedPropertySql, [propertyID]);
-
-    finalUpdatedPropertyDetails.images = JSON.parse(finalUpdatedPropertyDetails.images);
-    finalUpdatedPropertyDetails.available_date = format(new Date(finalUpdatedPropertyDetails.available_date), 'yyyy-MM-dd');
-
-    console.log('Property updated successfully ->> ', finalUpdatedPropertyDetails);
-
-    await con.commit();
-    returnedData.message = 'success';
-    returnedData.data = finalUpdatedPropertyDetails;
-    res.json(returnedData);
-  } catch (error) {
-    await con.rollback();
-    console.error('Error in updateProperty API:', error);
-    returnedData.error = error.message || 'Internal Server Error';
-    res.status(500).json(returnedData);
-  } finally {
-    if (con) {
-      con.release();
+  
+    const con = await connection();
+  
+    try {
+      await con.beginTransaction();
+  
+      const userID = req.body.user_id;
+      const propertyID = req.body.prop_id;
+  
+      // Validate if the user exists
+      const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+  
+      if (!user) {
+        returnedData = { message: 'User not found', data: {}, error: {} };
+        await con.rollback();
+        return res.status(404).json(returnedData);
+      }
+  
+      // Validate if the property exists and is owned by the user
+      const [[property]] = await con.query('SELECT * FROM `tbl_prop` WHERE prop_id = ? AND user_id = ?', [propertyID, userID]);
+  
+      if (!property) {
+        returnedData = { message: 'Property not found or does not belong to the user', data: {}, error: {} };
+        await con.rollback();
+        return res.json(returnedData);
+      }
+  
+      // Extract property details from the request body
+      const {
+        owner_name,
+        owner_contact,
+        owner_email,
+        title,
+        description,
+        address,
+        city,
+        country,
+        prop_type,
+        bedroom_nums,
+        bathroom_type,
+        parking_type,
+        size_sqft,
+        rent_amount,
+        currency,
+        available_date,
+        prop_status, // Assuming this is part of the request body
+        country_flag,
+        country_code,
+      } = req.body;
+  
+      // Set is_available based on prop_status
+      const is_available = prop_status === 'available';
+  
+      let images;
+  
+      if (req.files && req.files.length > 0) {
+        console.log('New Images uploaded');
+        images = req.files.map(file => ({ path: `http://${process.env.Host1}/uploads/${file.filename}` }));
+      } else {
+        console.log('Existing Images uploaded');
+        images = JSON.parse(property.images);
+      }
+  
+      // Create an object with updated property details
+      const updatedPropertyDetails = {
+        owner_name: owner_name || property.owner_name,
+        owner_contact: owner_contact || property.owner_contact,
+        owner_email: owner_email || property.owner_email,
+        title: title || property.title,
+        description: description || property.description,
+        address: address || property.address,
+        city: city || property.city,
+        country: country || property.country,
+        prop_type: prop_type || property.prop_type,
+        bedroom_nums: bedroom_nums || property.bedroom_nums,
+        bathroom_type: bathroom_type || property.bathroom_type,
+        parking_type: parking_type || property.parking_type,
+        size_sqft: size_sqft || property.size_sqft,
+        rent_amount: rent_amount || property.rent_amount,
+        currency: currency || property.currency,
+        available_date: available_date || property.available_date,
+        is_available: is_available || property.is_available,
+        prop_status: prop_status || property.prop_status,
+        country_flag: country_flag || property.country_flag,
+        country_code: country_code || property.country_code,
+        images: JSON.stringify(images),
+      };
+  
+      // Update property details in the tbl_prop table
+      const updateSql =
+        'UPDATE tbl_prop SET owner_name=?, owner_contact=?, owner_email=?, title=?, description=?, address=?, city=?, country=?, prop_type=?, bedroom_nums=?, bathroom_type=?, parking_type=?, size_sqft=?, rent_amount=?,  currency=?, available_date=?, is_available=?, prop_status=?, country_flag=? , country_code=?,  images=? WHERE prop_id=?';
+      const updateValues = [
+        updatedPropertyDetails.owner_name,
+        updatedPropertyDetails.owner_contact,
+        updatedPropertyDetails.owner_email,
+        updatedPropertyDetails.title,
+        updatedPropertyDetails.description,
+        updatedPropertyDetails.address,
+        updatedPropertyDetails.city,
+        updatedPropertyDetails.country,
+        updatedPropertyDetails.prop_type,
+        updatedPropertyDetails.bedroom_nums,
+        updatedPropertyDetails.bathroom_type,
+        updatedPropertyDetails.parking_type,
+        updatedPropertyDetails.size_sqft,
+        updatedPropertyDetails.rent_amount,
+        updatedPropertyDetails.currency,
+        updatedPropertyDetails.available_date,
+        updatedPropertyDetails.is_available,
+        updatedPropertyDetails.prop_status,
+        updatedPropertyDetails.country_flag,
+        updatedPropertyDetails.country_code,
+        updatedPropertyDetails.images,
+        propertyID,
+      ];
+  
+      await con.query(updateSql, updateValues);
+  
+      // Optionally, you can retrieve the updated property details if needed
+      const selectUpdatedPropertySql = 'SELECT * FROM `tbl_prop` WHERE prop_id = ?';
+      const [[finalUpdatedPropertyDetails]] = await con.query(selectUpdatedPropertySql, [propertyID]);
+  
+      finalUpdatedPropertyDetails.images = JSON.parse(finalUpdatedPropertyDetails.images);
+      finalUpdatedPropertyDetails.available_date = format(new Date(finalUpdatedPropertyDetails.available_date), 'yyyy-MM-dd');
+  
+      console.log('Updated Successfully ->>', finalUpdatedPropertyDetails);
+  
+      await con.commit();
+      returnedData = { message: 'Success', data: { ...finalUpdatedPropertyDetails }, error: {} };
+      res.json(returnedData);
+    } catch (error) {
+      // Rollback the transaction in case of an error
+      await con.rollback();
+      console.error('Error in updateProperty API:', error);
+      returnedData = { result: 'Internal Server Error', data: {}, error };
+      res.status(500).json(returnedData);
+    } finally {
+      if (con) {
+        con.release();
+      }
     }
-  }
-};
+  };
+  
 
 
 
@@ -2349,6 +2403,107 @@ function generateAgreementNumber() {
 
 
 
+//------------ Fech countries ------------ 
+
+const fetchcountries = async (req, res) => {
+  let returnedData = {
+    message: 'Unexpected error',
+    data: {},
+    error: {},
+  };
+
+  const con = await connection();
+
+  try {
+    con.beginTransaction();
+    const { country } = req.body;
+
+    const [countries] = await con.query('SELECT DISTINCT country FROM tbl_locations ORDER BY country ASC');
+
+    con.commit();
+
+    returnedData = { message: 'success', data: countries, error: {} };
+    return res.status(200).json(returnedData);
+  } catch (error) {
+    con.rollback();
+    returnedData = { message: 'Internal Server Error', data: {}, error:error.message };
+    return res.status(500).json(returnedData);
+  } finally {
+    con.release();
+  }
+};
+
+//----------  Fetch cities by country - 
+
+
+const fetchCities = async (req, res) => {
+  let returnedData = {
+    message: 'Unexpected error',
+    data: {},
+    error: {},
+  };
+
+  const con = await connection();
+
+  try {
+    con.beginTransaction();
+    const { country } = req.body;
+
+    const [cities] = await con.query('SELECT city FROM tbl_locations WHERE country = ? ORDER BY city ASC', [country]);
+
+    con.commit();
+
+    returnedData = { message: 'success', data: cities, error: {} };
+    return res.status(200).json(returnedData);
+  } catch (error) {
+    con.rollback();
+    returnedData = { message: 'Internal Server Error', data: {}, error:error.message };
+    return res.status(500).json(returnedData);
+  } finally {
+    con.release();
+  }
+};
+
+
+//------------  Is Active user -------
+const isActive = async (req, res) => {
+  let returnedData = {
+    message: 'Unexpected error',
+    data: {},
+    error: {},
+  };
+
+  const con = await connection();
+
+  try {
+    const userID = req.body.user_id;
+
+    // Validate if the user exists
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+
+    if (!user) {
+      returnedData = { message: 'User not found', data: {}, error: {} };
+      return res.status(404).json(returnedData);
+    }
+
+    if (user.status !== 'active') {
+      returnedData = { message: 'User is Deactivated', data: {}, error: {} };
+      return res.status(200).json(returnedData);
+    }
+
+    returnedData = { message: 'User is Active', data: {}, error: {} };
+    return res.status(200).json(returnedData);
+  } catch (error) {
+    returnedData = { message: 'Internal Server Error', data: {}, error };
+    return res.status(500).json(returnedData);
+  } finally {
+    con.release();
+  }
+};
+
+
+
+
 //===================Break Point for Duplicate APIS  =============================================
 
 
@@ -2359,12 +2514,12 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
     profile,  obtainToken, updateProfile ,
      updatePreference, addProperty, property, Properties , myProperties , 
      updateProperty , deleteProperty , addToInterest , getQuestions,
-     addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets ,tandc , pandp , faqs,
-     checkPreferenceAvailability  ,  createPDFWithSignatureField ,
+     addAnswer , removeAccount , propTypes , getSkills ,getSkills1 , contactUs , myTickets ,tandc , pandp , faqs,
+     checkPreferenceAvailability  ,  createPDFWithSignatureField , fetchcountries, fetchCities , isActive
 
 
 
-     getSkills1
+     
 }
 
 

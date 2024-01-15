@@ -606,6 +606,8 @@ const addProperty = async (req, res, next) => {
       title,
       prefered_gender,
       description,
+      country_flag,
+      country_code,
       address,
       city,
       country,
@@ -634,7 +636,7 @@ const addProperty = async (req, res, next) => {
 
     // Insert property details into the tbl_prop table
     const insertSql =
-      'INSERT INTO tbl_prop (user_id, owner_name, owner_contact, owner_email, title,prefered_gender, description, address, city, country, prop_type, bedroom_nums, bathroom_type, parking_type, size_sqft, rent_amount, currency, available_date, is_available, prop_status, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      'INSERT INTO tbl_prop (user_id, owner_name, owner_contact, owner_email, title,prefered_gender, description, address,  country_flag, country_code, city, country, prop_type, bedroom_nums, bathroom_type, parking_type, size_sqft, rent_amount, currency, available_date, is_available, prop_status, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const insertValues = [
       userID,
       owner_name,
@@ -644,6 +646,8 @@ const addProperty = async (req, res, next) => {
       prefered_gender,
       description,
       address,
+      country_flag,
+      country_code,
       city,
       country,
       prop_type,
