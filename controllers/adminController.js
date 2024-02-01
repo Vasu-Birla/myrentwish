@@ -939,7 +939,7 @@ const NotifyPost = async (req, res, next) => {
   const con = await connection();
 
   try {
-    const recipientEmails = Array.isArray(req.body.recipientEmail) ? req.body.recipientEmail : [req.body.recipientEmail];
+    const recipientEmails = Array.isArray(req.body.options) ? req.body.options : [req.body.options];
 
     const subject = req.body.emailSubject;
     const message = req.body.emailMessage;

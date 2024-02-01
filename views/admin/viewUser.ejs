@@ -1,6 +1,11 @@
 <%- include ("header.ejs") %>
 <%- include ("navbar.ejs") %>
 
+<style>
+  .form-group.add-admin {
+    margin-bottom: 0px !important;
+}
+</style>
       <!-- Main Content -->
       <div class="main-content">
         <section class="section">
@@ -35,12 +40,12 @@
         </div>
       
     <% } else { %>
-      <div class="alert alert-success">
+      <div class="alert alert-success mb-1">
          <%= output %>
       </div>                                   
     <% } %> 
 <!-- /alert msgs  -->
-                  <div class="full-forms">
+                  <div class="full-forms py-1 px-1">
 
             <form action="/admin/viewUser" method="post">
 
@@ -48,7 +53,7 @@
                   <input type="hidden" name="user_id" value="<%- user.user_id  %>" >
 
 
-                <div class="form-group add-admin col-md-12">
+                <div class="form-group add-admin col-md-6">
                     <label class="control-label" for="name">First Name</label>
                     <input type="text" name="firstname" class="form-control required"  value="<%- user.firstname  %>">
                 </div>
@@ -57,6 +62,7 @@
                     <input type="text" name="lastname" class="form-control required"  value="<%- user.lastname  %>">
                 </div>
 
+              
                
 
                    <div class="form-group add-admin col-md-12">
@@ -64,22 +70,16 @@
                         <input type="email" name="user_email" class="form-control required" pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}" value="<%- user.user_email  %>" readonly>
                     </div>
                     
-                     <div class="form-group add-admin col-md-6">
-                        <label class="control-label" for="name">Mobile no</label>
-                        <input type="number" name="user_mobile" class="form-control required" value="<%- user.user_mobile  %>" >
-                    </div>
+                    <div class="form-group add-admin col-md-6">
+                      <label class="control-label" for="name">Mobile no</label>
+                      <input type="number" name="user_mobile" class="form-control required" value="<%- user.user_mobile  %>" >
+                  </div>
 
                      <!-- <div class="form-group add-admin col-md-6">
                         <label class="control-label" for="image"> Customer Image</label><br>
                         <input type="file" name="image" onchange="validateImage(this)" id="image" class="" size="20" required="">
                         <div id="image_req" style="color: red"></div>
                     </div> -->
-
-                      <div class="form-group add-admin col-md-12">
-                        <label class="control-label" for="name">Address</label>
-                        <textarea type="text" name="address" class="form-control required" value="<%- user.address  %>"> <%- user.address  %> </textarea>
-                    </div>
-
 
                     <div class="form-group col-md-6">
                       <label for="gender">Gender</label><br>
@@ -92,6 +92,14 @@
                           <label class="form-check-label" for="female">Female</label>
                       </div>
                   </div>
+
+                      <div class="form-group add-admin col-md-12">
+                        <label class="control-label" for="name">Address</label>
+                        <textarea type="text" name="address" class="form-control required" value="<%- user.address  %>"> <%- user.address  %> </textarea>
+                    </div>
+
+
+         
 
                    
                     <div class="form-group  add-admin mt-3 col-md-12" style="margin-bottom: 0px;">

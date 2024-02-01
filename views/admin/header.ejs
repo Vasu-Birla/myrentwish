@@ -35,6 +35,105 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
 
+<style>
+  @media (min-width: 992px){
+.navbar-expand-lg .navbar-nav .dropdown-menu {
+    position: absolute;
+}
+  }
+
+.navbar-nav .dropdown-menu {
+    position: static;
+    float: none;
+}
+.pullDown {
+    animation-name: pullDown;
+    -webkit-animation-name: pullDown;
+    animation-duration: 1.1s;
+    -webkit-animation-duration: 1.1s;
+    animation-timing-function: ease-out;
+    -webkit-animation-timing-function: ease-out;
+    transform-origin: 50% 0%;
+    -ms-transform-origin: 50% 0%;
+    -webkit-transform-origin: 50% 0%;
+}
+.dropdown-menu {
+    box-shadow: 0 0 30px rgba(0,0,0,0.1);
+    border: none;
+    width: 200px;
+}
+.dropdown-menu-right {
+    right: 0;
+    left: auto;
+}
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 10rem;
+    padding: 0.5rem 0;
+    margin: 0.125rem 0 0;
+    font-size: 1rem;
+    color: #212529;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 0.25rem;
+}
+.dropdown-menu.show {
+    display: block !important;
+}
+</style>
+
+<script>
+  $(document).ready(function() {
+    // Handle click event on profile image
+    $('.nav-link-user').click(function(e) {
+      e.preventDefault();
+      e.stopPropagation(); // Prevent event from bubbling up to the document
+
+      // Toggle aria-expanded attribute for profile image
+      var isExpanded = $(this).attr('aria-expanded');
+      $(this).attr('aria-expanded', isExpanded === 'true' ? 'false' : 'true');
+
+      // Add 'show' class to the parent dropdown li
+      $(this).parent('.dropdown').addClass('show');
+      // Add 'show' class to the dropdown-menu
+      $(this).next('.dropdown-menu').addClass('show');
+    });
+
+    // Handle click event on dropdown toggle link
+    $('[data-toggle="dropdown"]').click(function(e) {
+      e.preventDefault();
+      e.stopPropagation(); // Prevent event from bubbling up to the document
+
+      // Toggle aria-expanded attribute for dropdown toggle link
+      var isExpanded = $(this).attr('aria-expanded');
+      $(this).attr('aria-expanded', isExpanded === 'true' ? 'false' : 'true');
+
+      // Add 'show' class to the parent dropdown li
+      $(this).parents('.dropdown').addClass('show');
+      // Add 'show' class to the dropdown-menu
+      $(this).next('.dropdown-menu').addClass('show');
+    });
+
+    // Close dropdown menu when clicking outside
+    $(document).click(function(e) {
+      if (!$(e.target).closest('.dropdown').length) {
+        $('.dropdown').removeClass('show');
+        $('.dropdown-menu').removeClass('show');
+        // Reset aria-expanded attribute for all dropdown toggle links
+        $('[data-toggle="dropdown"]').attr('aria-expanded', 'false');
+      }
+    });
+  });
+</script>
+
 
 
   

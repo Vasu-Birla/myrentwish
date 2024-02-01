@@ -13,7 +13,7 @@
 
             <form style="float: right;" action="/admin/viewQuestions" method="GET">
               <!-- Your form fields go here -->
-              <div class="form-group col-md-12">
+              <div class="form-group mt-1 col-md-12">
                   <button type="submit" class="btn btn-success">view Questions</button>
               </div>
           </form>
@@ -30,13 +30,13 @@
             <!-- Form Start -->
             <form id="questionForm">
               <!-- Question Input -->
-              <div class="form-group">
+              <div class="form-group col-md-8">
                 <label for="question">Question</label>
                 <input type="text" name="question_text" class="form-control" placeholder="Enter your question" required>
               </div>
 
               <!-- Question Type Selection -->
-              <div class="form-group">
+              <div class="form-group col-md-8">
                 <label for="question_type">Question Type</label>
                 <select name="question_type" class="form-control" required>
                   <option selected > Question Type ? </option>
@@ -48,10 +48,10 @@
               </div>
 
               <!-- Answer Options -->
-              <div class="form-group" id="answerOptionsContainer">
+              <div class="form-group col-md-12" id="answerOptionsContainer">
                 <label for="answerOptions">Answer Options</label>
                 <!-- Dynamic options for the dropdown -->
-                <div class="input-group mb-3">
+                <div class="input-group mb-1">
                   <!-- <input type="text" name="answerOptions[]" class="form-control" placeholder="Option 1" required>
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="button" id="addOption">Add Option</button>
@@ -60,7 +60,7 @@
               </div>
 
               <!-- Submit Button -->
-              <div class="form-group add-admin col-md-12" style="margin: 10px 0px;">
+              <div class="form-group col-md-12">
                 <input type="submit" name="add" class="btn btn-primary" value="Submit" style="width:20%;">
               </div>
             </form>

@@ -39,6 +39,53 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+
+
+  <script>
+    $(document).ready(function() {
+      // Handle click event on profile image
+      $('.nav-link-user').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation(); // Prevent event from bubbling up to the document
+  
+        // Toggle aria-expanded attribute for profile image
+        var isExpanded = $(this).attr('aria-expanded');
+        $(this).attr('aria-expanded', isExpanded === 'true' ? 'false' : 'true');
+  
+        // Add 'show' class to the parent dropdown li
+        $(this).parent('.dropdown').addClass('show');
+        // Add 'show' class to the dropdown-menu
+        $(this).next('.dropdown-menu').addClass('show');
+      });
+  
+      // Handle click event on dropdown toggle link
+      $('[data-toggle="dropdown"]').click(function(e) {
+        e.preventDefault();
+        e.stopPropagation(); // Prevent event from bubbling up to the document
+  
+        // Toggle aria-expanded attribute for dropdown toggle link
+        var isExpanded = $(this).attr('aria-expanded');
+        $(this).attr('aria-expanded', isExpanded === 'true' ? 'false' : 'true');
+  
+        // Add 'show' class to the parent dropdown li
+        $(this).parents('.dropdown').addClass('show');
+        // Add 'show' class to the dropdown-menu
+        $(this).next('.dropdown-menu').addClass('show');
+      });
+  
+      // Close dropdown menu when clicking outside
+      $(document).click(function(e) {
+        if (!$(e.target).closest('.dropdown').length) {
+          $('.dropdown').removeClass('show');
+          $('.dropdown-menu').removeClass('show');
+          // Reset aria-expanded attribute for all dropdown toggle links
+          $('[data-toggle="dropdown"]').attr('aria-expanded', 'false');
+        }
+      });
+    });
+  </script>
+  
+  
   
   </head>
 
@@ -85,8 +132,8 @@
             <a href="/admin"> <img alt="image" src="../assets/img/punocoin-logo.png" class="header-logo" />
             </a>
           </div>
-          <ul class="sidebar-menu">
-            <li class="menu-header">Main</li>
+          <ul class="sidebar-menu mt-2">
+            
             <li class="dropdown active">
               <a href="/admin" class="nav-link"><i data-feather="monitor"></i><span>Dashboard</span></a>
             </li>
