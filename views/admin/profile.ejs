@@ -41,9 +41,11 @@
                 </div>
               
                   
-              <div class="col-12 col-md-12 col-lg-5">
+              <div class="col-12 col-md-12 col-lg-4">
+             <div class="card">
 
-                <div class="profile-pic">
+            
+                <div class="profile-pic  mt-3">
                   <label class="-label" for="file">
                     <span class="glyphicon glyphicon-camera"></span>
                     <!-- <span>Change Image</span> -->
@@ -52,7 +54,7 @@
                   <img src="http://<%= host %>/uploads/<%- admin.image %>" id="output" alt="Change" width="200" />
                  </div>
 
-                 <div class="contact_inner">
+                 <div class="contact_inner mt-3 text-center">
                   <h3><%- admin.firstname %> <%- admin.lastname %></h3>
                   <p><strong>About: </strong>Admin of MyRentWish </p>
                   <ul class="list-unstyled">
@@ -80,13 +82,13 @@
                
               </div>
 
-
+</div>
 
 
               
 
 
-              <div class="col-12 col-md-12 col-lg-7">
+              <div class="col-12 col-md-12 col-lg-8">
                 <div class="card-forms profile-widget">
 
 
@@ -105,14 +107,14 @@
                         </nav>
                         <div class="tab-content" id="nav-tabContent">
                            <% if (output === ' Profile Updated Successfully !!' || output === 'Password changed successfully') { %>
-                              <p class="success-text"><%= output %></p>
+                              <p class="success-text mt-2 mb-0"><%= output %></p>
                            <% } else { %>
-                              <p class="error-text"><%= output %></p>
+                              <p class="error-text mt-2 mb-0"><%= output %></p>
                            <% } %>
              
-                           <div class="tab-pane fade show active" id="profile_section" role="tabpanel" aria-labelledby="nav-home-tab">
+                           <div class="tab-pane mt-0 fade show active" id="profile_section" role="tabpanel" aria-labelledby="nav-home-tab">
                           
-                              <div class="card">
+                              <div class="card mt-0">
                                  <div class="card-body">
                                     <h5 class="card-title d-flex justify-content-between">
                                        <span>Personal Details</span> 
