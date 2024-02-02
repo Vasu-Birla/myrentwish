@@ -42,7 +42,18 @@ table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.
     border: 2px solid #ddd !important;
 }
 /*# ALL PAGE CSS START  */
-
+.main-sidebar .sidebar-menu li a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 45px;
+    font-size: 14px;
+    padding: 0 20px;
+    width: 100%;
+    color: #000;
+    font-weight: 600;
+    text-decoration: none;
+}
 .full-city {
     border-top: 5px solid #4464af;
 }
