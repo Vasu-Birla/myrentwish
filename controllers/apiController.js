@@ -772,7 +772,7 @@ const addProperty = async (req, res, next) => {
 //---------- fetch Properties -------
 
 
-const Properties = async (req, res, next) => {
+const Properties11 = async (req, res, next) => {
   let returnedData = {
     message: 'Unexpected error',
     data: {},
@@ -851,6 +851,82 @@ const Properties = async (req, res, next) => {
     }
   }
 };
+
+
+
+
+
+const Properties = async (req, res, next) => {
+  const con = await connection();
+
+  var returnedData = {
+    message: 'Unexpected error',
+    data: {},
+    error: {},
+  };
+
+  try {
+    const userID = req.body.user_id;
+
+    // Validate if the user exists
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+    if (!user) {
+      returnedData = { message: 'User not found', data: {}, error: {} };
+      return res.status(404).json(returnedData);
+    }
+
+    console.log(user);
+
+    if (user.status == 'inactive') {
+      console.log("Inactivated user");
+      returnedData = { message: 'User is Deactivated', data: {}, error: {} };
+      return res.status(403).json(returnedData);
+    }
+
+    const page = req.body.page_number || 1; // Default to page 1 if not provided
+    const resultsPerPage = 5;
+    const offset = (page - 1) * resultsPerPage;
+
+    // Fetch all properties without pagination
+    const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ?';
+    const [allProperties] = await con.query(selectPropertiesSql, [userID]);
+
+    // Calculate match percentage for each property
+    for (const row of allProperties) {
+      row.images = JSON.parse(row.images);
+      row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
+
+      // Check if the property is in the user's interest
+      const [interestResult] = await con.query('SELECT * FROM tbl_interest WHERE user_id = ? AND prop_id = ?', [userID, row.prop_id]);
+      row.interest = (interestResult.length > 0).toString();
+
+      // Calculate match percentage
+      const matchPercentage = calculatePreferencesMatchPercentage(user, row);
+      row.match_percentage = `${matchPercentage}%`;
+
+      var [[owner]] = await con.query('SELECT * from tbl_users where user_id = ? ', [row.user_id]);
+      row.owner_image = owner.imagePath;
+    }
+
+    // Sort all properties by match percentage in descending order
+    allProperties.sort((a, b) => parseFloat(b.match_percentage) - parseFloat(a.match_percentage));
+
+    // Apply pagination after sorting
+    const propertiesOnPage = allProperties.slice(offset, offset + resultsPerPage);
+
+    returnedData = { message: 'Success', data: propertiesOnPage, error: {} };
+    res.json(returnedData);
+  } catch (error) {
+    console.error('Error in fetchAllProperties API:', error);
+    returnedData = { message: 'Properties not found', data: {}, error: { message: error.message, stack: error.stack } };
+    res.status(404).json(returnedData);
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
 
 
 

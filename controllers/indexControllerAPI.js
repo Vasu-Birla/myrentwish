@@ -698,6 +698,96 @@ const addProperty = async (req, res, next) => {
 
 
 
+const Properties11 = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    const userID = req.body.user_id;
+
+    // Validate if the user exists
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+    if (!user) {
+      return res.status(404).json({ result: "User not found" });
+    }
+
+    console.log(user)
+
+    if( user.status == 'inactive'){
+      console.log("Inactivated user")
+      return res.status(403).json({ result: "User is Deactivated" });
+    }
+
+    
+
+    const page = req.body.page_number || 1; // Default to page 1 if not provided
+    const resultsPerPage = 5;
+    const offset = (page - 1) * resultsPerPage;
+
+    // Fetch total number of properties for pagination calculation
+    const [totalPropsResult] = await con.query('SELECT COUNT(*) as total FROM tbl_prop');
+    const totalProperties = totalPropsResult[0].total;
+
+    const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ? LIMIT ? OFFSET ?';
+    const [properties] = await con.query(selectPropertiesSql, [userID, resultsPerPage, offset]);
+
+    for (const row of properties) {
+            row.images = JSON.parse(row.images);
+            row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
+
+            // Check if the property is in the user's interest
+            const [interestResult] = await con.query('SELECT * FROM tbl_interest WHERE user_id = ? AND prop_id = ?', [userID, row.prop_id]);
+
+            row.interest = (interestResult.length > 0).toString();
+
+            // Calculate match percentage
+            const matchPercentage = calculatePreferencesMatchPercentage(user, row);
+            row.match_percentage = `${matchPercentage}%`;
+
+            console.log("type--percent -> ", typeof row.match_percentage)
+
+            var [[owner]] = await con.query('SELECT * from tbl_users where user_id = ? ',[row.user_id]); 
+
+            row.owner_image = owner.imagePath
+            
+    }
+
+  
+
+    // Sort properties by match percentage in descending order
+   // properties.sort((a, b) => b.match_percentage- a.match_percentage);
+
+
+
+    properties.sort((a, b) => {
+      const matchPercentageA = parseFloat(a.match_percentage);
+      const matchPercentageB = parseFloat(b.match_percentage);
+    
+      // If match percentages are equal, compare by decimal values
+      if (matchPercentageA === matchPercentageB) {
+        const decimalA = parseFloat(a.match_percentage.split('.')[1]) || 0;
+        const decimalB = parseFloat(b.match_percentage.split('.')[1]) || 0;
+        return decimalB - decimalA;
+      }
+    
+      return matchPercentageB - matchPercentageA;
+    });
+    
+
+
+
+    res.json(properties);
+
+  } catch (error) {
+    console.error('Error in fetchAllProperties API:', error);
+    res.status(404).json({ result: 'Properties not found' });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
 const Properties = async (req, res, next) => {
   const con = await connection();
 
@@ -758,7 +848,6 @@ const Properties = async (req, res, next) => {
     }
   }
 };
-
 
 // Function to calculate match percentage based on preferences
 const calculatePreferencesMatchPercentage = (userPreferences, propertyDetails) => {
