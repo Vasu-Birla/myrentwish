@@ -975,7 +975,7 @@ const property = async (req, res, next) => {
 
     res.json(property);
   } catch (error) {
-    console.error('Error in profile API:', error);
+    console.error('Error in Property API:', error);
     res.status(500).json({ result: 'Internal Server Error' });
   } finally {  
       con.release();
