@@ -330,17 +330,20 @@ const  removeAccount = async(req,res,next)=>{
       const userID = req.body.user_id;
       const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
 
-      if( user.status != 'active'){
-        return res.status(403).json({ result: "User is Deactivated" });
-      }
+      // if( user.status != 'active'){
+      //   return res.status(403).json({ result: "User is Deactivated" });
+      // }
   
-      if (user && user.status == "active") {
-        res.json(user);
-      } else {
-        res.json({ result: "Deactivated User's Profile cannot be Open" });
-      }
+      // if (user && user.status == "active") {
+      //   res.json(user);
+      // } else {
+      //   res.json({ result: "Deactivated User's Profile cannot be Open" });
+      // }
+
+      res.json(user);
     } catch (error) {
       console.error('Error in profile API:', error);
+      console.log("Error for Profile -> ", req.body.user_id )
       res.status(500).json({ result: 'Internal Server Error' });
     } finally {  
         con.release();
