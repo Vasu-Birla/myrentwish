@@ -1205,7 +1205,7 @@ const propTypes = async (req, res, next) => {
     res.json( propTypes );
 
   } catch (error) {
-    console.error('Error in getQuestions API:', error);
+    console.error('Error in proptypes API:', error);
     res.status(500).json({ result: 'failed' , message:'Internal Server Error' });
 
   } finally {
@@ -1357,6 +1357,7 @@ const addToInterest = async (req, res, next) => {
 const getQuestions = async (req, res, next) => {
   const con = await connection();
 
+  console.log(" data from front end --> get Questions API -> ",  (req.body))
   
 
   try {
@@ -1468,9 +1469,6 @@ const addAnswer = async (req, res, next) => {
     const [questions] = await con.query('SELECT * FROM tbl_questions WHERE question_id IN (?)', [questionIds]);
 
     const questionMap = new Map(questions.map(question => [question.question_id, question]));
-
-
-
 
     
     // Validate answers

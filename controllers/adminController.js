@@ -1009,7 +1009,7 @@ const addQuestionPost = async (req, res, next) => {
 
     if (!['options_2', 'options_3', 'dropdown','Text'].includes(question_type)) {
       await con.rollback();
-      return res.json({ result: "Invalid question type" });
+      return res.status(500).json({ result: "Invalid question type" });
     }
 
 
