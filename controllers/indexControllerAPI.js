@@ -33,7 +33,7 @@ paypal.configure({
   });
   
 
-import {hashPassword, comparePassword, sendMailOTP} from '../middleware/helper.js'
+import {hashPassword, comparePassword, sendMailOTP , sendLoginOTP} from '../middleware/helper.js'
 import { type } from 'os';
 import { start } from 'repl';
 
@@ -64,6 +64,14 @@ function setValue()
   
       const image = ' ';
       const imagePath = ' ';
+
+
+       var age  = parseInt(req.body.age)
+  
+       if (age < 18) {
+           await con.rollback();
+           return res.status(400).json({ result: 'User must be at least 18 years old' });
+       }
   
     
       await con.beginTransaction();
@@ -79,7 +87,7 @@ function setValue()
         return res.status(409).json({ result: 'Email already exists' });
       } else {
         const sql =
-          'INSERT INTO `tbl_users` ( firstname, lastname, user_email,  password, user_mobile, country_flag , country_code, birthday, location, latitude, longitude, address, country, city, gender, image, imagePath, prefered_gender, prefered_city, prefered_country, bedroom_nums, bathroom_type, parking_type,prefered_type, prefered_rent, about_me, skill) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?)';
+          'INSERT INTO `tbl_users` ( firstname, lastname, user_email,  password, user_mobile, country_flag , country_code, age, location, latitude, longitude, address, country, city, gender, image, imagePath, prefered_gender, prefered_city, prefered_country, bedroom_nums, bathroom_type, parking_type,prefered_type, prefered_rent, about_me, skill) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?)';
   
         const values = [
           req.body.firstname,
@@ -89,7 +97,7 @@ function setValue()
           req.body.user_mobile,
           req.body.country_flag,
           req.body.country_code,
-          req.body.birthday,
+          age,
           req.body.location,
           req.body.latitude,
           req.body.longitude,
@@ -246,6 +254,44 @@ const ForgotPassword = async (req, res, next) => {
 
 
 //---------------------- Forgot Password End  -------------------------------
+
+
+
+
+//------------------ Login OTP verification ---------------------------- 
+
+
+const loginOTP = async (req, res, next) => {
+  const con = await connection();
+  try {
+    const { user_email } = req.body;
+    var email = user_email
+
+     otp =   Math.random();
+    otp = otp * 1000000;
+      otp = parseInt(otp);
+        console.log(otp);
+
+    if (!email) {
+      res.status(204).json({ result: "Email Required " });
+    } else {
+      const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_email = ?', [email]);
+
+      if (!user) {
+        res.status(400).json({ result: "Invalid Email" });
+      } else {
+        sendLoginOTP(email, otp, user);
+        res.status(200).json({ result: "success", user_id: user.user_id, otp: otp });
+      }
+    }
+  } catch (error) {
+    console.error('Error in ForgotPassword API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {
+    con.release();
+  }
+};
+
 
 
 //============== Reset Password with the OTP sent from previous post Method  ------------
@@ -853,7 +899,7 @@ const Properties = async (req, res, next) => {
 };
 
 // Function to calculate match percentage based on preferences
-const calculatePreferencesMatchPercentage = (userPreferences, propertyDetails) => {
+const calculatePreferencesMatchPercentage7feb = (userPreferences, propertyDetails) => {
   // Define weights for each preference (adjust these according to importance)
   const weightGender = 10;
   const weightCity = 8;
@@ -909,6 +955,75 @@ const calculatePreferencesMatchPercentage = (userPreferences, propertyDetails) =
 
   return parseInt(matchPercentage);
 };
+
+
+const calculatePreferencesMatchPercentage = (userPreferences, propertyDetails) => {
+  // Define weights for each preference (adjust these according to importance)
+  const weightGender = 10;
+  const weightCity = 8;
+  const weightCountry = 7;
+  const weightBedrooms = 5;
+  const weightBathroomType = 5;
+  const weightParkingType = 5;
+  const weightPreferredType = 6;
+  const weightPreferredRent = 14;
+
+
+  // Initialize match percentage
+  let matchPercentage = 0;
+
+  // Check each preference and increase matchPercentage accordingly
+  if (userPreferences.gender.split(',').some(gender => propertyDetails.prefered_gender.includes(gender))) {
+      matchPercentage += weightGender;
+  }
+
+  if (userPreferences.prefered_city == propertyDetails.city) {
+      matchPercentage += weightCity;
+  }
+
+  if (userPreferences.prefered_country == propertyDetails.country) {
+      matchPercentage += weightCountry;
+  }
+
+  if (userPreferences.bedroom_nums == propertyDetails.bedroom_nums) {
+      matchPercentage += weightBedrooms;
+  }
+
+
+
+
+  
+
+  // Check bathroom_type preference
+  if (userPreferences.bathroom_type === 'Any' || propertyDetails.bathroom_type === 'Any') {
+      matchPercentage += weightBathroomType; // Full match for "Any"
+  } else if (userPreferences.bathroom_type.split(',').some(type => propertyDetails.bathroom_type.includes(type))) {
+      matchPercentage += weightBathroomType; // Partial match
+  }
+
+  // Check parking_type preference
+  if (userPreferences.parking_type === 'Any' || propertyDetails.parking_type === 'Any') {
+      matchPercentage += weightParkingType; // Full match for "Any"
+  } else if (userPreferences.parking_type.split(',').some(type => propertyDetails.parking_type.includes(type))) {
+      matchPercentage += weightParkingType; // Partial match
+  }
+
+  // Check prefered_type preference
+  if (userPreferences.prefered_type === 'Any' || propertyDetails.prefered_type === 'Any') {
+      matchPercentage += weightPreferredType; // Full match for "Any"
+  } else if (userPreferences.prefered_type.split(',').some(type => propertyDetails.prefered_type.includes(type))) {
+      matchPercentage += weightPreferredType; // Partial match
+  }
+
+  // Calculate match percentage based on rent difference
+  const rentDifference = Math.abs(userPreferences.prefered_rent - propertyDetails.rent_amount);
+  const maxRentDifference = 1000; // Adjust this value based on your criteria
+  const rentMatch = Math.max(0, maxRentDifference - rentDifference) / maxRentDifference * weightPreferredRent;
+  matchPercentage += rentMatch;
+
+  return parseInt(matchPercentage);
+};
+
 
 
 
@@ -2804,7 +2919,9 @@ const  fetchCities= async (req, res)=>{
 
   try {  
         con.beginTransaction()
-        const { country } = req.body;   
+        var { country } = req.body;   
+
+        country = 'Canada';
         
         const [cities] = await con.query('SELECT city FROM tbl_locations WHERE country = ? ORDER BY city ASC', [country]);
         
@@ -2863,7 +2980,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets ,tandc , pandp , faqs,
      checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
-     getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive
+     getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive , loginOTP
 }
 
 

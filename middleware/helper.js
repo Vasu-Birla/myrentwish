@@ -155,6 +155,53 @@ const sendMailOTP = function (email,otp,user) {
  }); 
  
  }
+
+
+
+
+ //----------------------- send OTP Helper start ------------------------------- 
+const sendLoginOTP = function (email,otp,user) {
+    //process.env.NODE_TLS_REJECT_UNAUTHORIZED='0'
+ 
+ var transporter = nodemailer.createTransport({
+   service: 'gmail',
+   auth: {
+     user: 'vasubirla@gmail.com',
+     pass: 'phjwptaxdnaunqol'
+   }
+ });
+ 
+ var mailOptions = {
+  from: 'vasubirla@gmail.com',
+  to: email,
+  subject: 'OTP to Login - MyRentWish',
+  html: `
+    <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
+      <h2 style="color: #333333;">MyRentWish - Login OTP</h2>
+      <p style="color: #555555;">Dear User,</p>
+      <p style="color: #555555;">You have requested to Login in MyRentWish. Please use the following OTP to complete the process:</p>
+      <div style="background-color: #ffffff; padding: 10px; border: 1px solid #dddddd; border-radius: 5px; margin-top: 15px;">
+        <h3 style="color: #333333;">Your One Time Password (OTP): <span style="color: #007BFF;">${otp}</span></h3>
+      </div>
+      <p style="color: #555555; margin-top: 15px;">If you did not request a password reset, please ignore this email. The OTP is valid for a short period of time.</p>
+      <p style="color: #555555;">Best Regards,<br/>MyRentWish Team</p>
+    </div>
+  `
+};
+
+ 
+ transporter.sendMail(mailOptions, function(error, info){  
+  
+   if (error) {
+    console.log("error in sending mail")
+    //res.json({ result: "failed"});     
+   } else {
+    console.log("emailllll sent...............")
+    //res.json({ result: "success","user_id":user.id,otp:otp}); 
+   }
+ }); 
+ 
+ }
  
 
 
@@ -812,5 +859,5 @@ const sendOTPFornewPass = async function (email,otp) {
 
 export { hashPassword , comparePassword ,sendWelcomeMsg, sendMailOTP , 
   responsetoQuery, sendNotification , sendPushNotification, 
-  sendAgreement, sendAgreementToOwner , sendOTPFornewPass };
+  sendAgreement, sendAgreementToOwner , sendOTPFornewPass ,sendLoginOTP };
 

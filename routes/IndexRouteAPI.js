@@ -33,7 +33,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     getOnlyFansProfile,
     fetchCities,
     fetchcountries,
-    isActive} from '../controllers/indexControllerAPI.js';
+    isActive,
+    loginOTP} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -52,6 +53,10 @@ router.route('/register').post( upload.none(),register);
 router.route('/login').post( upload.none(),Login);
 
 router.route('/logout').get( Logout);
+
+
+
+router.route('/loginOTP').post( upload.none(),loginOTP);
 
 router.route('/forgotpassword').post( upload.none(),ForgotPassword );
 
