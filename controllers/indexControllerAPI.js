@@ -994,26 +994,32 @@ const calculatePreferencesMatchPercentage = (userPreferences, propertyDetails) =
 
   
 
-  // Check bathroom_type preference
-  if (userPreferences.bathroom_type === 'Any' || propertyDetails.bathroom_type === 'Any') {
-      matchPercentage += weightBathroomType; // Full match for "Any"
-  } else if (userPreferences.bathroom_type.split(',').some(type => propertyDetails.bathroom_type.includes(type))) {
-      matchPercentage += weightBathroomType; // Partial match
-  }
+   // Check bathroom_type preference
+   if (userPreferences.bathroom_type && propertyDetails.bathroom_type) {
+    if (userPreferences.bathroom_type === 'Any' || propertyDetails.bathroom_type === 'Any') {
+        matchPercentage += weightBathroomType; // Full match for "Any"
+    } else if (userPreferences.bathroom_type.split(',').some(type => propertyDetails.bathroom_type.includes(type))) {
+        matchPercentage += weightBathroomType; // Partial match
+    }
+}
 
-  // Check parking_type preference
-  if (userPreferences.parking_type === 'Any' || propertyDetails.parking_type === 'Any') {
-      matchPercentage += weightParkingType; // Full match for "Any"
-  } else if (userPreferences.parking_type.split(',').some(type => propertyDetails.parking_type.includes(type))) {
-      matchPercentage += weightParkingType; // Partial match
-  }
+// Check parking_type preference
+if (userPreferences.parking_type && propertyDetails.parking_type) {
+    if (userPreferences.parking_type === 'Any' || propertyDetails.parking_type === 'Any') {
+        matchPercentage += weightParkingType; // Full match for "Any"
+    } else if (userPreferences.parking_type.split(',').some(type => propertyDetails.parking_type.includes(type))) {
+        matchPercentage += weightParkingType; // Partial match
+    }
+}
 
-  // Check prefered_type preference
-  if (userPreferences.prefered_type === 'Any' || propertyDetails.prefered_type === 'Any') {
-      matchPercentage += weightPreferredType; // Full match for "Any"
-  } else if (userPreferences.prefered_type.split(',').some(type => propertyDetails.prefered_type.includes(type))) {
-      matchPercentage += weightPreferredType; // Partial match
-  }
+// Check prefered_type preference
+if (userPreferences.prefered_type && propertyDetails.prefered_type) {
+    if (userPreferences.prefered_type === 'Any' || propertyDetails.prefered_type === 'Any') {
+        matchPercentage += weightPreferredType; // Full match for "Any"
+    } else if (userPreferences.prefered_type.split(',').some(type => propertyDetails.prefered_type.includes(type))) {
+        matchPercentage += weightPreferredType; // Partial match
+    }
+}
 
   // Calculate match percentage based on rent difference
   const rentDifference = Math.abs(userPreferences.prefered_rent - propertyDetails.rent_amount);
