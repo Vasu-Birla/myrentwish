@@ -798,7 +798,7 @@ const Properties11 = async (req, res, next) => {
             const matchPercentage = calculatePreferencesMatchPercentage(user, row);
             row.match_percentage = `${matchPercentage}%`;
 
-            console.log("type--percent -> ", typeof row.match_percentage)
+            // console.log("type--percent -> ", typeof row.match_percentage)
 
             var [[owner]] = await con.query('SELECT * from tbl_users where user_id = ? ',[row.user_id]); 
 
@@ -957,7 +957,7 @@ const calculatePreferencesMatchPercentage7feb = (userPreferences, propertyDetail
   const rentMatch = Math.max(0, maxRentDifference - rentDifference) / maxRentDifference * weightPreferredRent;
   matchPercentage += rentMatch;
 
-  console.log(typeof matchPercentage )
+  // console.log(typeof matchPercentage )
 
   return parseInt(matchPercentage);
 };
@@ -1081,7 +1081,7 @@ const userList = async (req, res, next) => {
     for (const row of allUsers) {
       // Calculate match percentage
       const matchPercentage = calculateUserMatchPercentage(Ownerproperties, row);
-      console.log( typeof matchPercentage )
+      // console.log( typeof matchPercentage )
       row.match_percentage = `${matchPercentage}%`;
       
     }
@@ -1116,41 +1116,37 @@ const calculateUserMatchPercentage = (ownerProperties, user) => {
   const weightPreferredType = 6;
   const weightPreferredRent = 14;
 
-  // Initialize match percentage
+  // Initialize total match percentage
   let totalMatchPercentage = 0;
 
   // Iterate over each property owned by the user
   ownerProperties.forEach((property) => {
     let matchPercentage = 0;
 
+    // Split user preferences into arrays if they contain commas
+    const userGenders = user.gender.split(',');
+    const userBathroomTypes = user.bathroom_type.split(',');
+    const userParkingTypes = user.parking_type.split(',');
+    const userPreferredTypes = user.prefered_type.split(',');
+
     // Check each preference and increase matchPercentage accordingly
-    if (property.gender == user.prefered_gender) {
+    if (userGenders.includes(property.gender)) {
       matchPercentage += weightGender;
     }
 
-    if (property.prefered_city == user.city) {
-      matchPercentage += weightCity;
-    }
-
-    if (property.prefered_country == user.country) {
-      matchPercentage += weightCountry;
-    }
-
-    if (property.bedroom_nums == user.bedroom_nums) {
-      matchPercentage += weightBedrooms;
-    }
-
-    if (property.bathroom_type == user.bathroom_type) {
+    if (userBathroomTypes.includes('Any') || userBathroomTypes.some(type => property.bathroom_type.includes(type))) {
       matchPercentage += weightBathroomType;
     }
 
-    if (property.parking_type == user.parking_type) {
+    if (userParkingTypes.includes('Any') || userParkingTypes.some(type => property.parking_type.includes(type))) {
       matchPercentage += weightParkingType;
     }
 
-    if (property.prefered_type == user.prefered_type) {
+    if (userPreferredTypes.includes('Any') || userPreferredTypes.includes(property.prefered_type)) {
       matchPercentage += weightPreferredType;
     }
+
+    // Check other preferences and calculate match percentage accordingly
 
     // Calculate match percentage based on rent difference
     const rentDifference = Math.abs(property.rent_amount - user.prefered_rent);
