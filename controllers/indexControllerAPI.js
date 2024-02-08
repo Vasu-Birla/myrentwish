@@ -225,6 +225,7 @@ const Logout = async(req,res,next)=>{
 
 
 const ForgotPassword = async (req, res, next) => {
+  console.log("Reset pasword Request for -> ", req.body.user_email )
     const con = await connection();
     try {
       const { user_email } = req.body;
@@ -1080,7 +1081,9 @@ const userList = async (req, res, next) => {
     for (const row of allUsers) {
       // Calculate match percentage
       const matchPercentage = calculateUserMatchPercentage(Ownerproperties, row);
+      console.log( typeof matchPercentage )
       row.match_percentage = `${matchPercentage}%`;
+      
     }
 
     // Sort all properties by match percentage in descending order
