@@ -34,7 +34,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     fetchCities,
     fetchcountries,
     isActive,
-    loginOTP} from '../controllers/indexControllerAPI.js';
+    loginOTP,
+    userList} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -83,6 +84,13 @@ router.route('/checkPreference').post(upload.none(),checkPreferenceAvailability)
 
 
 router.route('/getSkills').get(upload.none(),getSkills)
+
+
+//---------- fetch top percentage users --------
+
+
+router.route('/userList').post(upload.none(),userList)
+
 
 
 //------------- Property Section ------------------- 

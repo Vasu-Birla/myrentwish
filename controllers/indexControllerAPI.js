@@ -1040,6 +1040,152 @@ if (userPreferences.prefered_type && propertyDetails.prefered_type) {
 
 
 
+//==============================  User List match percentage ======================== 
+
+
+
+const userList = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    const userID = req.body.user_id;
+
+    // Validate if the user exists
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
+    if (!user) {
+      return res.status(404).json({ result: "User not found" });
+    }
+
+
+
+    if (user.status == 'inactive') {
+      console.log("Inactivated user");
+      return res.status(403).json({ result: "User is Deactivated" });
+    }
+
+
+
+    const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id = ?';  
+    const [Ownerproperties] = await con.query(selectPropertiesSql, [userID]);
+
+    const page = req.body.page_number || 1; // Default to page 1 if not provided
+    const resultsPerPage = 5;
+    const offset = (page - 1) * resultsPerPage;
+
+    // Fetch all properties without pagination
+    const selectUsersSql = 'SELECT * FROM `tbl_users` WHERE user_id != ?';
+    const [allUsers] = await con.query(selectUsersSql, [userID]);
+
+    // Calculate match percentage for each property
+    for (const row of allUsers) {
+      // Calculate match percentage
+      const matchPercentage = calculateUserMatchPercentage(Ownerproperties, row);
+      row.match_percentage = `${matchPercentage}%`;
+    }
+
+    // Sort all properties by match percentage in descending order
+    allUsers.sort((a, b) => parseFloat(b.match_percentage) - parseFloat(a.match_percentage));
+
+    // Apply pagination after sorting
+    const UsersOnPage = allUsers.slice(offset, offset + resultsPerPage);
+
+    res.json(UsersOnPage);
+  } catch (error) {
+    console.error('Error in fetch all Users API:', error);
+    res.status(404).json({ result: 'Users not found' });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
+const calculateUserMatchPercentage = (ownerProperties, user) => {
+  // Define weights for each preference (adjust these according to importance)
+  const weightGender = 10;
+  const weightCity = 8;
+  const weightCountry = 7;
+  const weightBedrooms = 5;
+  const weightBathroomType = 5;
+  const weightParkingType = 5;
+  const weightPreferredType = 6;
+  const weightPreferredRent = 14;
+
+  // Initialize match percentage
+  let totalMatchPercentage = 0;
+
+  // Iterate over each property owned by the user
+  ownerProperties.forEach((property) => {
+    let matchPercentage = 0;
+
+    // Check each preference and increase matchPercentage accordingly
+    if (property.gender == user.prefered_gender) {
+      matchPercentage += weightGender;
+    }
+
+    if (property.prefered_city == user.city) {
+      matchPercentage += weightCity;
+    }
+
+    if (property.prefered_country == user.country) {
+      matchPercentage += weightCountry;
+    }
+
+    if (property.bedroom_nums == user.bedroom_nums) {
+      matchPercentage += weightBedrooms;
+    }
+
+    if (property.bathroom_type == user.bathroom_type) {
+      matchPercentage += weightBathroomType;
+    }
+
+    if (property.parking_type == user.parking_type) {
+      matchPercentage += weightParkingType;
+    }
+
+    if (property.prefered_type == user.prefered_type) {
+      matchPercentage += weightPreferredType;
+    }
+
+    // Calculate match percentage based on rent difference
+    const rentDifference = Math.abs(property.rent_amount - user.prefered_rent);
+    const maxRentDifference = 1000; // Adjust this value based on your criteria
+    const rentMatch = Math.max(0, maxRentDifference - rentDifference) / maxRentDifference * weightPreferredRent;
+    matchPercentage += rentMatch;
+
+    totalMatchPercentage += matchPercentage;
+  });
+
+  // Calculate average match percentage across all properties
+  const averageMatchPercentage = totalMatchPercentage / ownerProperties.length;
+
+  return parseInt(averageMatchPercentage);
+};
+
+
+
+
+
+const calculateUserMatchPercentage8feb = (Ownerproperties, user) => {
+  // Define weights for each preference (adjust these according to importance)
+  const weightGender = 10;
+  const weightCity = 8;
+  const weightCountry = 7;
+  const weightBedrooms = 5;
+  const weightBathroomType = 5;
+  const weightParkingType = 5;
+  const weightPreferredType = 6;
+  const weightPreferredRent = 14;
+
+
+  // Initialize match percentage
+  let matchPercentage = 0;
+
+
+  return parseInt(matchPercentage);
+};
 
 
 
@@ -2991,7 +3137,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets ,tandc , pandp , faqs,
      checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
-     getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive , loginOTP
+     getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive , loginOTP , userList
 }
 
 
