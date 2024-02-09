@@ -70,7 +70,7 @@ function setValue()
   
        if (age < 18) {
            await con.rollback();
-           return res.status(400).json({ result: 'User must be at least 18 years old' });
+           return res.status(200).json({ result: 'User must be at least 18 years old' });
        }
   
     
@@ -89,7 +89,7 @@ function setValue()
   
       if (userResult[0].count > 0) {
         await con.rollback();
-        return res.status(409).json({ result: 'Account already exists' });
+        return res.status(200).json({ result: 'Account already exists' });
       } else {
         const sql =
           'INSERT INTO `tbl_users` ( firstname, lastname, user_email,  password, user_mobile, country_flag , country_code, age, location, latitude, longitude, address, country, city, gender, image, imagePath, prefered_gender, prefered_city, prefered_country, bedroom_nums, bathroom_type, parking_type,prefered_type, prefered_rent, about_me, skill) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?)';
