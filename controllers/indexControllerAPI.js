@@ -1959,7 +1959,7 @@ const tandc = async (req, res, next) => {
 
 
         // Wrap the terms content in a container with 250% zoom level
-        const zoomedContent = `<div style="zoom: 250%;">${termsContent}</div>`;
+        const zoomedContent = `<div style="zoom: 350%;">${termsContent}</div>`;
       
         // Return the HTML content with zoom applied as a response
         res.send(zoomedContent);
