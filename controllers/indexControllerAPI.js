@@ -1834,7 +1834,7 @@ const obtainToken = async (req, res, next) => {
       if (result) {
         res.json({ "result": "success" });
       } else {
-        res.status(500).json({ "result": "failed" });
+        res.status(200).json({ "result": "failed" });
       }
     } else {
       console.log("New DeviceID");
@@ -1850,7 +1850,7 @@ const obtainToken = async (req, res, next) => {
       if (result) {
         res.json({ "result": "success" });
       } else {
-        res.status(500).json({ "result": "failed" });
+        res.status(200).json({ "result": "failed" });
       }
     }
 
@@ -1858,7 +1858,7 @@ const obtainToken = async (req, res, next) => {
   } catch (error) {
     await con.rollback();
     console.error('Error in obtainToken API:', error);
-    res.status(500).json({ "result": "Internal Server Error" });
+    res.status(200).json({ "result": "Internal Server Error" });
   } finally {
     if (con) {
       con.release();
@@ -1907,7 +1907,7 @@ const contactUs = async (req, res, next) => {
   } catch (error) {
     await con.rollback();
     console.error('Error in contactUs API:', error);
-    res.status(500).json({ result: 'Internal Server Error' });
+    res.status(200).json({ result: 'Internal Server Error' });
   } finally {
     if (con) {
       con.release();
@@ -1952,17 +1952,19 @@ const myTickets = async (req, res, next) => {
 const tandc = async (req, res, next) => {
   const con = await connection();
 
-  try {
-    // Fetch the terms and conditions from the database
+  try {  
     const [result] = await con.query('SELECT * FROM tbl_tandc where id = ?', [1]);
-
     if (result.length > 0) {
       const termsContent = result[0].terms;
 
-      // Return the HTML content as a response
-      res.send(termsContent);
-    } else {
-      // If terms and conditions not found, you can send an appropriate response
+
+        // Wrap the terms content in a container with 250% zoom level
+        const zoomedContent = `<div style="zoom: 250%;">${termsContent}</div>`;
+      
+        // Return the HTML content with zoom applied as a response
+        res.send(zoomedContent);
+     // res.send(termsContent);
+    } else { 
       res.status(200).send('Terms and conditions not found');
     }
   } catch (error) {
@@ -1971,6 +1973,8 @@ const tandc = async (req, res, next) => {
   } finally {
     con.release();
   }
+
+
 };
 
 
