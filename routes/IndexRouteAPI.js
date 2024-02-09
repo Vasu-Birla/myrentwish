@@ -57,7 +57,7 @@ router.route('/logout').get( Logout);
 
 
 
-router.route('/loginOTP').post( upload.none(),loginOTP);
+router.route('/signupOTP').post( upload.none(),loginOTP);
 
 router.route('/forgotpassword').post( upload.none(),ForgotPassword );
 
