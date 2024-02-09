@@ -160,7 +160,7 @@ const sendMailOTP = function (email,otp,user) {
 
 
  //----------------------- send OTP Helper start ------------------------------- 
-const sendLoginOTP = function (email,otp,user) {
+const sendLoginOTP = function (email,otp) {
     //process.env.NODE_TLS_REJECT_UNAUTHORIZED='0'
  
  var transporter = nodemailer.createTransport({

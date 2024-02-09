@@ -102,7 +102,7 @@ function setValue()
         return res.status(200).json({ result: 'Mobile already exists' });
 
 
-      }{
+      }else  {
         const sql =
           'INSERT INTO `tbl_users` ( firstname, lastname, user_email,  password, user_mobile, country_flag , country_code, age, location, latitude, longitude, address, country, city, gender, image, imagePath, prefered_gender, prefered_city, prefered_country, bedroom_nums, bathroom_type, parking_type,prefered_type, prefered_rent, about_me, skill) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?)';
   
@@ -178,7 +178,7 @@ const Login = async (req, res, next) => {
   
       // If user doesn't enter email or password
       if (!user_email || !password) {
-        res.status(204).json({ result: "Please Enter Email and Password" });
+        res.status(200).json({ result: "Please Enter Email and Password" });
         return;
       }
   
@@ -249,7 +249,7 @@ const ForgotPassword = async (req, res, next) => {
           console.log(otp);
   
       if (!email) {
-        res.status(204).json({ result: "Email Required " });
+        res.status(200).json({ result: "Email Required " });
       } else {
         const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_email = ?', [email]);
   
@@ -282,25 +282,47 @@ const ForgotPassword = async (req, res, next) => {
 const loginOTP = async (req, res, next) => {
   const con = await connection();
   try {
-    const { user_email } = req.body;
+    const { user_email , user_mobile } = req.body;
     var email = user_email
+    await con.beginTransaction();
+
+        // Check if the user already exists with the provided email
+        const checkUserSql = 'SELECT COUNT(*) as count FROM `tbl_users` WHERE user_email = ?';
+        const checkUserValues = [req.body.user_email];
+  
+  
+        const checkUserSql2 = 'SELECT COUNT(*) as count FROM `tbl_users` WHERE user_mobile = ?';
+        const checkUserValues2 = [req.body.user_mobile];  
+    
+        const [userResult] = await con.query(checkUserSql, checkUserValues);
+        const [userResult2] = await con.query(checkUserSql2, checkUserValues2);
 
      otp =   Math.random();
     otp = otp * 1000000;
       otp = parseInt(otp);
-        console.log(otp);
+        
 
     if (!email) {
-      res.status(204).json({ result: "Email Required " });
-    } else {
-      const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_email = ?', [email]);
+      res.status(200).json({ result: "Email Required " });
 
-      if (!user) {
-        res.status(200).json({ result: "Invalid Email" });
-      } else {
-        sendLoginOTP(email, otp, user);
-        res.status(200).json({ result: "success", user_id: user.user_id, otp: otp });
-      }
+    } else {        
+
+      if (userResult[0].count > 0) {
+        console.log("email already exists")
+        
+        return res.status(200).json({ result: 'Email already exists' });
+      } else if(userResult2[0].count > 0){
+        console.log("Mobile already exists")
+        return res.status(200).json({ result: 'Mobile already exists' });
+      }else  { 
+        console.log("Sending Sign UP OTP ")
+        console.log(otp);
+        sendLoginOTP(email, otp);
+        res.status(200).json({ result: "success",  otp: otp });
+
+      }  
+ 
+
     }
   } catch (error) {
     console.error('Error in ForgotPassword API:', error);
