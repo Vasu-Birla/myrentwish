@@ -1993,8 +1993,14 @@ const pandp = async (req, res, next) => {
     if (result.length > 0) {
       const policyContent = result[0].policy;
 
+
+      const zoomedContent = `<div style="zoom: 350%;">${policyContent}</div>`;
+      
+      // Return the HTML content with zoom applied as a response
+      res.send(zoomedContent);
+
       // Return the HTML content as a response
-      res.send(policyContent);
+      //res.send(policyContent);
     } else {
       // If terms and conditions not found, you can send an appropriate response
       res.status(200).send('User Privacy not found');
@@ -2030,8 +2036,14 @@ const faqs = async (req, res, next) => {
         <p>${result.answer}</p>
       `).join('');
 
+
+      const zoomedContent = `<div style="zoom: 350%;">${faqHTML}</div>`;
+      
+      // Return the HTML content with zoom applied as a response
+      res.send(zoomedContent);
+
       // Return the HTML as a response
-      res.send(faqHTML);
+     // res.send(faqHTML);
     } else {
       // If no FAQs found, you can send an appropriate response
       res.status(200).send('No FAQs found');
