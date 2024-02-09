@@ -175,14 +175,14 @@ const Login = async (req, res, next) => {
 
   
       if (!user) {
-        res.status(404).json({ result: "Account does not exist!" });
+        res.status(200).json({ result: "Account does not exist!" });
         return;
       }
   
       let isValid = comparePassword(password, user.password);
   
       if (!isValid) {
-        res.status(401).json({ result: "Incorrect Password" });
+        res.status(200).json({ result: "Incorrect Password" });
         return;
       }
   
@@ -190,7 +190,7 @@ const Login = async (req, res, next) => {
         sendTokenUser(user, 200, res);
         await con.commit();
       } else {
-        res.status(403).json({ result: "Your Account Has Been Deactivated!" });
+        res.status(200).json({ result: "Your Account Has Been Deactivated!" });
       }
     } catch (error) {
       await con.rollback();
@@ -242,7 +242,7 @@ const ForgotPassword = async (req, res, next) => {
         const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_email = ?', [email]);
   
         if (!user) {
-          res.status(400).json({ result: "Invalid Email" });
+          res.status(200).json({ result: "Invalid Email" });
         } else {
           sendMailOTP(email, otp, user);
           res.status(200).json({ result: "success", user_id: user.user_id, otp: otp });
@@ -284,7 +284,7 @@ const loginOTP = async (req, res, next) => {
       const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_email = ?', [email]);
 
       if (!user) {
-        res.status(400).json({ result: "Invalid Email" });
+        res.status(200).json({ result: "Invalid Email" });
       } else {
         sendLoginOTP(email, otp, user);
         res.status(200).json({ result: "success", user_id: user.user_id, otp: otp });
@@ -350,7 +350,7 @@ const  removeAccount = async(req,res,next)=>{
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
   
     if ( user.status == "inactive") {
-      return res.status(401).json({ result: "failed", message:"Deactivated Profile Cannot be deleted" });
+      return res.status(200).json({ result: "failed", message:"Deactivated Profile Cannot be deleted" });
     } 
     await con.query('DELETE FROM tbl_users WHERE user_id = ?', [userID]);
    
@@ -383,7 +383,7 @@ const  removeAccount = async(req,res,next)=>{
       const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
 
       // if( user.status != 'active'){
-      //   return res.status(403).json({ result: "User is Deactivated" });
+      //   return res.status(200).json({ result: "User is Deactivated" });
       // }
   
       // if (user && user.status == "active") {
@@ -417,13 +417,13 @@ const  removeAccount = async(req,res,next)=>{
   
       if (!existingUser) {
         await con.rollback();
-        res.status(404).json({ result: "User not found" });
+        res.status(200).json({ result: "User not found" });
         return;
       }
 
 
       if( existingUser.status != 'active'){
-        return res.status(403).json({ result: "User is Deactivated" });
+        return res.status(200).json({ result: "User is Deactivated" });
       }
 
 
@@ -516,7 +516,7 @@ const  removeAccount = async(req,res,next)=>{
   
       if (!existingUser) {
         await con.rollback();
-        res.status(404).json({ result: "User not found" });
+        res.status(200).json({ result: "User not found" });
         return;
       }
   
@@ -585,7 +585,7 @@ const  removeAccount = async(req,res,next)=>{
       const [[existingUser]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
   
       if (!existingUser) {
-        res.status(404).json({ result: "User not found" });
+        res.status(200).json({ result: "User not found" });
         return;
       }
   
@@ -650,7 +650,7 @@ const addProperty = async (req, res, next) => {
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
     if (!user) {
       await con.rollback();
-      return res.status(404).json({ result: "User not found" });
+      return res.status(200).json({ result: "User not found" });
     }
 
     // Extract property details from the request body
@@ -762,14 +762,14 @@ const Properties11 = async (req, res, next) => {
     // Validate if the user exists
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
     if (!user) {
-      return res.status(404).json({ result: "User not found" });
+      return res.status(200).json({ result: "User not found" });
     }
 
     console.log(user)
 
     if( user.status == 'inactive'){
       console.log("Inactivated user")
-      return res.status(403).json({ result: "User is Deactivated" });
+      return res.status(200).json({ result: "User is Deactivated" });
     }
 
     
@@ -834,7 +834,7 @@ const Properties11 = async (req, res, next) => {
 
   } catch (error) {
     console.error('Error in fetchAllProperties API:', error);
-    res.status(404).json({ result: 'Properties not found' });
+    res.status(200).json({ result: 'Properties not found' });
   } finally {
     if (con) {
       con.release();
@@ -852,14 +852,14 @@ const Properties = async (req, res, next) => {
     // Validate if the user exists
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
     if (!user) {
-      return res.status(404).json({ result: "User not found" });
+      return res.status(200).json({ result: "User not found" });
     }
 
     console.log(user);
 
     if (user.status == 'inactive') {
       console.log("Inactivated user");
-      return res.status(403).json({ result: "User is Deactivated" });
+      return res.status(200).json({ result: "User is Deactivated" });
     }
 
     const page = req.body.page_number || 1; // Default to page 1 if not provided
@@ -896,7 +896,7 @@ const Properties = async (req, res, next) => {
     res.json(propertiesOnPage);
   } catch (error) {
     console.error('Error in fetchAllProperties API:', error);
-    res.status(404).json({ result: 'Properties not found' });
+    res.status(200).json({ result: 'Properties not found' });
   } finally {
     if (con) {
       con.release();
@@ -1054,14 +1054,14 @@ const userList = async (req, res, next) => {
     // Validate if the user exists
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
     if (!user) {
-      return res.status(404).json({ result: "User not found" });
+      return res.status(200).json({ result: "User not found" });
     }
 
 
 
     if (user.status == 'inactive') {
       console.log("Inactivated user");
-      return res.status(403).json({ result: "User is Deactivated" });
+      return res.status(200).json({ result: "User is Deactivated" });
     }
 
 
@@ -1095,7 +1095,7 @@ const userList = async (req, res, next) => {
     res.json(UsersOnPage);
   } catch (error) {
     console.error('Error in fetch all Users API:', error);
-    res.status(404).json({ result: 'Users not found' });
+    res.status(200).json({ result: 'Users not found' });
   } finally {
     if (con) {
       con.release();
@@ -1202,11 +1202,11 @@ const myProperties = async (req, res, next) => {
       const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
       if (!user) {
         await con.rollback();
-        return res.status(404).json({ result: "User not found" });
+        return res.status(200).json({ result: "User not found" });
       }
 
       if( user.status != 'active'){
-        return res.status(403).json({ result: "User is Deactivated" });
+        return res.status(200).json({ result: "User is Deactivated" });
       }
   
       const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id = ?';  
@@ -1240,7 +1240,7 @@ const property = async (req, res, next) => {
     const [[property]] = await con.query('SELECT * FROM tbl_prop WHERE prop_id = ?', [prop_id]);
 
     if (!property) {
-      return res.status(404).json({ result: "Property Not Found" });
+      return res.status(200).json({ result: "Property Not Found" });
      
     } 
 
@@ -1274,7 +1274,7 @@ const updateProperty = async (req, res, next) => {
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
     if (!user) {
       await con.rollback();
-      return res.status(404).json({ result: "User not found" });
+      return res.status(200).json({ result: "User not found" });
     }
 
     // Validate if the property exists and is owned by the user
@@ -1432,14 +1432,14 @@ const deleteProperty = async (req, res, next) => {
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
     if (!user) {
       await con.rollback();
-      return res.status(404).json({ result: "User not found" });
+      return res.status(200).json({ result: "User not found" });
     }
 
     // Validate if the property exists and is owned by the user
     const [[property]] = await con.query('SELECT * FROM `tbl_prop` WHERE prop_id = ? AND user_id = ?', [propertyID, userID]);
     if (!property) {
       await con.rollback();
-      return res.status(404).json({ result: "Property not found or does not belong to the user" });
+      return res.status(200).json({ result: "Property not found or does not belong to the user" });
     }
 
     // Delete the property from the tbl_prop table
@@ -1505,7 +1505,7 @@ const getSkills = async (req, res, next) => {
 
   } catch (error) {
     console.error('Error in getskills :', error);
-    res.status(404).json({ result: 'failed' , message:'Internal Server Error' });
+    res.status(200).json({ result: 'failed' , message:'Internal Server Error' });
 
   } finally {
     if (con) {
@@ -1541,7 +1541,7 @@ const getSkills1 = async (req, res, next) => {
   } catch (error) {
     console.error('Error in getSkills:', error);
     returnedData.error = error.message || 'Internal Server Error';
-    res.status(404).json(returnedData);
+    res.status(200).json(returnedData);
 
   } finally {   
       con.release();    
@@ -1573,7 +1573,7 @@ const addToInterest = async (req, res, next) => {
 
     if (!userResult[0] || !propertyResult[0]) {
       await con.rollback();
-      return res.status(404).json({ result: "User or Property not found" });
+      return res.status(200).json({ result: "User or Property not found" });
     }
 
     // Check if the user is already interested in the property
@@ -1589,7 +1589,7 @@ const addToInterest = async (req, res, next) => {
 
     if (!ownerResult[0]) {
       await con.rollback();
-      return res.status(404).json({ result: "Owner not found for this property" });
+      return res.status(200).json({ result: "Owner not found for this property" });
     }
 
     const ownerID = ownerResult[0].user_id;
@@ -1732,7 +1732,7 @@ const addAnswer = async (req, res, next) => {
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
     if (!user) {
       await con.rollback();
-      return res.status(404).json({ result: "User not found" });
+      return res.status(200).json({ result: "User not found" });
     }
 
     // Fetch all questions to validate answers
@@ -1760,7 +1760,7 @@ const invalidAnswers = answers.filter(answer => {
 
     if (invalidAnswers.length > 0) {
       await con.rollback();
-      return res.status(400).json({ result: "failed", message: "Invalid question or answer", invalidAnswers });
+      return res.status(200).json({ result: "failed", message: "Invalid question or answer", invalidAnswers });
     }
 
     // Insert or update answers
@@ -1888,7 +1888,7 @@ const contactUs = async (req, res, next) => {
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
     if (!user) {
       await con.rollback();
-      return res.status(404).json({ result: 'User not found' });
+      return res.status(200).json({ result: 'User not found' });
     }
 
     // Generate a random 4-digit number
@@ -1925,7 +1925,7 @@ const myTickets = async (req, res, next) => {
     // Validate if the user exists
     const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
     if (!user) {
-      return res.status(404).json({ result: 'User not found' });
+      return res.status(200).json({ result: 'User not found' });
     }
 
     // Fetch tickets for the specified user
@@ -1963,7 +1963,7 @@ const tandc = async (req, res, next) => {
       res.send(termsContent);
     } else {
       // If terms and conditions not found, you can send an appropriate response
-      res.status(404).send('Terms and conditions not found');
+      res.status(200).send('Terms and conditions not found');
     }
   } catch (error) {
     console.error('Error:', error);
@@ -1993,7 +1993,7 @@ const pandp = async (req, res, next) => {
       res.send(policyContent);
     } else {
       // If terms and conditions not found, you can send an appropriate response
-      res.status(404).send('User Privacy not found');
+      res.status(200).send('User Privacy not found');
     }
   } catch (error) {
     console.error('Error:', error);
@@ -2030,7 +2030,7 @@ const faqs = async (req, res, next) => {
       res.send(faqHTML);
     } else {
       // If no FAQs found, you can send an appropriate response
-      res.status(404).send('No FAQs found');
+      res.status(200).send('No FAQs found');
     }
   } catch (error) {
     console.error('Error:', error);
@@ -2087,7 +2087,7 @@ const agreements = async (req, res, next) => {
       res.json(result);
     } else {
       // If agreements not found, you can send an appropriate response
-      res.status(404).json({ error: 'Agreements not found' });
+      res.status(200).json({ error: 'Agreements not found' });
     }
   } catch (error) {
     console.error('Error:', error);
@@ -2118,7 +2118,7 @@ const agreements1 = async (req, res, next) => {
       res.send(AgreementHTML);
     } else {
       // If no FAQs found, you can send an appropriate response
-      res.status(404).send('No FAQs found');
+      res.status(200).send('No FAQs found');
     }
   } catch (error) {
     console.error('Error:', error);
