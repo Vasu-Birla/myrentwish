@@ -77,20 +77,32 @@ function setValue()
       await con.beginTransaction();
   
       // Check if the user already exists with the provided email
-      // const checkUserSql = 'SELECT COUNT(*) as count FROM `tbl_users` WHERE user_email = ?';
-      // const checkUserValues = [req.body.user_email];
+      const checkUserSql = 'SELECT COUNT(*) as count FROM `tbl_users` WHERE user_email = ?';
+      const checkUserValues = [req.body.user_email];
 
 
-      const checkUserSql = 'SELECT COUNT(*) as count FROM `tbl_users` WHERE user_email = ? OR user_mobile = ?';
-      const checkUserValues = [req.body.user_email, req.body.user_mobile];
+      const checkUserSql2 = 'SELECT COUNT(*) as count FROM `tbl_users` WHERE user_mobile = ?';
+      const checkUserValues2 = [req.body.user_mobile];
+
+
+      const checkUserSql1 = 'SELECT COUNT(*) as count FROM `tbl_users` WHERE user_email = ? OR user_mobile = ?';
+      const checkUserValues1 = [req.body.user_email, req.body.user_mobile];
 
   
       const [userResult] = await con.query(checkUserSql, checkUserValues);
+      const [userResult2] = await con.query(checkUserSql2, checkUserValues2);
+
+      console.log(userResult)
   
       if (userResult[0].count > 0) {
         await con.rollback();
-        return res.status(200).json({ result: 'Account already exists' });
-      } else {
+        return res.status(200).json({ result: 'Email already exists' });
+      } else if(userResult2[0].count > 0){
+        await con.rollback();
+        return res.status(200).json({ result: 'Mobile already exists' });
+
+
+      }{
         const sql =
           'INSERT INTO `tbl_users` ( firstname, lastname, user_email,  password, user_mobile, country_flag , country_code, age, location, latitude, longitude, address, country, city, gender, image, imagePath, prefered_gender, prefered_city, prefered_country, bedroom_nums, bathroom_type, parking_type,prefered_type, prefered_rent, about_me, skill) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? , ?, ?)';
   
