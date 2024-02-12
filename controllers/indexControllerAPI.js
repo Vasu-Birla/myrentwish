@@ -1758,7 +1758,7 @@ const addAnswer = async (req, res, next) => {
     
     });
 
-    console.log(answers)
+    console.log("req.body frontend --> ", answers)
 
     
 
@@ -1772,9 +1772,18 @@ const addAnswer = async (req, res, next) => {
     // Fetch all questions to validate answers
     // const questionIds = answers.map(answer => answer.question_id);
 
-    const questionIds = answers.map(answer => parseInt(answer.question_id, 10));
+    const questionIds = answers.map(answer => parseInt(answer.question_id, 10));  
+
+    console.log("Question Ids are ->  ", questionIds)
+
+    if (questionIds.length === 0) {
+      // Handle the case where there are no question IDs
+      await con.rollback();
+      return res.status(200).json({ result: "failed", message: "No question IDs provided from Frontend" });
+    }
  
     const [questions] = await con.query('SELECT * FROM tbl_questions WHERE question_id IN (?)', [questionIds]);
+    
 
     const questionMap = new Map(questions.map(question => [question.question_id, question]));
 
