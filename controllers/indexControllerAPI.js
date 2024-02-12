@@ -1168,15 +1168,28 @@ const calculateUserMatchPercentage = (ownerProperties, user) => {
     const userParkingTypes = user.parking_type.split(',');
     const userPreferredTypes = user.prefered_type.split(',');
 
-    console.log("userGenders  --> ", userGenders)
-    console.log("userBathroomTypes  --> ", userBathroomTypes)
-    console.log("userParkingTypes  --> ", userParkingTypes)
-     console.log("userPreferredTypes  --> ", userPreferredTypes)
 
     // Check each preference and increase matchPercentage accordingly
     if (userGenders.includes(property.gender)) {
       matchPercentage += weightGender;
     }
+
+
+    if (user.prefered_country.includes(property.country)) {
+      matchPercentage += weightCountry;
+    }
+
+    if (user.prefered_city.includes(property.city)) {
+      matchPercentage += weightCity;
+    }
+
+    if (user.bedroom_nums.includes(property.bedroom_nums)) {
+      matchPercentage += weightBedrooms;
+    }
+
+    // if (userGenders.includes('Any') || userGenders.some(type => property.gender.includes(type))) {
+    //   matchPercentage += weightGender;
+    // }
 
     if (userBathroomTypes.includes('Any') || userBathroomTypes.some(type => property.bathroom_type.includes(type))) {
       matchPercentage += weightBathroomType;
