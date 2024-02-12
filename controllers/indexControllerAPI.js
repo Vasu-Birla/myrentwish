@@ -1140,6 +1140,11 @@ const userList = async (req, res, next) => {
 
 
 const calculateUserMatchPercentage = (ownerProperties, user) => {
+
+  if(ownerProperties.length ==0){
+
+    return parseInt(0);
+  }
   // Define weights for each preference (adjust these according to importance)
   const weightGender = 10;
   const weightCity = 8;
@@ -1162,6 +1167,11 @@ const calculateUserMatchPercentage = (ownerProperties, user) => {
     const userBathroomTypes = user.bathroom_type.split(',');
     const userParkingTypes = user.parking_type.split(',');
     const userPreferredTypes = user.prefered_type.split(',');
+
+    console.log("userGenders  --> ", userGenders)
+    console.log("userBathroomTypes  --> ", userBathroomTypes)
+    console.log("userParkingTypes  --> ", userParkingTypes)
+     console.log("userPreferredTypes  --> ", userPreferredTypes)
 
     // Check each preference and increase matchPercentage accordingly
     if (userGenders.includes(property.gender)) {
@@ -1189,6 +1199,8 @@ const calculateUserMatchPercentage = (ownerProperties, user) => {
     matchPercentage += rentMatch;
 
     totalMatchPercentage += matchPercentage;
+
+    console.log(totalMatchPercentage);
   });
 
   // Calculate average match percentage across all properties
