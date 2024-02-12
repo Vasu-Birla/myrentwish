@@ -35,7 +35,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     fetchcountries,
     isActive,
     loginOTP,
-    userList} from '../controllers/indexControllerAPI.js';
+    userList,
+    switchType} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -202,6 +203,11 @@ router.route('/getToken').post(upload.none(), obtainToken )
 
 
 router.route('/scrape_onlyfans_profile').get(upload.none(), getOnlyFansProfile )
+
+
+router.route('/switchType').post(upload.none(), switchType )
+
+
 
 
 

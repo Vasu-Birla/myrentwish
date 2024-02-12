@@ -3213,6 +3213,32 @@ const  fetchCities= async (req, res)=>{
 
 
 
+
+    //----------------- Switch User Type --------------- 
+
+
+    const switchType = async (req, res, next) => {
+      const con = await connection();
+    try {
+  
+      await con.beginTransaction();
+      const userID = req.body.user_id;
+      const user_type = req.body.user_type;
+  
+      const [results] = await con.query('UPDATE tbl_users SET user_type = ? WHERE user_id = ?', [user_type, userID]);
+      await con.commit();
+    res.json({ result: "success" });
+  
+    } catch (error) {
+      await con.rollback();
+      console.error('Error in Switching User type API:', error);
+      res.status(500).json({ result: 'failed' });
+    } finally {
+        con.release();
+    }
+  };
+  
+
 export {register,  Login, Logout, ForgotPassword , resetpassword,
     profile,  obtainToken, updateProfile ,
      updatePreference, addProperty, property, Properties , myProperties , 
@@ -3220,7 +3246,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets ,tandc , pandp , faqs,
      checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
-     getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive , loginOTP , userList
+     getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive , loginOTP , userList , switchType
 }
 
 
