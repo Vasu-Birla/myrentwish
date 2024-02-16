@@ -1870,6 +1870,33 @@ const invalidAnswers = answers.filter(answer => {
 
 
 
+//--------- total Answered numbers ----------- 
+
+const totalAnswered = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    const userID = req.body.user_id;
+
+    // Fetch the total number of questions answered by the user
+    const [result] = await con.query('SELECT COUNT(*) AS total_answered FROM tbl_user_answers WHERE user_id = ?', [userID]);
+    const totalAnswered = result[0].total_answered;
+
+    res.json({ result:"success", answers_count: totalAnswered });
+  } catch (error) {
+    console.error('Error in totalAnswered API:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
+
+
 
 //==============================================  NOTIFICATION SECTOIN =========================
 
@@ -3251,7 +3278,9 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
      getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive , loginOTP , userList , switchType
-}
+, totalAnswered
+
+    }
 
 
          

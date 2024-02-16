@@ -36,7 +36,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     isActive,
     loginOTP,
     userList,
-    switchType} from '../controllers/indexControllerAPI.js';
+    switchType,
+    totalAnswered} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -123,6 +124,10 @@ router.route('/propTypes').get(upload.none(),propTypes)
 router.route('/getQuestions').post(upload.none(),getQuestions)
 
 router.route('/addAnswer').post(upload.none(),addAnswer)
+
+router.route('/anscount').post(upload.none(),totalAnswered)
+
+
 
 
 
