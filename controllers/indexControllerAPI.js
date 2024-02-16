@@ -477,7 +477,7 @@ const  removeAccount = async(req,res,next)=>{
         lastname: req.body.lastname || existingUser.lastname,
         user_email: req.body.user_email || existingUser.user_email,
         user_mobile: req.body.user_mobile || existingUser.user_mobile,
-        birthday: req.body.birthday || existingUser.birthday,
+        age: req.body.age || existingUser.age,
         location: req.body.location || existingUser.location,
         latitude: req.body.latitude || existingUser.latitude,
         longitude: req.body.longitude || existingUser.longitude,
@@ -497,13 +497,13 @@ const  removeAccount = async(req,res,next)=>{
         
       // Update the user details in the database
       const updateSql =
-        'UPDATE tbl_users SET firstname=?, lastname=?, user_email=?, user_mobile=?, birthday=?, location=?, latitude=?, longitude=?, address=?, country=?, city=?, gender=?, country_flag=?, country_code=?, image=?, imagePath=? WHERE user_id=?';
+        'UPDATE tbl_users SET firstname=?, lastname=?, user_email=?, user_mobile=?, age=?, location=?, latitude=?, longitude=?, address=?, country=?, city=?, gender=?, country_flag=?, country_code=?, image=?, imagePath=? WHERE user_id=?';
       const updateValues = [
         updatedUser.firstname,
         updatedUser.lastname,
         updatedUser.user_email,
         updatedUser.user_mobile,
-        updatedUser.birthday,
+        updatedUser.age,
         updatedUser.location,
         updatedUser.latitude,
         updatedUser.longitude,
