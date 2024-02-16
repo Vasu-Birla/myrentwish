@@ -917,7 +917,7 @@ const Properties = async (req, res, next) => {
       const matchPercentage = calculatePreferencesMatchPercentage(user, row);
       row.match_percentage = `${matchPercentage}%`;
 
-      var [[owner]] = await con.query('SELECT * from tbl_users where user_id = ? ',[row.user_id]); 
+      var [[owner]] = await con.query('SELECT * from tbl_users where user_id = ? ',[userID]); 
 
       console.log("Ownerrrrrr    --->>>>> ", owner)
       row.owner_image = owner.imagePath;
