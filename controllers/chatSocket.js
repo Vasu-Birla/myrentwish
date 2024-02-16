@@ -391,10 +391,11 @@ socket.on('chatList', async (userID) =>{
   const con = await connection();
 
   //var userID = req.body.user_id;
-  const [chats] = await con.query('SELECT * FROM messages WHERE user_from = ? ORDER BY timestamp ASC', [userID ]);  
-  const [chats1] = await con.query('SELECT * FROM messages WHERE user_to = ? ORDER BY timestamp ASC', [userID ]);  
+ // const [chats] = await con.query('SELECT * FROM messages WHERE user_from = ? ORDER BY timestamp ASC', [userID ]);  
+  //const [chats1] = await con.query('SELECT * FROM messages WHERE user_to = ? ORDER BY timestamp ASC', [userID ]);  
  
-
+  const [chats] = await con.query('SELECT * FROM messages WHERE user_from = ? ORDER BY timeorder DESC', [userID]);
+  const [chats1] = await con.query('SELECT * FROM messages WHERE user_to = ? ORDER BY timeorder DESC', [userID]);
 
 
  for (let row of chats1){
@@ -482,8 +483,7 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
 
    
       if(receiver){
-        console.log(" ROW Interaction ---> " , row.timestamp)
-        var panewala = {"id":receiver.user_id, "name":receiver.firstname,"image":receiver.imagePath,"LastSeen": lastSeen,"unreadCount":unreadResult.length , "latestInteraction": row.timestamp } 
+        var panewala = {"id":receiver.user_id, "name":receiver.firstname,"image":receiver.imagePath,"LastSeen": lastSeen,"unreadCount":unreadResult.length} 
         receivers.push(panewala)
       }
 
@@ -493,8 +493,6 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
      }
   
  } 
-
- receivers.sort((a, b) => b.latestInteraction - a.latestInteraction);
 
  console.log("receivers---------------------------->>>> ",receivers)
 
