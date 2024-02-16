@@ -480,9 +480,13 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
            lastSeen = "Never Logged in"
         }
 
+
+
+        const lastMessageTimestamp = row.timestamp;
+
    
       if(receiver){
-        var panewala = {"id":receiver.user_id, "name":receiver.firstname,"image":receiver.imagePath,"LastSeen": lastSeen,"unreadCount":unreadResult.length} 
+        var panewala = {"id":receiver.user_id, "name":receiver.firstname,"image":receiver.imagePath,"LastSeen": lastSeen,"unreadCount":unreadResult.length , "lastMessageTimestamp": lastMessageTimestamp  } 
         receivers.push(panewala)
       }
 
@@ -493,9 +497,31 @@ chatList.sort((a, b) => a.timestamp - b.timestamp);
   
  } 
 
- console.log("receivers---------------------------->>>> ",receivers)
 
- socket.emit('chatList', receivers);   
+ // Sort the array first by unreadCount in descending order, then by lastMessageTimestamp in descending order
+ receivers.sort((a, b) => {
+  if (b.unreadCount !== a.unreadCount) {
+    return b.unreadCount - a.unreadCount;
+  } else {
+    return b.lastMessageTimestamp - a.lastMessageTimestamp;
+  }
+});
+
+
+// Extract the final list of receivers without the additional properties
+const finalReceivers = receivers.map(receiver => {
+  return {
+    "id": receiver.id,
+    "name": receiver.name,
+    "image": receiver.image,
+    "LastSeen": receiver.LastSeen,
+    "unreadCount": receiver.unreadCount
+  };
+});
+
+ console.log("receivers---------------------------->>>> ",finalReceivers)
+
+ socket.emit('chatList', finalReceivers);   
 
 });
 
