@@ -918,7 +918,7 @@ const Properties = async (req, res, next) => {
       row.match_percentage = `${matchPercentage}%`;
 
       var [[owner]] = await con.query('SELECT * from tbl_users where user_id = ? ',[row.user_id]); 
-      row.owner_image = owner.imagePath;
+      row.owner_image = owner.image;
     }
 
     // Sort all properties by match percentage in descending order
