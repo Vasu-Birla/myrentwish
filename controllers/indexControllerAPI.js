@@ -1902,6 +1902,44 @@ const totalAnswered = async (req, res, next) => {
 
 
 
+//--------- total Answered question answer ----------- 
+
+const answeredQuestions = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    const userID = req.body.user_id;
+
+    // Fetch questions and answers answered by the user
+    const [rows] = await con.query('SELECT question, answer FROM tbl_user_answers WHERE user_id = ?', [userID]);
+
+    // Extract questions and answers from rows
+    // const answeredQuestions = rows.map(row => ({
+    //   question: row.question,
+    //   answer: row.answer
+    // }));
+
+    const answeredQuestions = rows.map((row, index) => ({
+      question: `Q${index + 1}. ${row.question}`,
+      answer: row.answer
+    }));
+
+    res.json(answeredQuestions);
+  } catch (error) {
+    console.error('Error in answeredQuestions API:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
+
+
+
 //==============================================  NOTIFICATION SECTOIN =========================
 
 const obtainToken = async (req, res, next) => {
@@ -3282,7 +3320,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
      getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive , loginOTP , userList , switchType
-, totalAnswered
+, totalAnswered , answeredQuestions
 
     }
 
