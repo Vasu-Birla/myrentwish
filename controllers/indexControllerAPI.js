@@ -919,7 +919,7 @@ const Properties = async (req, res, next) => {
 
       var [[owner]] = await con.query('SELECT * from tbl_users where user_id = ? ',[userID]); 
 
-      console.log("Ownerrrrrr    --->>>>> ", owner)
+      console.log("Ownerrrrrr    --->>>>> ", row)
       row.owner_image = owner.imagePath;
     }
 
