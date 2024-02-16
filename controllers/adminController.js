@@ -668,6 +668,9 @@ const  deleteUser1 = async(req,res,next)=>{
   try {  
     await con.beginTransaction();
 
+     // Delete user's properties from tbl_prop
+     await con.query('DELETE FROM tbl_prop WHERE user_id = ?', [userID]);
+
     await con.query('DELETE FROM tbl_users WHERE user_id = ?', [userID]);
     var [users] =  await con.query('SELECT * FROM tbl_users');
 

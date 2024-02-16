@@ -386,6 +386,10 @@ const  removeAccount = async(req,res,next)=>{
     if ( user.status == "inactive") {
       return res.status(200).json({ result: "failed", message:"Deactivated Profile Cannot be deleted" });
     } 
+
+     // Delete user's properties from tbl_prop
+     await con.query('DELETE FROM tbl_prop WHERE user_id = ?', [userID]);
+
     await con.query('DELETE FROM tbl_users WHERE user_id = ?', [userID]);
    
 
