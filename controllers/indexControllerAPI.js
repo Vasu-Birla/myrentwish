@@ -892,6 +892,9 @@ const Properties = async (req, res, next) => {
   const con = await connection();
 
   try {
+
+    const { user_id, page_number, prefered_services, city, rent_amount } = req.body;
+
     const userID = req.body.user_id;
 
     // Validate if the user exists
@@ -912,8 +915,59 @@ const Properties = async (req, res, next) => {
     const offset = (page - 1) * resultsPerPage;
 
     // Fetch all properties without pagination
-    const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ?';
-    const [allProperties] = await con.query(selectPropertiesSql, [userID]);
+   // const selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ?';
+    let selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ?';
+   // const [allProperties] = await con.query(selectPropertiesSql, [userID]);
+
+
+    const filterValues = [user_id];
+
+
+    if (prefered_services) {
+      // Split the prefered_services string into an array of service names
+      const serviceNames = prefered_services.split(',');
+      // Construct the SQL condition to check if any service name matches
+      selectPropertiesSql += ' AND (';
+      serviceNames.forEach((serviceName, index) => {
+        if (index > 0) {
+          selectPropertiesSql += ' OR ';
+        }
+        selectPropertiesSql += 'prefered_services LIKE ?';
+        filterValues.push(`%${serviceName.trim()}%`);
+      });
+      selectPropertiesSql += ')';
+    }
+    if (city) {
+      selectPropertiesSql += ' AND city = ?';
+      filterValues.push(city);
+    }
+    if (rent_amount) {
+      selectPropertiesSql += ' AND rent_amount <= ?';
+      filterValues.push(rent_amount);
+    }
+    
+
+    const [filteredProperties1] = await con.query(selectPropertiesSql, filterValues);
+
+
+    // Exclude properties that do not match all criteria
+    const allProperties = filteredProperties1.filter(property => {
+
+
+      if (prefered_services && !property.prefered_services.includes(prefered_services)) {
+        return false;
+      }
+      if (city && property.city !== city) {
+        return false;
+      }
+      if (parseInt(rent_amount) && parseInt(property.rent_amount)  > parseInt(rent_amount) ) {
+        return false;
+      }
+      return true;
+    });
+
+
+
 
     // Calculate match percentage for each property
     for (const row of allProperties) {

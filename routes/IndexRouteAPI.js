@@ -72,6 +72,8 @@ router.route('/profile').post(upload.none(),profile)
 
 router.route('/updateprofile').post(upload.single('image'),updateProfile)
 
+//router.route('/updateprofile').post(upload.fields([{ name: 'image', maxCount: 1 }, { name: 'user_images', maxCount: 5 }]), updateProfile);
+
 
 
 
