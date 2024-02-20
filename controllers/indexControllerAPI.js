@@ -698,6 +698,8 @@ const addProperty = async (req, res, next) => {
       owner_email,
       title,
       prefered_gender,
+      prefered_services,
+      services_description,
       description,
       country_flag,
       country_code,
@@ -729,7 +731,7 @@ const addProperty = async (req, res, next) => {
 
     // Insert property details into the tbl_prop table
     const insertSql =
-      'INSERT INTO tbl_prop (user_id, owner_name, owner_contact, owner_email, title,prefered_gender, description, address,  country_flag, country_code, city, country, prop_type, bedroom_nums, bathroom_type, parking_type, size_sqft, rent_amount, currency, available_date, is_available, prop_status, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      'INSERT INTO tbl_prop (user_id, owner_name, owner_contact, owner_email, title,prefered_gender, prefered_services, services_description, description, address,  country_flag, country_code, city, country, prop_type, bedroom_nums, bathroom_type, parking_type, size_sqft, rent_amount, currency, available_date, is_available, prop_status, images) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
     const insertValues = [
       userID,
       owner_name,
@@ -737,6 +739,8 @@ const addProperty = async (req, res, next) => {
       owner_email,
       title,
       prefered_gender,
+      prefered_services,
+      services_description,
       description,
       address,
       country_flag,
@@ -1372,6 +1376,10 @@ const updateProperty = async (req, res, next) => {
       prop_status, // Assuming this is part of the request body
       country_flag,
       country_code ,
+      prefered_gender,
+      prefered_services,
+      services_description
+
 
     } = req.body;
 
@@ -1421,12 +1429,17 @@ const updateProperty = async (req, res, next) => {
       prop_status: prop_status || property.prop_status,
       country_flag: country_flag || property.country_flag,
       country_code: country_code || property.country_code,
+      prefered_gender: prefered_gender || property.prefered_gender,
+      prefered_services: prefered_services || property.prefered_services,
+      services_description: services_description || property.services_description,
       images: JSON.stringify(images),
     };
 
+
+
     // Update property details in the tbl_prop table
     const updateSql =
-      'UPDATE tbl_prop SET owner_name=?, owner_contact=?, owner_email=?, title=?, description=?, address=?, city=?, country=?, prop_type=?, bedroom_nums=?, bathroom_type=?, parking_type=?, size_sqft=?, rent_amount=?,  currency=?, available_date=?, is_available=?, prop_status=?, country_flag=? , country_code=?,  images=? WHERE prop_id=?';
+      'UPDATE tbl_prop SET owner_name=?, owner_contact=?, owner_email=?, title=?, description=?, address=?, city=?, country=?, prop_type=?, bedroom_nums=?, bathroom_type=?, parking_type=?, size_sqft=?, rent_amount=?,  currency=?, available_date=?, is_available=?, prop_status=?, country_flag=? , country_code=?, prefered_gender=? , prefered_services=?, services_description=?,  images=? WHERE prop_id=?';
     const updateValues = [
       updatedPropertyDetails.owner_name,
       updatedPropertyDetails.owner_contact,
@@ -1448,6 +1461,9 @@ const updateProperty = async (req, res, next) => {
       updatedPropertyDetails.prop_status,
       updatedPropertyDetails.country_flag,
       updatedPropertyDetails.country_code,
+      updatedPropertyDetails.prefered_gender,
+      updatedPropertyDetails.prefered_services,
+      updatedPropertyDetails.services_description,
       updatedPropertyDetails.images,
       propertyID,
     ];
