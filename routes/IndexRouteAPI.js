@@ -38,7 +38,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     userList,
     switchType,
     totalAnswered,
-    answeredQuestions} from '../controllers/indexControllerAPI.js';
+    answeredQuestions,
+    PropertiesFilter} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -102,6 +103,8 @@ router.route('/userList').post(upload.none(),userList)
 router.route('/addProperty').post(upload.array('images'),addProperty)
 
 router.route('/properties').post(upload.none(),Properties)
+
+router.route('/fiterproperties').post(upload.none(),PropertiesFilter)
 
 router.route('/myProperties').post(upload.none(),myProperties)
 

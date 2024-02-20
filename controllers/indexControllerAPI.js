@@ -676,6 +676,9 @@ const  removeAccount = async(req,res,next)=>{
 
 
 const addProperty = async (req, res, next) => {  
+
+console.log("add Property data from frontend --> ", req.body)
+
   const con = await connection();
   try {
    
@@ -1081,6 +1084,102 @@ if (userPreferences.prefered_type && propertyDetails.prefered_type) {
 
   return parseInt(matchPercentage);
 };
+
+
+
+
+
+//------------------  filtered Properties --------------
+
+
+const PropertiesFilter = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    const { user_id, page_number, prefered_services, city, rent_amount } = req.body;
+    const userID = req.body.user_id;
+
+    // Validate if the user exists
+    const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [user_id]);
+    if (!user) {
+      return res.status(200).json({ result: "User not found" });
+    }
+
+    console.log(user);
+
+    if (user.status == 'inactive') {
+      console.log("Inactivated user");
+      return res.status(200).json({ result: "User is Deactivated" });
+    }
+
+    const resultsPerPage = 5;
+    const offset = (page_number - 1) * resultsPerPage;
+
+    // Construct the base query for fetching properties
+    let selectPropertiesSql = 'SELECT * FROM `tbl_prop` WHERE user_id != ?';
+
+    // Apply filters based on parameters provided
+    const filterValues = [user_id];
+    if (prefered_services) {
+      selectPropertiesSql += ' AND prefered_services LIKE ?';
+      filterValues.push(`%${prefered_services}%`);
+    }
+    if (city) {
+      selectPropertiesSql += ' AND city = ?';
+      filterValues.push(city);
+    }
+    if (rent_amount) {
+      selectPropertiesSql += ' AND rent_amount <= ?';
+      filterValues.push(rent_amount);
+    }
+    
+
+    // Fetch properties based on filters
+    const [filteredProperties] = await con.query(selectPropertiesSql, filterValues);
+
+
+
+
+    for (const row of filteredProperties) {
+      row.images = JSON.parse(row.images);
+      row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
+
+      // Check if the property is in the user's interest
+      const [interestResult] = await con.query('SELECT * FROM tbl_interest WHERE user_id = ? AND prop_id = ?', [userID, row.prop_id]);
+      row.interest = (interestResult.length > 0).toString();
+
+      // Calculate match percentage
+      const matchPercentage = calculatePreferencesMatchPercentage(user, row);
+      row.match_percentage = `${matchPercentage}%`;
+
+      var ownerID = row.user_id;
+
+      var [[owner]] = await con.query('SELECT * from tbl_users where user_id = ? ',[ownerID]); 
+
+      console.log("Ownerrrrrr    --->>>>> ", row)
+      row.owner_image = owner.imagePath;
+    }
+
+
+
+
+    // Sort filtered properties by match percentage in descending order
+    filteredProperties.sort((a, b) => parseFloat(b.match_percentage) - parseFloat(a.match_percentage));
+
+    // Apply pagination after sorting
+    const propertiesOnPage = filteredProperties.slice(offset, offset + resultsPerPage);
+
+    res.json(propertiesOnPage);
+  } catch (error) {
+    console.error('Error in Products Filter API:', error);
+    res.status(200).json({ result: 'Error in filtering properties' });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
 
 
 
@@ -3336,7 +3435,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
      getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive , loginOTP , userList , switchType
-, totalAnswered , answeredQuestions
+, totalAnswered , answeredQuestions , PropertiesFilter
 
     }
 
