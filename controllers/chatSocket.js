@@ -386,7 +386,7 @@ socket.on('chatList', async (userID) =>{
 const chatList = chats.concat(chats1);
 
 // Sort the merged chat list by timestamp in ascending order
-chatList.sort((a, b) => a.timestamp - b.timestamp);
+chatList.sort((a, b) => b.timeorder - a.timeorder);
 
 
   var receivers = [];
