@@ -932,7 +932,7 @@ const Properties = async (req, res, next) => {
 
       var [[owner]] = await con.query('SELECT * from tbl_users where user_id = ? ',[ownerID]); 
 
-      console.log("Ownerrrrrr    --->>>>> ", row)
+      //console.log("Ownerrrrrr    --->>>>> ", row)
       row.owner_image = owner.imagePath;
     }
 
@@ -1120,9 +1120,23 @@ const PropertiesFilter = async (req, res, next) => {
 
     // Apply filters based on parameters provided
     const filterValues = [user_id];
+    // if (prefered_services) {
+    //   selectPropertiesSql += ' AND prefered_services LIKE ?';
+    //   filterValues.push(`%${prefered_services}%`);
+    // }
     if (prefered_services) {
-      selectPropertiesSql += ' AND prefered_services LIKE ?';
-      filterValues.push(`%${prefered_services}%`);
+      // Split the prefered_services string into an array of service names
+      const serviceNames = prefered_services.split(',');
+      // Construct the SQL condition to check if any service name matches
+      selectPropertiesSql += ' AND (';
+      serviceNames.forEach((serviceName, index) => {
+        if (index > 0) {
+          selectPropertiesSql += ' OR ';
+        }
+        selectPropertiesSql += 'prefered_services LIKE ?';
+        filterValues.push(`%${serviceName.trim()}%`);
+      });
+      selectPropertiesSql += ')';
     }
     if (city) {
       selectPropertiesSql += ' AND city = ?';
@@ -1173,7 +1187,7 @@ const PropertiesFilter = async (req, res, next) => {
 
       var [[owner]] = await con.query('SELECT * from tbl_users where user_id = ? ',[ownerID]); 
 
-      console.log("Ownerrrrrr    --->>>>> ", row)
+      //console.log("Ownerrrrrr    --->>>>> ", row)
       row.owner_image = owner.imagePath;
     }
 
