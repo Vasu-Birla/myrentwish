@@ -211,6 +211,7 @@ export default function initializeChatService(server) {
                        
                    //clients[targetId].emit("message", latestMsg); 
                    }
+                   
 
 
         }
@@ -220,8 +221,7 @@ export default function initializeChatService(server) {
 
 
              
-
-            });  // messesage socket End  
+});  // messesage socket End  
 
 
 

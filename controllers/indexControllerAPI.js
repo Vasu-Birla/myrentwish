@@ -1913,16 +1913,16 @@ const answeredQuestions = async (req, res, next) => {
     // Fetch questions and answers answered by the user
     const [rows] = await con.query('SELECT question, answer FROM tbl_user_answers WHERE user_id = ?', [userID]);
 
-    // Extract questions and answers from rows
-    // const answeredQuestions = rows.map(row => ({
-    //   question: row.question,
-    //   answer: row.answer
-    // }));
-
-    const answeredQuestions = rows.map((row, index) => ({
-      question: `Q${index + 1}. ${row.question}`,
+    //Extract questions and answers from rows
+    const answeredQuestions = rows.map(row => ({
+      question: row.question,
       answer: row.answer
     }));
+
+    // const answeredQuestions = rows.map((row, index) => ({
+    //   question: `Q${index + 1}. ${row.question}`,
+    //   answer: row.answer
+    // }));
 
     res.json(answeredQuestions);
   } catch (error) {
