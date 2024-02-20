@@ -1135,7 +1135,24 @@ const PropertiesFilter = async (req, res, next) => {
     
 
     // Fetch properties based on filters
-    const [filteredProperties] = await con.query(selectPropertiesSql, filterValues);
+    const [filteredProperties1] = await con.query(selectPropertiesSql, filterValues);
+
+
+      // Exclude properties that do not match all criteria
+      const filteredProperties = filteredProperties1.filter(property => {
+
+
+        if (prefered_services && !property.prefered_services.includes(prefered_services)) {
+          return false;
+        }
+        if (city && property.city !== city) {
+          return false;
+        }
+        if (parseInt(rent_amount) && parseInt(property.rent_amount)  > parseInt(rent_amount) ) {
+          return false;
+        }
+        return true;
+      });
 
 
 
