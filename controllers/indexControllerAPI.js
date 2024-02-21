@@ -432,16 +432,16 @@ const  removeAccount = async(req,res,next)=>{
 
       console.log("Images Length ", user.user_images.length )
 
-      console.log("type of user images ", user.user_images )
+      console.log("type of user images ", typeof user.user_images )
 
-      if(user.user_images.length > 0){
+      if(user.user_images != '' || user.user_images.length > 0){
         user.user_images = JSON.parse(user.user_images);
        
-       
-        user.user_images.forEach((item) => {
-          item.image = `${BASEURL}${item.image}`;
-          //delete item.path;
-      });
+            
+              user.user_images.forEach((item) => {
+                item.image = `${BASEURL}${item.image}`;
+                //delete item.path;
+            });
 
 
 
