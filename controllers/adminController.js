@@ -1945,10 +1945,17 @@ const appPassPost = async (req, res, next) => {
                   console.log("agreement ownerInfo - ", ownerInfo)
 
                   console.log("agreement tenantInfo - ", tenantInfo)
-                  agreements[i].owner_fullname = `${ownerInfo[0].firstname} ${ownerInfo[0].lastname}`;
+
+                  if(ownerInfo){
+                    agreements[i].owner_fullname = `${ownerInfo[0].firstname} ${ownerInfo[0].lastname}`;
+                  }
+
+                 if(tenantInfo){
+                  agreements[i].tenant_fullname = `${tenantInfo[0].firstname} ${tenantInfo[0].lastname}`;
+                 }
   
                   // Add tenant full name to the agreement
-                  agreements[i].tenant_fullname = `${tenantInfo[0].firstname} ${tenantInfo[0].lastname}`;
+                 
               }
                   
                 res.render('admin/viewagreements',{'output':'ALL Agreements Fetched','agreements':agreements})
