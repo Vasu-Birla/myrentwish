@@ -911,9 +911,7 @@ const Properties = async (req, res, next) => {
 
   try {
 
-    var { user_id, page_number, prefered_services, city, rent_amount } = req.body;
-
-    rent_amount = parseInt(rent_amount) +1;
+    const { user_id, page_number, prefered_services, city, rent_amount } = req.body;
 
     const userID = req.body.user_id;
 
