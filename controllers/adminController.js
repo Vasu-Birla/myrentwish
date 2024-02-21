@@ -1955,6 +1955,7 @@ const appPassPost = async (req, res, next) => {
     
             
             } catch (error) {
+              console.log("error in view Agreements --> ", error)
               res.render('admin/kilvish500')
             }
        
