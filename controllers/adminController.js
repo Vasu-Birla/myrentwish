@@ -2019,25 +2019,6 @@ const appPassPost = async (req, res, next) => {
 
 let jsonData = {
 
-  "Jamaica": [
-    "Black River",
-    "Browns Town",
-    "Gordon Town",
-    "Gregory Park",
-    "Kingston",
-    "Mandeville",
-    "May Pen",
-    "Moneague",
-    "Montego Bay",
-    "Negril",
-    "Ocho Rios",
-    "Old Harbour",
-    "Port Maria",
-    "Portland Cottage",
-    "Portmore",
-    "Runaway Bay",
-    "Spanish Town"
-  ],
   "Canada": [
     "100 Mile House",
     "Abbey",
