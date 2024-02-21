@@ -48,7 +48,6 @@ function setValue()
           console.log(otp);
 }
 
-let BASEURL = `http://${process.env.Host1}/uploads/`;
 
 
   const register = async (req, res, next) => {
@@ -570,7 +569,7 @@ const  removeAccount = async(req,res,next)=>{
 
       if (req.files && req.files.length > 0) {
         console.log("new Images uploaded")
-        images = req.files.map(file => ({ path: `http://${process.env.Host1}/uploads/${file.filename}` , image:file.filename }));
+        images = req.files.map(file => ({ image:file.filename }));
       } else {
         console.log("Existing Images uploaded")
         images = JSON.parse(existingUser.user_images);
@@ -1299,6 +1298,8 @@ const PropertiesFilter = async (req, res, next) => {
 
 const userList = async (req, res, next) => {
   const con = await connection();
+  
+var BASEURL = `http://${process.env.Host1}/uploads/`;
 
   try {
     const userID = req.body.user_id;
@@ -1331,11 +1332,17 @@ const userList = async (req, res, next) => {
 
     // Calculate match percentage for each property
     for (const row of allUsers) {
-      // Calculate match percentage
         if(row.user_images){
           row.user_images = JSON.parse(row.user_images) 
+       
+          row.user_images.forEach((item) => {
+            item.image = `${BASEURL}${item.image}`;
+            //delete item.path;
+        });
+
+
         }
-      
+       // Calculate match percentage
       const matchPercentage = calculateUserMatchPercentage(Ownerproperties, row);
       // console.log( typeof matchPercentage )
       row.match_percentage = `${matchPercentage}%`;
