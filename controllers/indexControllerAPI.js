@@ -415,6 +415,7 @@ const  removeAccount = async(req,res,next)=>{
 
   const profile = async (req, res, next) => {
     const con = await connection();
+    var BASEURL = `http://${process.env.Host1}/uploads/`;
     try {        
       const userID = req.body.user_id;
       const [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [userID]);
@@ -433,6 +434,15 @@ const  removeAccount = async(req,res,next)=>{
 
       if(user.user_images.length > 0){
         user.user_images = JSON.parse(user.user_images);
+       
+       
+        user.user_images.forEach((item) => {
+          item.image = `${BASEURL}${item.image}`;
+          //delete item.path;
+      });
+
+
+
       }else{
         user.user_images = [];
       }
