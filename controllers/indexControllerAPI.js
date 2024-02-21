@@ -433,6 +433,8 @@ const  removeAccount = async(req,res,next)=>{
 
       if(user.user_images.length > 0){
         user.user_images = JSON.parse(user.user_images);
+      }else{
+        user.user_images = [];
       }
 
       
@@ -1343,7 +1345,10 @@ var BASEURL = `http://${process.env.Host1}/uploads/`;
         });
 
 
+        }else{
+          row.user_images = [];
         }
+
        // Calculate match percentage
       const matchPercentage = calculateUserMatchPercentage(Ownerproperties, row);
       // console.log( typeof matchPercentage )
