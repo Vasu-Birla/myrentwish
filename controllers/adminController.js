@@ -1935,24 +1935,28 @@ const appPassPost = async (req, res, next) => {
     
               if(agreements.length > 0){
                 for (let i = 0; i < agreements.length; i++) {
+
                   // Fetch owner information
                   const [ownerInfo] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [agreements[i].owner_id]);
   
                   // Fetch tenant information
                   const [tenantInfo] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [agreements[i].tenant_id]);
   
-                  // Add owner full name to the agreement
-                  console.log("agreement ownerInfo - ", ownerInfo)
+      
 
-                  console.log("agreement tenantInfo - ", tenantInfo)
-
-                  if(ownerInfo){
+                  if(ownerInfo.length > 0){
                     agreements[i].owner_fullname = `${ownerInfo[0].firstname} ${ownerInfo[0].lastname}`;
+                  }else{
+                    agreements[i].owner_fullname = `Deleted Owner`;
                   }
 
-                 if(tenantInfo){
-                  agreements[i].tenant_fullname = `${tenantInfo[0].firstname} ${tenantInfo[0].lastname}`;
-                 }
+                  if(tenantInfo.length > 0){
+                    agreements[i].tenant_fullname = `${tenantInfo[0].firstname} ${tenantInfo[0].lastname}`;
+                  }else{
+                    agreements[i].owner_fullname = `Deleted Tenant `;
+                  }
+
+                  
   
                   // Add tenant full name to the agreement
                  
