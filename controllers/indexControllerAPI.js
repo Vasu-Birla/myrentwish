@@ -48,7 +48,7 @@ function setValue()
           console.log(otp);
 }
 
-
+let BASEURL = `http://${process.env.Host1}/uploads/`;
 
 
   const register = async (req, res, next) => {
@@ -430,7 +430,11 @@ const  removeAccount = async(req,res,next)=>{
       //   res.json({ result: "Deactivated User's Profile cannot be Open" });
       // }
 
-      user.user_images = JSON.parse(user.user_images);
+      if(user.user_images){
+        user.user_images = JSON.parse(user.user_images);
+      }
+
+      
 
       res.json(user);
     } catch (error) {
@@ -1328,6 +1332,10 @@ const userList = async (req, res, next) => {
     // Calculate match percentage for each property
     for (const row of allUsers) {
       // Calculate match percentage
+        if(row.user_images){
+          row.user_images = JSON.parse(row.user_images) 
+        }
+      
       const matchPercentage = calculateUserMatchPercentage(Ownerproperties, row);
       // console.log( typeof matchPercentage )
       row.match_percentage = `${matchPercentage}%`;
