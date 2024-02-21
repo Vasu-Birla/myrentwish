@@ -39,7 +39,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     switchType,
     totalAnswered,
     answeredQuestions,
-    PropertiesFilter} from '../controllers/indexControllerAPI.js';
+    PropertiesFilter,
+    addUserToInterest} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -119,6 +120,10 @@ router.route('/deleteProperty').post(upload.none(),deleteProperty)
 
 
 router.route('/addToInterest').post(upload.none(),addToInterest)
+
+router.route('/addUserToInterest').post(upload.none(),addUserToInterest)
+
+
 
 router.route('/propTypes').get(upload.none(),propTypes)
 

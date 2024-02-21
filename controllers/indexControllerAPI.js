@@ -1923,6 +1923,67 @@ const addToInterest = async (req, res, next) => {
 
 
 
+
+//============================== add user to Interest ====================== 
+
+
+const addUserToInterest = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    await con.beginTransaction();
+
+    var ownerID = req.body.owner_id ;
+    const userID = req.body.user_id ;
+
+    // Check if the user and property exist
+    const [userResult] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [ownerID]);
+    const [propertyResult] = await con.query('SELECT * FROM tbl_users WHERE user_id  = ?', [userID]);
+
+
+    if (!userResult[0] || !propertyResult[0]) {
+      await con.rollback();
+      return res.status(200).json({ result: "Owner or User not found" });
+    }
+
+    // Check if the user is already interested in the property
+    const [existingInterest] = await con.query('SELECT * FROM tbl_owner_interest  WHERE owner_id = ? AND user_id  = ?', [ownerID, userID]);
+
+    if (existingInterest.length > 0) {
+      await con.rollback();
+      return res.status(200).json({ result: "Owner is already interested in this User" });
+    }
+
+
+    // Add the interest to tbl_interest table
+    const insertSql = 'INSERT INTO tbl_owner_interest (owner_id, user_id ) VALUES (?, ?)';
+    await con.query(insertSql, [ownerID, userID]);
+
+    // Insert notification into tbl_notifications
+    const notificationSql = 'INSERT INTO tbl_notifications (user_id, owner_id, title, message, created_at) VALUES (?, ?, ?, ?, NOW())';
+    const notificationTitle = 'New Interest';
+    const notificationMessage = `Owner ${userResult[0].firstname} is interested to show his properties to you`;
+    await con.query(notificationSql, [userID, ownerID, notificationTitle, notificationMessage]);
+
+    await con.commit();
+    //await sendPushNotification(ownerID, ownerID);
+    res.json({ result: "success", message: "Added to interest list successfully" });
+
+  } catch (error) {
+    // Rollback the transaction in case of an error
+    await con.rollback();
+    console.error('Error in addToInterest API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
 //=================================== Questions  section ====================================== 
 
 
@@ -3548,7 +3609,7 @@ const  fetchCities= async (req, res)=>{
 export {register,  Login, Logout, ForgotPassword , resetpassword,
     profile,  obtainToken, updateProfile ,
      updatePreference, addProperty, property, Properties , myProperties , 
-     updateProperty , deleteProperty , addToInterest , getQuestions,
+     updateProperty , deleteProperty , addToInterest , addUserToInterest, getQuestions,
      addAnswer , removeAccount , propTypes , getSkills , contactUs , myTickets ,tandc , pandp , faqs,
      checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
