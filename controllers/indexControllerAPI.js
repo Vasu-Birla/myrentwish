@@ -1316,6 +1316,8 @@ const userList = async (req, res, next) => {
 var BASEURL = `http://${process.env.Host1}/uploads/`;
 
   try {
+    const { user_id, page_number, prefered_services, city, rent_amount } = req.body;
+
     const userID = req.body.user_id;
 
     // Validate if the user exists
@@ -1341,8 +1343,57 @@ var BASEURL = `http://${process.env.Host1}/uploads/`;
     const offset = (page - 1) * resultsPerPage;
 
     // Fetch all properties without pagination
-    const selectUsersSql = 'SELECT * FROM `tbl_users` WHERE user_id != ?';
-    const [allUsers] = await con.query(selectUsersSql, [userID]);
+    let selectUsersSql = 'SELECT * FROM `tbl_users` WHERE user_id != ?';
+    //const [allUsers] = await con.query(selectUsersSql, [userID]);
+
+    const filterValues = [user_id];
+
+
+    if (prefered_services) {
+      // Split the prefered_services string into an array of service names
+      const serviceNames = prefered_services.split(',');
+      // Construct the SQL condition to check if any service name matches
+      selectUsersSql += ' AND (';
+      serviceNames.forEach((serviceName, index) => {
+        if (index > 0) {
+          selectUsersSql += ' OR ';
+        }
+        selectUsersSql += 'skill LIKE ?';
+        filterValues.push(`%${serviceName.trim()}%`);
+      });
+      selectUsersSql += ')';
+    }
+    if (city) {
+      selectUsersSql += ' AND prefered_city = ?';
+      filterValues.push(city);
+    }
+    if (rent_amount) {
+      selectUsersSql += ' AND prefered_rent <= ?';
+      filterValues.push(rent_amount);
+    }
+
+
+
+     const [filteredUsers] = await con.query(selectUsersSql, filterValues);
+
+
+    // Exclude properties that do not match all criteria
+    const allUsers = filteredUsers.filter(user => {
+
+
+      if (prefered_services && !user.skill.includes(prefered_services)) {
+        return false;
+      }
+      if (city && user.prefered_city !== city) {
+        return false;
+      }
+      if (parseInt(rent_amount) && parseInt(user.prefered_rent)  > parseInt(rent_amount) ) {
+        return false;
+      }
+      return true;
+    });
+
+
 
     // Calculate match percentage for each property
     for (const row of allUsers) {
