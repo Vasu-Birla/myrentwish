@@ -81,7 +81,7 @@ router.route('/removeAccount').post(upload.none(),removeAccount)
 
 
 
-router.route('/updatePreference').post(upload.none(),updatePreference)
+router.route('/updatePreference').post(upload.array('user_images'),updatePreference)
 
 router.route('/checkPreference').post(upload.none(),checkPreferenceAvailability)
 

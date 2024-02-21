@@ -430,6 +430,8 @@ const  removeAccount = async(req,res,next)=>{
       //   res.json({ result: "Deactivated User's Profile cannot be Open" });
       // }
 
+      user.user_images = JSON.parse(user.user_images);
+
       res.json(user);
     } catch (error) {
       console.error('Error in profile API:', error);
@@ -557,6 +559,20 @@ const  removeAccount = async(req,res,next)=>{
         res.status(200).json({ result: "User not found" });
         return;
       }
+
+
+
+      let images;
+
+      if (req.files && req.files.length > 0) {
+        console.log("new Images uploaded")
+        images = req.files.map(file => ({ path: `http://${process.env.Host1}/uploads/${file.filename}` , image:file.filename }));
+      } else {
+        console.log("Existing Images uploaded")
+        images = JSON.parse(existingUser.user_images);
+      }
+
+     
   
       // Update user preferences
       const updatedPreferences = {
@@ -569,12 +585,13 @@ const  removeAccount = async(req,res,next)=>{
         prefered_rent: req.body.prefered_rent || existingUser.prefered_rent,
         about_me:req.body.about_me || existingUser.about_me,
         skill:req.body.skill || existingUser.skill,
-        prefered_type:req.body.prefered_type  || existingUser.prefered_type
+        prefered_type:req.body.prefered_type  || existingUser.prefered_type,
+        user_images: JSON.stringify(images),
       };
   
       // Update the user preferences in the database
       const updateSql =
-        'UPDATE tbl_users SET prefered_gender=?, prefered_city=?, prefered_country=?, bedroom_nums=?, bathroom_type=?, parking_type=?, prefered_type=?, prefered_rent=?,about_me=?, skill=?  WHERE user_id=?';
+        'UPDATE tbl_users SET prefered_gender=?, prefered_city=?, prefered_country=?, bedroom_nums=?, bathroom_type=?, parking_type=?, prefered_type=?, prefered_rent=?,about_me=?, user_images=? , skill=?  WHERE user_id=?';
       const updateValues = [
         updatedPreferences.prefered_gender,
         updatedPreferences.prefered_city,
@@ -585,6 +602,7 @@ const  removeAccount = async(req,res,next)=>{
         updatedPreferences.prefered_type,
         updatedPreferences.prefered_rent,        
         updatedPreferences.about_me,
+        updatedPreferences.user_images,
         updatedPreferences.skill,
         userID,
       ];
@@ -894,6 +912,8 @@ const Properties = async (req, res, next) => {
   try {
 
     const { user_id, page_number, prefered_services, city, rent_amount } = req.body;
+
+    rent_amount = parseInt(rent_amount) +1;
 
     const userID = req.body.user_id;
 
