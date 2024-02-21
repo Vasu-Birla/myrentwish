@@ -1942,6 +1942,9 @@ const appPassPost = async (req, res, next) => {
                   const [tenantInfo] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [agreements[i].tenant_id]);
   
                   // Add owner full name to the agreement
+                  console.log("agreement ownerInfo - ", ownerInfo)
+
+                  console.log("agreement tenantInfo - ", tenantInfo)
                   agreements[i].owner_fullname = `${ownerInfo[0].firstname} ${ownerInfo[0].lastname}`;
   
                   // Add tenant full name to the agreement
