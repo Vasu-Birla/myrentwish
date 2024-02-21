@@ -430,7 +430,9 @@ const  removeAccount = async(req,res,next)=>{
       //   res.json({ result: "Deactivated User's Profile cannot be Open" });
       // }
 
-      console.log(" user.user_images", user.user_images.length )
+      console.log("Images Length ", user.user_images.length )
+
+      console.log("type of user images ", user.user_images )
 
       if(user.user_images.length > 0){
         user.user_images = JSON.parse(user.user_images);
