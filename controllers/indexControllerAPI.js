@@ -1960,10 +1960,10 @@ const addUserToInterest = async (req, res, next) => {
     await con.query(insertSql, [ownerID, userID]);
 
     // Insert notification into tbl_notifications
-    const notificationSql = 'INSERT INTO tbl_notifications (user_id, owner_id, title, message, created_at) VALUES (?, ?, ?, ?, NOW())';
+    const notificationSql = 'INSERT INTO tbl_notifications (user_id, owner_id, property_id, title, message, created_at) VALUES (?, ?, ?, ?, ?, NOW())';
     const notificationTitle = 'New Interest';
     const notificationMessage = `Owner ${userResult[0].firstname} is interested to show his properties to you`;
-    await con.query(notificationSql, [userID, ownerID, notificationTitle, notificationMessage]);
+    await con.query(notificationSql, [userID, ownerID, 0, notificationTitle, notificationMessage]);
 
     await con.commit();
     //await sendPushNotification(ownerID, ownerID);
