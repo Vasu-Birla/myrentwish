@@ -1435,7 +1435,7 @@ const calculateUserMatchPercentage = (ownerProperties, user) => {
 
     totalMatchPercentage += matchPercentage;
 
-    console.log(totalMatchPercentage);
+    //console.log(totalMatchPercentage);
   });
 
   // Calculate average match percentage across all properties
