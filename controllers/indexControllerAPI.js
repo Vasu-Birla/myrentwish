@@ -586,7 +586,11 @@ const  removeAccount = async(req,res,next)=>{
         images = req.files.map(file => ({ image:file.filename }));
       } else {
         console.log("Existing Images uploaded")
-        images = JSON.parse(existingUser.user_images);
+
+        if(existingUser.user_images.length > 0){
+          images = JSON.parse(existingUser.user_images);
+        }
+       
       }
 
      
