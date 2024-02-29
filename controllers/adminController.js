@@ -1185,28 +1185,29 @@ const skillsPost = async (req, res, next) => {
   const con = await connection();
 
   try {
-    const { skill } = req.body;
 
-    // Check if the prop_type already exists
+    const { skill, subcategories } = req.body;
+
+    // Check if the skill already exists
     const [existingSkill] = await con.query('SELECT * FROM tbl_skills WHERE skill = ?', [skill]);
 
     if (existingSkill.length > 0) {
-      // Return an error if the prop_type already exists
+      // Return an error if the skill already exists
       const [skills] = await con.query('SELECT * FROM tbl_skills');
       return res.render('admin/skills', { 'skills': skills, 'output': 'Error: Can not add Duplicate Skill' });
     }
-      
 
     await con.beginTransaction();
 
-    // Insert the prop_type value into tbl_proptype
-    await con.query('INSERT INTO tbl_skills (skill) VALUES (?)', [skill]);
+    // Insert the skill value into tbl_skills
+    await con.query('INSERT INTO tbl_skills (skill, skill_subcats) VALUES (?, ?)', [skill, subcategories.join(',')]);
 
-    // Retrieve updated proptypes after insertion
+    // Retrieve updated skills after insertion
     const [skills] = await con.query('SELECT * FROM tbl_skills');
 
     await con.commit();
     res.render('admin/skills', { 'skills': skills, 'output': 'Skill Added' });
+  
   } catch (error) {
     await con.rollback();
     console.error('Error in propTypePost API:', error);

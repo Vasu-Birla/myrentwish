@@ -1866,7 +1866,7 @@ const propTypes = async (req, res, next) => {
 
 
 
-const getSkills = async (req, res, next) => {
+const getSkills29feb = async (req, res, next) => {
   const con = await connection();
 
   try {
@@ -1887,6 +1887,37 @@ const getSkills = async (req, res, next) => {
     }
   }
 };
+
+const getSkills = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    const selectSql = 'SELECT * FROM tbl_skills';
+    const [skills] = await con.query(selectSql);
+
+    // Modify the skills array to convert subcategories from comma-separated string to array
+    const formattedSkills = skills.map(skill => {
+      if (skill.skill_subcats) {
+        skill.subcategories = skill.skill_subcats.split(',');
+      } else {
+        skill.subcategories = []; // If no subcategories, set it to an empty array
+      }
+      // Remove skill_subcats property as it's not needed anymore
+      delete skill.skill_subcats;
+      return skill;
+    });
+
+    res.json(formattedSkills);
+  } catch (error) {
+    console.error('Error in getSkills:', error);
+    res.status(500).json({ result: 'failed', message: 'Internal Server Error' });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
 
 
 
