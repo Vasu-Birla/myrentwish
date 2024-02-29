@@ -9,7 +9,7 @@
        <section class="section">
            <div class="fully-page">
              <div class="full-headings">
-               <h4> Property Type Management </h4>
+               <h4> Skill/Service Types Management </h4>
              </div>
              <div class="box-bodys">
               <div id="successMessage" class="alert alert-success d-none">
@@ -51,6 +51,7 @@
                         <option value="Activity">Activity</option>
                         <option value="Business">Business</option>
                         <option value="Childcare">Childcare</option>
+                        <option value="Companionship">Companionship</option>
                         <option value="Cooking">Cooking</option>
                         <option value="Educational/learning">Educational/learning</option>
                         <option value="Ground work">Ground work</option>
@@ -76,7 +77,17 @@
               <div class="form-group add-admin col-md-12" id="subcategories-container">
                 <label class="control-label" for="subcategories"> Subcategories </label>
                 <div class="subcategories">
-                  <!-- Subcategories will be added dynamically here -->
+                 
+
+
+                  <div class="input-group mb-2">
+                    <input type="text" class="form-control" name="subcategories[]" placeholder="Enter Skill Subcategory" required>
+                    <div class="input-group-append">
+                    <button class="btn btn-danger removeSubcategory" type="button">Remove</button>
+                    </div>
+                  </div>
+
+
                 </div>
                 <button type="button" class="btn btn-primary mt-4" id="addSubcategory">Add Skill Subcategory</button>
               </div>
@@ -113,6 +124,7 @@
                             <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 30.0781px;">Id</th>
                           <!-- <th class="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Date: activate to sort column descending" style="width: 30.156px;">box</th> -->
                           <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 80.0781px;">Type</th>
+                          <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 80.0781px;">Skill's Subcategories</th>
 
                           <!-- <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Net: activate to sort column ascending" style="width: 75.5625px;">Status</th> -->
                           <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 110.156px;">Action</th>
@@ -138,6 +150,14 @@
                               <input type="text" class="edit-input form-control" value="<%= skills[i].prop_type %>" style="display:none;">
                               <button class="btn btn-success save-action" data-index="<%= i %>" data-user-id="<%= skills[i].id %>" style="display:none;">Save</button>   
                         
+
+                              <td>
+                                <% var subcategories = skills[i].skill_subcats.split(','); %>
+                                <% subcategories.forEach(function(subcategory) { %>                    
+                                  <button type="button" class="btn btn btn-info btn-sm extra-small-btn m-1"><%= subcategory.trim() %></button>
+                                <% }); %>
+                              </td>
+
     
                               <td>
                                 <div class="dropdown">
