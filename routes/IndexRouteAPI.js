@@ -40,7 +40,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     totalAnswered,
     answeredQuestions,
     PropertiesFilter,
-    addUserToInterest} from '../controllers/indexControllerAPI.js';
+    addUserToInterest,
+    servicesdetails} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -162,6 +163,11 @@ router.route('/myTickets').post(upload.none(),myTickets)
 
 
 router.route('/tandc').get(upload.none(),tandc)
+
+router.route('/servicesdetails').get(upload.none(),servicesdetails)
+
+
+
 
 router.route('/pandp').get(upload.none(),pandp)
 

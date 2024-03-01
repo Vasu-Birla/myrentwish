@@ -3711,6 +3711,45 @@ const  fetchCities= async (req, res)=>{
   };
   
 
+
+
+  //=============== services Details ---------------- 
+
+
+
+
+
+  const servicesdetails = async (req, res, next) => {
+    const con = await connection();
+  
+    try {  
+      const [result] = await con.query('SELECT * FROM tbl_servicesdetails where id = ?', [1]);
+      if (result.length > 0) {
+        const termsContent = result[0].terms;
+  
+  
+          // Wrap the terms content in a container with 250% zoom level
+          const zoomedContent = `<div style="zoom: 250%;">${termsContent}</div>`;
+        
+          // Return the HTML content with zoom applied as a response
+          res.send(zoomedContent);
+       // res.send(termsContent);
+      } else { 
+        res.status(200).send('Services Details not found');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
+    } finally {
+      con.release();
+    }
+  
+  
+  };
+  
+
+
+
 export {register,  Login, Logout, ForgotPassword , resetpassword,
     profile,  obtainToken, updateProfile ,
      updatePreference, addProperty, property, Properties , myProperties , 
@@ -3719,7 +3758,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
      getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive , loginOTP , userList , switchType
-, totalAnswered , answeredQuestions , PropertiesFilter
+, totalAnswered , answeredQuestions , PropertiesFilter, servicesdetails
 
     }
 

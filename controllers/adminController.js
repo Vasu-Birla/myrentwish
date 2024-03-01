@@ -4271,7 +4271,76 @@ let jsonData = {
       }
   };
   
-      
+  
+  
+  //--------------add service ----------- 
+
+
+  
+
+const addservicesDetails = async(req,res,next)=>{   
+  const con = await connection(); 
+ 
+      try {
+        const [tandcs] = await con.query('SELECT * FROM tbl_servicesdetails');   
+        res.render('admin/addservicesDetails',{'output':'T & C Fetched','tandcs':tandcs})
+      } catch (error) {
+        res.render('admin/kilvish500')
+      }
+ 
+  }
+
+
+
+  const addservicesDetailsPost = async (req, res, next) => {
+    const con = await connection();
+  
+    try {
+      await con.beginTransaction();
+  
+      const termsContent = decodeURIComponent(req.body.tandc);
+  
+      //const tandcID = decodeURIComponent(req.body.tandcID);   //  For multiple TandC if required in Future 
+  
+      const [result] = await con.query('SELECT * FROM tbl_servicesdetails where id = ?', [1]);
+  
+      if (result.length > 0) {
+        const [results] = await con.query('UPDATE tbl_servicesdetails SET terms = ? WHERE id = ?', [termsContent, 1]);
+  
+        const [tandcs] = await con.query('SELECT * FROM tbl_servicesdetails');
+  
+        if (results) {
+          await con.commit();
+          res.render('admin/addservicesDetails', { output: 'Services Details Updated Successfully !!', tandcs: tandcs });
+        } else {
+          await con.rollback();
+          res.render('admin/addservicesDetails', { output: 'Failed to update Services Details', tandcs: tandcs });
+        }
+      } else {
+        await con.query('ALTER TABLE `tbl_servicesdetails` AUTO_INCREMENT = 1');
+        const sql = 'INSERT INTO `tbl_servicesdetails` ( terms ) VALUES (?)';
+        const values = [termsContent];
+        const [results] = await con.query(sql, values);
+        const [tandcs] = await con.query('SELECT * FROM tbl_servicesdetails');
+  
+        if (results) {
+          await con.commit();
+          res.render('admin/addservicesDetails', { output: 'Services Details Added Successfully !!', tandcs: tandcs });
+        } else {
+          await con.rollback();
+          res.render('admin/addservicesDetails', { output: 'Failed to add Services Details ', tandcs: tandcs });
+        }
+      }
+    } catch (error) {
+      await con.rollback();
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
+    } finally {
+      con.release();
+    }
+  };
+
+
 
 
 
@@ -4289,7 +4358,7 @@ export {homePage,
         deletetandc , appPass, appPassPost , ForgotPassword , sendOTP , verifyOTP , resetpassword , NotifyPost ,
       
         rentAgreement  , rentAgreementPost , deleteAgreement ,
-         viewAgreements ,updateAgreementStatus , addLocations , addLocationsPost , deleteLocation }
+         viewAgreements ,updateAgreementStatus , addLocations , addLocationsPost , deleteLocation , addservicesDetails , addservicesDetailsPost }
 
 
          
