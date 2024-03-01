@@ -595,7 +595,7 @@ const  removeAccount = async(req,res,next)=>{
        
       }
 
-     
+      
   
       // Update user preferences
       const updatedPreferences = {
@@ -608,13 +608,14 @@ const  removeAccount = async(req,res,next)=>{
         prefered_rent: req.body.prefered_rent || existingUser.prefered_rent,
         about_me:req.body.about_me || existingUser.about_me,
         skill:req.body.skill || existingUser.skill,
+        skill_subcats:req.body.skill_subcats || existingUser.skill_subcats,
         prefered_type:req.body.prefered_type  || existingUser.prefered_type,
         user_images: JSON.stringify(images),
       };
   
       // Update the user preferences in the database
       const updateSql =
-        'UPDATE tbl_users SET prefered_gender=?, prefered_city=?, prefered_country=?, bedroom_nums=?, bathroom_type=?, parking_type=?, prefered_type=?, prefered_rent=?,about_me=?, user_images=? , skill=?  WHERE user_id=?';
+        'UPDATE tbl_users SET prefered_gender=?, prefered_city=?, prefered_country=?, bedroom_nums=?, bathroom_type=?, parking_type=?, prefered_type=?, prefered_rent=?,about_me=?, user_images=? , skill=? , skill_subcats=?  WHERE user_id=?';
       const updateValues = [
         updatedPreferences.prefered_gender,
         updatedPreferences.prefered_city,
@@ -627,6 +628,7 @@ const  removeAccount = async(req,res,next)=>{
         updatedPreferences.about_me,
         updatedPreferences.user_images,
         updatedPreferences.skill,
+        updatedPreferences.skill_subcats,
         userID,
       ];
   
