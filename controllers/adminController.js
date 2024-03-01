@@ -4283,7 +4283,7 @@ const addservicesDetails = async(req,res,next)=>{
  
       try {
         const [tandcs] = await con.query('SELECT * FROM tbl_servicesdetails');   
-        res.render('admin/addservicesDetails',{'output':'T & C Fetched','tandcs':tandcs})
+        res.render('admin/addservicesDetails',{'output':'Service Details Fetched','tandcs':tandcs})
       } catch (error) {
         res.render('admin/kilvish500')
       }

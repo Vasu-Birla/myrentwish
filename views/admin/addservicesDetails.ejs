@@ -36,7 +36,7 @@
                <!--  Tect Editor End   -->
 
                	<!-- alert msgs  -->
-                 <% if (output === 'Failed to update Terms&Condition' || output === 'Failed to add Terms&Condition ' || output === 'Failed to Delete') { %>
+                 <% if (output === 'Failed to update Services Details' || output === 'Failed to add Services Details ' || output === 'Failed to Delete') { %>
                
                   <div class="alert alert-danger">
                     <%= output %>
@@ -73,7 +73,7 @@
                                   <button class="btn mt-1 mb-1 btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</button>
                                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item"  onclick="updatetandc('<%- tandcs[i].id %>','<%= JSON.stringify(tandcs[i].terms) %>')" href="#">Edit</a>
-                                    <a class="dropdown-item" href="/admin/deletetandc?tandcID=<%= tandcs[i].id %>"  >Delete</a>                                       
+                                    <a class="dropdown-item" href="/admin/deleteServiceDetails?tandcID=<%= tandcs[i].id %>"  >Delete</a>                                       
                                   </div>
                                 </div>
                               </td>
