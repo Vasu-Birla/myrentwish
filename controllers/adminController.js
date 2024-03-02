@@ -1722,23 +1722,58 @@ const sendMailtoUser = async (req, res, next) => {
   const con = await connection();
 
   try {
+
+
+    await con.beginTransaction();
+
       const email = req.body.recipientEmail;
       const subject = req.body.emailSubject;
       const message = req.body.emailMessage;
+      const ticket_number = req.body.ticket_number;
+
+      const complain_number = ticket_number;
+
+
+      const [Queries] = await con.query('SELECT * FROM tbl_queries WHERE status IN (?, ?) ORDER BY id DESC', ['opened', 'closed']);
+
+      const [queryResult] = await con.query('SELECT status, closed_by FROM tbl_queries WHERE complain_number = ?', [ticket_number]);
+
+      if (queryResult.length > 0) {
+        const { status, closed_by } = queryResult[0];
+  
+        if (status === 'closed') {
+          const replyMessage = `This ticket is closed by ${closed_by === 'support_executive' ? 'support executive' : 'user'}`;
+  
+          await con.commit();
+          return res.render('queries', { "output": replyMessage, "queries": Queries });
+        }
+      }
+
+     
+      const userID = '0';
+      const role = userID == '0' ? 'support_executive' : 'customer';
+
+      await con.query(
+        'INSERT INTO tbl_complain_threads (complain_number, user_id, role, message) VALUES (?, ?, ?, ?)',
+        [complain_number, userID, role, message]
+      );
+  
+      await con.commit();
+
 
       // Call the responsetoQuery function to send an email
       responsetoQuery(email, message, subject);
 
       // Fetch queries from the tbl_queries table
-      const [Queries] = await con.query('SELECT * FROM tbl_queries WHERE status IN (?, ?) ORDER BY id DESC', ['opened', 'closed']);
+     
 
       if (Queries) {
-          res.render('queries', { "output": "Email Sent to " + email + " Successfully", "queries": Queries });
+          res.render('queries', { "output": "Ticket Response Sent to " + email + " and User's Account Successfully", "queries": Queries });
       } else {
           res.render('queries', { "output": "Failed to send Email", "queries": Queries });
       }
   } catch (error) {
-      console.error('Error in sendMailtoUser API:', error);
+      console.error('Error in ThreadReply by Admin & sendMailtoUser API:', error);
       res.status(500).json({ result: 'Internal Server Error' });
   } finally {
       con.release();

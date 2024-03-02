@@ -2449,6 +2449,19 @@ const contactUs = async (req, res, next) => {
     const insertSql = 'INSERT INTO tbl_queries (user_id, subject, email, message, complain_number) VALUES (?, ?, ?, ?, ?)';
     const [result] = await con.query(insertSql, [user_id, subject, email, message, complain_number]);
 
+
+
+      // Determine the role based on the presence of user_id
+    const role = 'customer';
+
+    // Insert the reply into the tbl_complain_threads table
+    await con.query(
+      'INSERT INTO tbl_complain_threads (complain_number, user_id, role, message) VALUES (?, ?, ?, ?)',
+      [complain_number, user_id, role, message]
+    );
+
+
+
     await con.commit();
 
     res.json({ result: 'success', message: 'Contact query added successfully', complain_number });
@@ -3913,6 +3926,121 @@ const messageTime = messageDate.toLocaleTimeString([], { hour: '2-digit', minute
 //================= Chat conversation end ==================
   
 
+//===============  Ticket Thread ---------- 
+
+
+const ThreadReply = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    await con.beginTransaction();
+
+    const { complain_number, message } = req.body;
+    const user_id = req.body.user_id; // Get user_id from the request body
+
+    // Check if the ticket is closed
+    const [queryResult] = await con.query('SELECT status, closed_by FROM tbl_queries WHERE complain_number = ?', [complain_number]);
+
+    if (queryResult.length > 0) {
+      const { status, closed_by } = queryResult[0];
+
+      if (status === 'closed') {
+        const replyMessage = `This ticket is closed by ${closed_by === 'support_executive' ? 'support executive' : 'user'}`;
+
+        await con.commit();
+        return res.status(200).json({ result: replyMessage });
+      }
+    }
+
+    // Determine the role based on the presence of user_id
+    const role = user_id == '0' ? 'support_executive' : 'customer';
+
+    // Insert the reply into the tbl_complain_threads table
+    await con.query(
+      'INSERT INTO tbl_complain_threads (complain_number, user_id, role, message) VALUES (?, ?, ?, ?)',
+      [complain_number, user_id, role, message]
+    );
+
+    await con.commit();
+
+    res.status(200).json({ result: 'Success' });
+  } catch (error) {
+    await con.rollback();
+    console.error('Error in Thread Reply API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
+
+const FetchUserQueries = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    const { user_id } = req.body;
+
+    // Fetch all queries of the specified user from tbl_queries
+    const [userQueries] = await con.query('SELECT * FROM tbl_queries WHERE user_id = ?', [user_id]);
+
+
+    const formatteduserQueries = userQueries.map(msg => {
+      const messageDate = new Date(msg.timestamp);
+      const formattedDate = messageDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '-');
+      const formattedTime = messageDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      return { ...msg, timestamp: `${formattedDate} ${formattedTime}` };
+    });
+
+   
+    res.status(200).json(formatteduserQueries);
+  } catch (error) {
+    console.error('Error in Fetch User Queries API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
+
+const fetchSingleThread = async (req, res, next) => {
+  const con = await connection();
+
+  try {
+    const { user_id, complain_number } = req.body;
+
+    // Fetch all conversations of the specified user for the given complain_number
+    const [conversation] = await con.query(
+      'SELECT * FROM tbl_complain_threads WHERE user_id = ? AND complain_number = ? ORDER BY id DESC',
+      [user_id, complain_number]
+    );
+
+
+    const formattedConversation = conversation.map(msg => {
+      const messageDate = new Date(msg.timestamp);
+      const formattedDate = messageDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '-');
+      const formattedTime = messageDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      return { ...msg, timestamp: `${formattedDate} ${formattedTime}` };
+    });
+
+    res.status(200).json( formattedConversation );
+  } catch (error) {
+    console.error('Error in Fetch Single Thread API:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+  } finally {
+    if (con) {
+      con.release();
+    }
+  }
+};
+
+
 
 
 export {register,  Login, Logout, ForgotPassword , resetpassword,
@@ -3923,7 +4051,8 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
      getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive , loginOTP , userList , switchType
-, totalAnswered , answeredQuestions , PropertiesFilter, servicesdetails, chatConversation
+, totalAnswered , answeredQuestions , PropertiesFilter, servicesdetails, chatConversation , ThreadReply , FetchUserQueries,
+fetchSingleThread
 
     }
 

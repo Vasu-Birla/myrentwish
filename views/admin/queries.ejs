@@ -21,6 +21,9 @@
             <label for="recipientEmail">Recipient Email:</label>
             <input type="email" class="form-control" id="recipientEmail" name="recipientEmail" value="" readonly>
           </div>
+
+          <input type="hidden" class="form-control" id="ticket_number" name="ticket_number" value="" readonly>
+          
           <div class="form-group">
             <label for="emailSubject">Subject:</label>
             <input type="text" class="form-control" id="emailSubject" name="emailSubject" required>
@@ -48,6 +51,20 @@
                 <div class="full-headings">
                   <h4> USER QUERIES MANAGEMENT </h4>
                 </div>
+                
+             
+              <% if (output && output.startsWith('Ticket Response')) { %>
+                <div class="alert  alert-success">
+                  <%= output %>
+                </div> 
+              <% } else if(output) { %>
+                <div class="alert alert-danger">
+                  <%= output %>
+                </div>   
+              <% } %>
+              
+
+
               <!--  -->
               <div class="table-reponsive box">
                 <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
@@ -80,7 +97,7 @@
                         <td>  <%- queries[i].message %> </td>
 
                         
-                        <td> <button style=" background-color: rgb(255, 255, 255); color: rgb(12, 17, 59); font-weight: bold; " aria-pressed="true" data-toggle="modal" data-target="#emailModal" data-email="<%- queries[i].email %>"> <%- queries[i].email %>  </button> </td>
+                        <td> <button style=" background-color: rgb(255, 255, 255); color: rgb(12, 17, 59); font-weight: bold; " aria-pressed="true" data-toggle="modal" data-target="#emailModal" data-ticket="<%- queries[i].complain_number %>" data-email="<%- queries[i].email %>"> <%- queries[i].email %>  </button> </td>
 
                   
 
@@ -193,10 +210,12 @@ $(document).ready(function() {
   $('#emailModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
       var recipientEmail = button.data('email'); // Extract email from data-email attribute
+      var ticket_number = button.data('ticket'); // Extract email from data-email attribute
       var modal = $(this);
   
       // Populate the recipient email field
       modal.find('#recipientEmail').val(recipientEmail);
+      modal.find('#ticket_number').val(ticket_number);
     });
   
 

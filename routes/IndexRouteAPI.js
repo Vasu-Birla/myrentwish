@@ -42,7 +42,10 @@ import { register ,Login, Logout,  ForgotPassword ,
     PropertiesFilter,
     addUserToInterest,
     servicesdetails,
-    chatConversation} from '../controllers/indexControllerAPI.js';
+    chatConversation,
+    ThreadReply,
+    FetchUserQueries,
+    fetchSingleThread} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -235,6 +238,13 @@ router.route('/switchType').post(upload.none(), switchType )
 
 
 router.route('/chatConversation').post(upload.none(), chatConversation )
+
+router.route('/ThreadReply').post(upload.none(), ThreadReply )
+
+router.route('/FetchUserQueries').post(upload.none(), FetchUserQueries )
+
+
+router.route('/fetchSingleThread').post(upload.none(), fetchSingleThread )
 
 
 
