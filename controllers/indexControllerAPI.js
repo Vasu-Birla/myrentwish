@@ -3788,6 +3788,18 @@ const  fetchCities= async (req, res)=>{
     try {
         const { user_from, user_to } = req.body;
 
+
+        const [userFromExists] = await con.query('SELECT COUNT(*) as count FROM tbl_users WHERE user_id = ?', [user_from]);
+        if (userFromExists[0].count === 0) {
+            return res.status(404).json({ result: 'failed', message: 'Sender not found' });
+        }
+
+        // Check if user_to exists in tbl_users
+        const [userToExists] = await con.query('SELECT COUNT(*) as count FROM tbl_users WHERE user_id = ?', [user_to]);
+        if (userToExists[0].count === 0) {
+            return res.status(404).json({ result: 'failed', message: 'Receiver not found' });
+        }
+
         // Retrieve messages between user_from and user_to
         const [messages] = await con.query('SELECT * FROM messages WHERE (user_from = ? AND user_to = ?) OR (user_from = ? AND user_to = ?) ORDER BY timestamp ASC', [user_from, user_to, user_to, user_from]);
 
