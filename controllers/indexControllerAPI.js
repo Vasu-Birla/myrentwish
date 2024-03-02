@@ -3823,7 +3823,7 @@ const  fetchCities= async (req, res)=>{
               font-family: 'Segoe UI Emoji', 'Noto Color Emoji', 'Twemoji', sans-serif;
           }
             @page {
-                margin: 1in;
+                margin: 0.5in;
             }
             .conversation-title, .date-header {
                 text-align: center;
