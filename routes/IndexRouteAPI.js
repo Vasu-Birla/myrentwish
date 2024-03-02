@@ -41,7 +41,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     answeredQuestions,
     PropertiesFilter,
     addUserToInterest,
-    servicesdetails} from '../controllers/indexControllerAPI.js';
+    servicesdetails,
+    chatConversation} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -231,6 +232,13 @@ router.route('/scrape_onlyfans_profile').get(upload.none(), getOnlyFansProfile )
 
 
 router.route('/switchType').post(upload.none(), switchType )
+
+
+router.route('/chatConversation').post(upload.none(), chatConversation )
+
+
+
+
 
 
 

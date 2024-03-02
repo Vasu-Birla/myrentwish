@@ -5,6 +5,7 @@ import connection from '../config.js';
 import axios from 'axios';
 import cheerio from 'cheerio';
 
+import { fileURLToPath } from 'url';
 
 const con = await connection();
 import * as path from 'path';
@@ -18,7 +19,7 @@ import puppeteer from 'puppeteer';
 import { ApifyClient } from 'apify-client';
 import jsdom from 'jsdom';
 
-
+import pdf from 'html-pdf';
 
 import 'jspdf-autotable'; // If you want to use autotable for better table support
 
@@ -3748,6 +3749,137 @@ const  fetchCities= async (req, res)=>{
   
   
   };
+
+
+
+  //============= chat Conversation download --------------- 
+
+
+
+  const chatConversation1 = async (req, res, next) => {
+    const con = await connection();
+  
+    try {
+      await con.beginTransaction();
+  
+      const { user_from, user_to } = req.body;
+  
+
+      await con.commit();
+  
+    } catch (error) {
+      await con.rollback();
+      console.error('Error in Chat Conversation API:', error);
+      res.status(200).json({ result: 'Internal Server Error' });
+    } finally {
+      if (con) {
+        con.release();
+      }
+    }
+  };
+
+
+
+
+  const chatConversation = async (req, res, next) => {
+    const con = await connection();
+    const BASEURL = `http://${process.env.Host1}/chatUploads/`;
+
+    try {
+        const { user_from, user_to } = req.body;
+
+        // Retrieve messages between user_from and user_to
+        const [messages] = await con.query('SELECT * FROM messages WHERE (user_from = ? AND user_to = ?) OR (user_from = ? AND user_to = ?) ORDER BY timestamp ASC', [user_from, user_to, user_to, user_from]);
+
+        // Fetch user names
+        const [userFromInfo] = await con.query('SELECT firstname, lastname FROM tbl_users WHERE user_id = ?', [user_from]);
+        const [userToInfo] = await con.query('SELECT firstname, lastname FROM tbl_users WHERE user_id = ?', [user_to]);
+
+        const userFromName = `${userFromInfo[0].firstname} ${userFromInfo[0].lastname}`;
+        const userToName = `${userToInfo[0].firstname} ${userToInfo[0].lastname}`;
+
+        let htmlContent = `
+        <style>
+            @page {
+                margin: 1in;
+            }
+            .conversation-title, .date-header {
+                text-align: center;
+            }
+        </style>
+        <div class="conversation-title"><h4>Conversation between ${userFromName} and ${userToName}</h4></div>
+        <br><br>
+        <div style="margin: 20px 0;">
+    `;
+    
+    
+    let currentDate = '';
+    
+    messages.forEach(message => {
+        const messageDate = new Date(message.timestamp * 1000); // Convert timestamp to milliseconds
+        const messageDateString = messageDate.toDateString();
+        const messageTime = messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+        // Check if message belongs to a new date
+        if (messageDateString !== currentDate) {
+            currentDate = messageDateString;
+            htmlContent += `<br><div class="date-header"><h4>${currentDate}</h4></div><br>`;
+        }
+    
+        // Format the message with sender's name, message, and timestamp
+        const messageHtml = `
+            <div style="margin-bottom: 10px;">
+                <div style="text-align: ${message.user_from === user_from ? 'right' : 'left'};">
+                    <p style="font-size: 12px; margin: 0;">${message.user_from === user_from ? userFromName : userToName} - ${messageTime}</p>
+                    <div style="background-color: ${message.user_from === user_from ? '#DCF8C6' : '#E3E3E3'}; border-radius: ${message.user_from === user_from ? '10px 0 10px 10px' : '0 10px 10px 10px'}; padding: 10px; display: inline-block; max-width: 70%;">
+                        <p style="margin: 0;">${message.message}</p>
+                    </div>
+
+                    ${message.mimetype && (message.mimetype.startsWith('image')) ? `<br> <img src="${BASEURL}${message.filename}" alt="Media" style="max-width: 20% !important;"/>` : ''}
+                    
+                    ${message.mimetype && message.mimetype.startsWith('video') ? `<br> <video controls><source src="${BASEURL}${message.filePath}" type="${message.mimetype}"></video>` : ''}
+
+                </div>
+            </div>
+        `;
+    
+        htmlContent += messageHtml;
+ 
+    });
+    
+    htmlContent += '</div>'; // Close the conversation div
+    
+
+        const browser = await puppeteer.launch({
+            args: ['--no-sandbox'],
+            headless: 'new',
+        });
+
+        const page = await browser.newPage();
+
+        await page.setContent(htmlContent);
+
+        const pdfBuffer = await page.pdf();
+
+        await browser.close();
+
+        const pdfFileName = `From_${user_from}_To_${user_to}.pdf`;
+        const filePath = path.join('public', 'chatUploads', pdfFileName);
+        fs.writeFileSync(filePath, pdfBuffer);
+
+        res.json({ result: 'success', pdf_url: `${BASEURL}${pdfFileName}` });
+    } catch (error) {
+        console.error('Error in Chat Conversation API:', error);
+        res.status(500).json({ result: 'failed', message: 'Internal Server Error' });
+    } finally {
+        if (con) {
+            con.release();
+        }
+    }
+};
+
+
+//================= Chat conversation end ==================
   
 
 
@@ -3760,7 +3892,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
      checkPreferenceAvailability  , agreements, createPDFWithSignatureField,
 
      getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive , loginOTP , userList , switchType
-, totalAnswered , answeredQuestions , PropertiesFilter, servicesdetails
+, totalAnswered , answeredQuestions , PropertiesFilter, servicesdetails, chatConversation
 
     }
 
