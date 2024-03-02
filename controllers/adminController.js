@@ -1708,7 +1708,10 @@ const QueriesPost = async(req,res,next)=>{
           var newStatus = "opened"
       }  
   
-      const [results] = await con.query('UPDATE tbl_queries SET status = ? WHERE id = ?', [newStatus, queryID]);
+      //const [results] = await con.query('UPDATE tbl_queries SET status = ? WHERE id = ?', [newStatus, queryID]);
+
+      const [results] = await con.query('UPDATE tbl_queries SET status = ?, closed_by = ? WHERE id = ?', [newStatus, 'support_executive', queryID]);
+
           if(results){
               res.json({ msg: 'Action Taken on Query'})
        }
