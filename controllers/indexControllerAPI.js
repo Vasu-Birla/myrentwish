@@ -3818,6 +3818,10 @@ const  fetchCities= async (req, res)=>{
 
         let htmlContent = `
         <style>
+
+            body {
+              font-family: 'Segoe UI Emoji', 'Noto Color Emoji', 'Twemoji', sans-serif;
+          }
             @page {
                 margin: 1in;
             }
