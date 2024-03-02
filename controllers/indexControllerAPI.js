@@ -3818,11 +3818,10 @@ const  fetchCities= async (req, res)=>{
     messages.forEach(message => {
     
 
-        const messageDate = new Date(`${message.timestamp.replace(' ', 'T')}Z`);
+        const messageDate = new Date(message.timestamp); // Parse the timestamp string directly
+const messageDateString = messageDate.toDateString();
+const messageTime = messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    // Format the date and time using the `toLocaleString` method
-    const messageDateString = messageDate.toLocaleDateString();
-    const messageTime = messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     
         // Check if message belongs to a new date
         if (messageDateString !== currentDate) {
