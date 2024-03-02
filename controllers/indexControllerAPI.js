@@ -3803,6 +3803,12 @@ const  fetchCities= async (req, res)=>{
         // Retrieve messages between user_from and user_to
         const [messages] = await con.query('SELECT * FROM messages WHERE (user_from = ? AND user_to = ?) OR (user_from = ? AND user_to = ?) ORDER BY timestamp ASC', [user_from, user_to, user_to, user_from]);
 
+
+
+        if (messages.length === 0) {
+          return res.status(404).json({ result: 'failed', message: 'No conversation found' });
+      }
+
         // Fetch user names
         const [userFromInfo] = await con.query('SELECT firstname, lastname FROM tbl_users WHERE user_id = ?', [user_from]);
         const [userToInfo] = await con.query('SELECT firstname, lastname FROM tbl_users WHERE user_id = ?', [user_to]);
