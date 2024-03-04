@@ -4046,33 +4046,33 @@ const fetchSingleThread = async (req, res, next) => {
 const closeTicket = async(req,res,next)=>{
 
   const con = await connection(); 
-  try {
+      try {
+        await con.beginTransaction();
 
-    await con.beginTransaction();
+        var newStatus = "closed"
 
+        const { user_id, complain_number } = req.body;
 
-    var newStatus = "closed"
+        const [userQueries] = await con.query('SELECT * FROM tbl_queries WHERE user_id = ? AND complain_number = ?', [user_id, complain_number]);
 
-    const { user_id, complain_number } = req.body;
-  
-    //const [results] = await con.query('UPDATE tbl_queries SET status = ? WHERE id = ?', [newStatus, queryID]);
+        if (userQueries.length == 0) {
+          return res.status(200).json({ result: 'No ticket found' });
+        }
+      
+        //const [results] = await con.query('UPDATE tbl_queries SET status = ? WHERE id = ?', [newStatus, queryID]);
 
-    const [results] = await con.query('UPDATE tbl_queries SET status = ?, closed_by = ? WHERE complain_number = ?', [newStatus, 'customer', complain_number]);
+        const [results] = await con.query('UPDATE tbl_queries SET status = ?, closed_by = ? WHERE complain_number = ?', [newStatus, 'customer', complain_number]);
 
-    
-
-     await con.commit();
-     res.status(200).json({ result: 'success' });
- 
-    
-  } catch (error) {
-    await con.rollback();
-    console.error('Error in closing Ticket:', error);
-    res.status(500).json({ result: 'Internal Server Error' });
-    
-  }
-
-
+        
+        await con.commit();
+        res.status(200).json({ result: 'success' }); 
+        
+      } catch (error) {
+        await con.rollback();
+        console.error('Error in closing Ticket:', error);
+        res.status(500).json({ result: 'Internal Server Error' });
+        
+      }
  
   
 }
