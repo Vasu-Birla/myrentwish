@@ -1700,6 +1700,7 @@ const deleteFAQ = async(req,res,next)=>{
 
         res.render('admin/queries', { "output": "", "queries": allQueries });
     } catch (error) {
+      console.log("error in fetching queries Admin Panel -> ",error)
         res.render('admin/kilvish500');
     }
 }
