@@ -10,23 +10,36 @@
 }
 
 .customer-message {
-    background-color: #e9aaaa;
+    background-color: #10182a;
+    color: white;
     padding: 10px;
     border-radius: 10px;
     margin-bottom: 10px;
     max-width: 100%;
+    margin-right: 200px;
+    margin-left: 10px;
 }
 
 .support-executive-message {
-    background-color: #c51e1e;
+    background-color: #10182a;
     color: white;
     padding: 10px;
     border-radius: 10px;
     margin-bottom: 10px;
     max-width: 100%;
     align-self: flex-end;
+    margin-left: 200px;
+    margin-right: 10px;
    
 }
+
+
+.message-role {
+    font-size: 14px;
+    color: #888;
+    margin-top: 5px;
+}
+
 
 
 </style>
@@ -273,12 +286,15 @@ ticket_thread.forEach(function(message) {
     var messageHtml = '<div class="message"  >';
     if (message.role === 'customer') {
         messageHtml += '<div class="customer-message" style="text-align:left" >';
+          messageHtml += '<span class="message-role">' + message.role+' :' + '</span>'; 
     } else {
         messageHtml += '<div class="support-executive-message" style="text-align:right">';
+          messageHtml += '<span class="message-role">' + message.role+' :' + '</span>'; 
     }
+
     messageHtml += '<p>' + message.message + '</p>';
-    messageHtml += '<span class="message-time">' + formatTime(message.timestamp) + '</span>';
-    messageHtml += '</div>'; // Close message container
+    messageHtml += '<span class="message-role">' + formatTime(message.timestamp) + '</span>';
+    messageHtml += '</div>'; // Close message container   
     messageHtml += '</div>'; // Close message
     conversationContainer.append(messageHtml);
 });
