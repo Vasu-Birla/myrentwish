@@ -4018,7 +4018,7 @@ const fetchSingleThread = async (req, res, next) => {
     // Fetch all conversations of the specified user for the given complain_number
     const [conversation] = await con.query(
       'SELECT * FROM tbl_complain_threads WHERE complain_number = ? ORDER BY id DESC',
-      [user_id, complain_number]
+      [complain_number]
     );
 
 
