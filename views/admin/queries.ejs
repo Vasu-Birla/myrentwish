@@ -3,6 +3,33 @@
 <%- include ("navbar.ejs") %>
 
 
+<style>
+  .conversation-container {
+    max-height: 400px; /* Adjust as needed */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.customer-message {
+    background-color: #e9aaaa;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    max-width: 100%;
+}
+
+.support-executive-message {
+    background-color: #c51e1e;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    max-width: 100%;
+    align-self: flex-end;
+   
+}
+
+
+</style>
 
 
 <!-- Modal -->
@@ -15,7 +42,14 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+
+
+      
+
       <div class="modal-body">
+
+      
+
         <form action="/admin/sendemail" method="post"> <!-- Adjust the form action URL as needed -->
           <div class="form-group">
             <label for="recipientEmail">Recipient Email:</label>
@@ -36,6 +70,10 @@
           <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="closeEmailModal()">Close</button>
         </form>
       </div>
+      <div class="conversation-container">
+        <!-- Conversation messages will be displayed here -->
+    </div>
+
     </div>
   </div>
 </div>
@@ -97,7 +135,7 @@
                         <td>  <%- queries[i].message %> </td>
 
                         
-                        <td> <button style=" background-color: rgb(255, 255, 255); color: rgb(12, 17, 59); font-weight: bold; " aria-pressed="true" data-toggle="modal" data-target="#emailModal" data-ticket="<%- queries[i].complain_number %>" data-email="<%- queries[i].email %>"> <%- queries[i].email %>  </button> </td>
+                        <td> <button style=" background-color: rgb(255, 255, 255); color: rgb(12, 17, 59); font-weight: bold; " aria-pressed="true" data-toggle="modal" data-target="#emailModal"  data-thread="<%= JSON.stringify(queries[i].ticket_thread) %>" data-ticket="<%- queries[i].complain_number %>" data-email="<%- queries[i].email %>"> <%- queries[i].email %>  </button> </td>
 
                   
 
@@ -209,13 +247,56 @@ $(document).ready(function() {
   
   $('#emailModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
-      var recipientEmail = button.data('email'); // Extract email from data-email attribute
-      var ticket_number = button.data('ticket'); // Extract email from data-email attribute
+
+
+      var recipientEmail = button.data('email'); 
+      var ticket_number = button.data('ticket'); 
+      var ticket_thread = button.data('thread')
+
+        console.log(ticket_thread)
       var modal = $(this);
   
       // Populate the recipient email field
       modal.find('#recipientEmail').val(recipientEmail);
       modal.find('#ticket_number').val(ticket_number);
+
+
+
+      
+      var conversationContainer = modal.find('.conversation-container');
+        conversationContainer.empty();
+
+      //  ticket_thread.reverse();
+
+// Display conversation messages
+ticket_thread.forEach(function(message) {
+    var messageHtml = '<div class="message"  >';
+    if (message.role === 'customer') {
+        messageHtml += '<div class="customer-message" style="text-align:left" >';
+    } else {
+        messageHtml += '<div class="support-executive-message" style="text-align:right">';
+    }
+    messageHtml += '<p>' + message.message + '</p>';
+    messageHtml += '<span class="message-time">' + formatTime(message.timestamp) + '</span>';
+    messageHtml += '</div>'; // Close message container
+    messageHtml += '</div>'; // Close message
+    conversationContainer.append(messageHtml);
+});
+
+// Function to format timestamp
+function formatTime(timestamp) {
+    var time = new Date(timestamp);
+    var hours = time.getHours();
+    var minutes = time.getMinutes();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // Handle midnight (0 hours)
+    minutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero to minutes if needed
+    var formattedTime = hours + ':' + minutes + ' ' + ampm;
+    return formattedTime;
+}
+
+
     });
   
 

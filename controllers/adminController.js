@@ -1685,7 +1685,11 @@ const deleteFAQ = async(req,res,next)=>{
         
         const allQueries = [...openedQueries, ...closedQueries];
 
-        console.log("allQueriesssssss",allQueries)
+        // Fetch conversation threads for each complain_number
+        for (const query of allQueries) {
+          const [threads] = await con.query('SELECT * FROM tbl_complain_threads WHERE complain_number = ? ORDER BY id DESC', [query.complain_number]);
+          query.ticket_thread = threads;
+      }
 
         res.render('admin/queries', { "output": "", "queries": allQueries });
     } catch (error) {
@@ -1765,10 +1769,12 @@ const sendMailtoUser = async (req, res, next) => {
       const userID = '0';
       const role = userID == '0' ? 'support_executive' : 'customer';
 
-      await con.query(
+     const [kilresult] =  await con.query(
         'INSERT INTO tbl_complain_threads (complain_number, user_id, role, message) VALUES (?, ?, ?, ?)',
         [complain_number, userID, role, message]
       );
+
+      console.log("thread reply by admin --> ", kilresult)
   
       await con.commit();
 
