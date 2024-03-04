@@ -45,7 +45,8 @@ import { register ,Login, Logout,  ForgotPassword ,
     chatConversation,
     ThreadReply,
     FetchUserQueries,
-    fetchSingleThread} from '../controllers/indexControllerAPI.js';
+    fetchSingleThread,
+    closeTicket} from '../controllers/indexControllerAPI.js';
 
 const router = express.Router(); 
 
@@ -245,6 +246,8 @@ router.route('/FetchUserQueries').post(upload.none(), FetchUserQueries )
 
 
 router.route('/fetchSingleThread').post(upload.none(), fetchSingleThread )
+
+router.route('/closeTicket').post(upload.none(), closeTicket )
 
 
 

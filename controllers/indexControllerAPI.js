@@ -3945,7 +3945,7 @@ const ThreadReply = async (req, res, next) => {
       const { status, closed_by } = queryResult[0];
 
       if (status === 'closed') {
-        const replyMessage = `This ticket is closed by ${closed_by === 'support_executive' ? 'support executive' : 'user'}`;
+        const replyMessage = `This ticket is closed by ${closed_by === 'support_executive' ? 'support executive' : 'you'}`;
 
         await con.commit();
         return res.status(200).json({ result: replyMessage });
@@ -4041,6 +4041,44 @@ const fetchSingleThread = async (req, res, next) => {
 };
 
 
+//--------- close ticket by Customer -> 
+
+const closeTicket = async(req,res,next)=>{
+
+  const con = await connection(); 
+  try {
+
+    await con.beginTransaction();
+
+
+    var newStatus = "closed"
+
+    const { user_id, complain_number } = req.body;
+  
+    //const [results] = await con.query('UPDATE tbl_queries SET status = ? WHERE id = ?', [newStatus, queryID]);
+
+    const [results] = await con.query('UPDATE tbl_queries SET status = ?, closed_by = ? WHERE complain_number = ?', [newStatus, 'customer', complain_number]);
+
+    
+
+     await con.commit();
+     res.status(200).json({ result: 'success' });
+ 
+    
+  } catch (error) {
+    await con.rollback();
+    console.error('Error in closing Ticket:', error);
+    res.status(500).json({ result: 'Internal Server Error' });
+    
+  }
+
+
+ 
+  
+}
+
+
+
 
 
 export {register,  Login, Logout, ForgotPassword , resetpassword,
@@ -4052,7 +4090,7 @@ export {register,  Login, Logout, ForgotPassword , resetpassword,
 
      getOnlyFansProfile,  getSkills1 , fetchCities , fetchcountries , isActive , loginOTP , userList , switchType
 , totalAnswered , answeredQuestions , PropertiesFilter, servicesdetails, chatConversation , ThreadReply , FetchUserQueries,
-fetchSingleThread
+fetchSingleThread, closeTicket
 
     }
 

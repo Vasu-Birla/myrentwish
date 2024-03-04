@@ -1677,17 +1677,19 @@ const deleteFAQ = async(req,res,next)=>{
   //================================= Query Tickets ========================================= 
   
 
-
-  const queries = async(req,res,next)=>{ 
-
-
+  const queries = async (req, res, next) => {
     const con = await connection(); 
     try {
-      
-      const [Queries] = await con.query('SELECT * FROM tbl_queries WHERE status IN (?, ?) ORDER BY id DESC', ['opened', 'closed']);
-      res.render('admin/queries',{"output":"","queries":Queries})
+        const [openedQueries] = await con.query('SELECT * FROM tbl_queries WHERE status = ? ORDER BY id DESC', ['opened']);
+        const [closedQueries] = await con.query('SELECT * FROM tbl_queries WHERE status = ? ORDER BY id DESC', ['closed']);
+        
+        const allQueries = [...openedQueries, ...closedQueries];
+
+        console.log("allQueriesssssss",allQueries)
+
+        res.render('admin/queries', { "output": "", "queries": allQueries });
     } catch (error) {
-      res.render('admin/kilvish500')
+        res.render('admin/kilvish500');
     }
 }
 
@@ -1696,26 +1698,33 @@ const QueriesPost = async(req,res,next)=>{
 
   const con = await connection(); 
 
-  
-  
+  try {
+    
+      
   var queryID = req.body.id;
 
-      if(req.body.status =='opened')
-      {
-          var newStatus = "closed"
-      }
-      else {
-          var newStatus = "opened"
-      }  
-  
-      //const [results] = await con.query('UPDATE tbl_queries SET status = ? WHERE id = ?', [newStatus, queryID]);
+  if(req.body.status =='opened')
+  {
+      var newStatus = "closed"
+  }
+  else {
+      var newStatus = "opened"
+  }  
 
-      const [results] = await con.query('UPDATE tbl_queries SET status = ?, closed_by = ? WHERE id = ?', [newStatus, 'support_executive', queryID]);
+  //const [results] = await con.query('UPDATE tbl_queries SET status = ? WHERE id = ?', [newStatus, queryID]);
 
-          if(results){
-              res.json({ msg: 'Action Taken on Query'})
-       }
-   
+  const [results] = await con.query('UPDATE tbl_queries SET status = ?, closed_by = ? WHERE id = ?', [newStatus, 'support_executive', queryID]);
+
+      if(results){
+          res.json({ msg: 'Action Taken on Query'})
+   }
+  } catch (error) {
+
+    res.render('admin/kilvish500');
+    
+  }
+
+     
   
 }
 
