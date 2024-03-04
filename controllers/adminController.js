@@ -1688,7 +1688,14 @@ const deleteFAQ = async(req,res,next)=>{
         // Fetch conversation threads for each complain_number
         for (const query of allQueries) {
           const [threads] = await con.query('SELECT * FROM tbl_complain_threads WHERE complain_number = ? ORDER BY id DESC', [query.complain_number]);
+          
+          var [[user]] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [query.user_id ]); 
+
+         var customer_name = `${user.firstname} ${user.lastname}`;
+
           query.ticket_thread = threads;
+
+          query.customer_name =  customer_name
       }
 
         res.render('admin/queries', { "output": "", "queries": allQueries });

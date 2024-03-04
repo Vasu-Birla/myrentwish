@@ -51,6 +51,9 @@
     background: #1c4526;
 }
 
+.msgtext {
+  margin-top: 10px;
+}
 
 </style>
 
@@ -158,7 +161,7 @@
                         <td>  <%- queries[i].message %> </td>
 
                         
-                        <td> <button style=" background-color: rgb(255, 255, 255); color: rgb(12, 17, 59); font-weight: bold; " aria-pressed="true" data-toggle="modal" data-target="#emailModal"  data-thread="<%= JSON.stringify(queries[i].ticket_thread) %>" data-ticket="<%- queries[i].complain_number %>" data-email="<%- queries[i].email %>"> <%- queries[i].email %>  </button> </td>
+                        <td> <button style=" background-color: rgb(255, 255, 255); color: rgb(12, 17, 59); font-weight: bold; " aria-pressed="true" data-toggle="modal" data-target="#emailModal"  data-thread="<%= JSON.stringify(queries[i].ticket_thread) %>"  data-customer_name="<%- queries[i].customer_name %>" data-ticket="<%- queries[i].complain_number %>" data-email="<%- queries[i].email %>"> <%- queries[i].email %>  </button> </td>
 
                   
 
@@ -275,6 +278,7 @@ $(document).ready(function() {
       var recipientEmail = button.data('email'); 
       var ticket_number = button.data('ticket'); 
       var ticket_thread = button.data('thread')
+      var customer_name = button.data('customer_name')
 
         console.log(ticket_thread)
       var modal = $(this);
@@ -293,16 +297,20 @@ $(document).ready(function() {
 
 // Display conversation messages
 ticket_thread.forEach(function(message) {
+
+  
     var messageHtml = '<div class="message"  >';
     if (message.role === 'customer') {
         messageHtml += '<div class="customer-message" style="text-align:left" >';
-          messageHtml += '<span class="message-role">' + message.role+' :' + '</span>'; 
+          //messageHtml += '<span class="message-role"> Customer </span>'; 
+          messageHtml += '<span class="message-role">' + customer_name +' :' + '</span>'; 
     } else {
         messageHtml += '<div class="support-executive-message" style="text-align:right">';
-          messageHtml += '<span class="message-role">' + message.role+' :' + '</span>'; 
+          // messageHtml += '<span class="message-role">' + message.role+' :' + '</span>'; 
+          messageHtml += '<span class="message-role"> Support Executive </span>'; 
     }
 
-    messageHtml += '<p>' + message.message + '</p>';
+    messageHtml += '<p class="msgtext">' + message.message + '</p>';
     messageHtml += '<span class="message-role">' + formatTime(message.timestamp) + '</span>';
     messageHtml += '</div>'; // Close message container   
     messageHtml += '</div>'; // Close message
