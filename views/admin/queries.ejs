@@ -55,6 +55,30 @@
   margin-top: 10px;
 }
 
+.closed-message {
+    color: red;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.badge.badge-info {
+    background-color: #3abaf4;
+    font-size: small;
+}
+
+.badge.badge-success {
+    background-color: #54ca68;
+    font-size: small;
+}
+
+.badge-warning {
+    color: #212529;
+    background-color: #be9109;
+    font-size: small;
+}
+
 </style>
 
 
@@ -63,18 +87,20 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="emailModalLabel">Send Email</h5>
+        <h5 class="modal-title" id="emailModalLabel">Ticket Thread</h5>
  
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
 
-
+      <div class="closed-message">
+      
+      </div>
       
 
       <div class="modal-body">
 
-      
+       
 
         <form action="/admin/sendemail" method="post"> <!-- Adjust the form action URL as needed -->
           <div class="form-group">
@@ -86,13 +112,13 @@
           
           <div class="form-group">
             <label for="emailSubject">Subject:</label>
-            <input type="text" class="form-control" id="emailSubject" name="emailSubject" required>
+            <input type="text" class="form-control" id="emailSubject" name="emailSubject" required readonly>
           </div>
           <div class="form-group">
             <label for="emailMessage">Message:</label>
             <textarea class="form-control" id="emailMessage" name="emailMessage" rows="4" required></textarea>
           </div>
-          <button type="submit" class="btn btn-success">Send</button>
+          <button type="submit" class="btn btn-success">Reply</button>
           <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="closeEmailModal()">Close</button>
         </form>
       </div>
@@ -117,7 +143,7 @@
                 </div>
                 
              
-              <% if (output && output.startsWith('Ticket Response')) { %>
+              <% if (outpu && output.startsWith('Ticket Response')) { %>
                 <div class="alert  alert-success">
                   <%= output %>
                 </div> 
@@ -138,9 +164,10 @@
                      <tr role="row">
                         <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 30.0781px;">Id</th>
                         <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 80.0781px;">Ticket Num  </th>
+                        <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 80.0781px;">Customer </th>
                       <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Day: activate to sort column ascending" style="width: 80.0781px;">Subject  </th>
                       <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Dc Id: activate to sort column ascending" style="width: 167.953px;"> Message </th>
-                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Dc Id: activate to sort column ascending" style="width: 167.953px;"> Sent BY</th>                    
+                      <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Dc Id: activate to sort column ascending" style="width: 167.953px;"> Ticket Thread </th>                    
                       <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Gross: activate to sort column ascending" style="width: 100.922px;">status</th>
                       <th class="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending" style="width: 110.156px;">Action </th>
                     </tr>
@@ -155,13 +182,15 @@
                         
                         <td>  <%- queries[i].complain_number %> </td>
 
+                        <td>  <%- queries[i].customer_name %> </td>
+
 
                         <td>  <%- queries[i].subject %> </td>
 
                         <td>  <%- queries[i].message %> </td>
 
                         
-                        <td> <button style=" background-color: rgb(255, 255, 255); color: rgb(12, 17, 59); font-weight: bold; " aria-pressed="true" data-toggle="modal" data-target="#emailModal"  data-thread="<%= JSON.stringify(queries[i].ticket_thread) %>"  data-customer_name="<%- queries[i].customer_name %>" data-ticket="<%- queries[i].complain_number %>" data-email="<%- queries[i].email %>"> <%- queries[i].email %>  </button> </td>
+                        <td> <button style=" background-color: rgb(255, 255, 255); color: rgb(12, 17, 59); font-weight: bold; " aria-pressed="true" data-toggle="modal" data-target="#emailModal" data-status="<%- queries[i].status %>"  data-subject="<%- queries[i].subject %>"  data-thread="<%= JSON.stringify(queries[i].ticket_thread) %>"  data-customer_name="<%- queries[i].customer_name %>" data-ticket="<%- queries[i].complain_number %>" data-email="<%- queries[i].email %>"> Open Thread </button> </td>
 
                   
 
@@ -171,7 +200,7 @@
                       <% if(queries[i].status == 'opened') { %>
                           <div class="badge badge-warning badge-lg"><%- queries[i].status %></div>
                           <% } else { %>                     
-                            <div class="badge badge-success badge-lg"><%- queries[i].status %></div>
+                            <div class="badge badge-success badge-lg"><%- queries[i].status %> </div>
                        
                        <% } %>  
                           
@@ -181,9 +210,9 @@
                           
 
                        <% if(queries[i].status == 'opened') { %>
-                          <button onclick="updateStatus('<%= queries[i].id %>','<%= queries[i].status %>')" class="badge badge-info badge-lg"> Close Ticket  </button>
+                          <button  onclick="updateStatus('<%= queries[i].id %>','<%= queries[i].status %>')" class="badge badge-info badge-lg"> Close Ticket  </button>
                           <% } else { %>                     
-                            <div class="badge badge-success badge-lg"><%- queries[i].status %></div>
+                            <div class="badge badge-success badge-lg"><%- queries[i].status %> By  <%- queries[i].closed_by %>  </div>
                        
                        <% } %> 
                  
@@ -279,14 +308,36 @@ $(document).ready(function() {
       var ticket_number = button.data('ticket'); 
       var ticket_thread = button.data('thread')
       var customer_name = button.data('customer_name')
+      var subject = button.data('subject')
+      var status = button.data('status')
+      
+
+      var uniqueSubject = 'Ticket_'+ticket_number+'_'+subject
 
         console.log(ticket_thread)
       var modal = $(this);
-  
-      // Populate the recipient email field
+
+      if(status=='opened'){
+        
+          // Populate the recipient email field
       modal.find('#recipientEmail').val(recipientEmail);
       modal.find('#ticket_number').val(ticket_number);
+      modal.find('#emailSubject').val(uniqueSubject);
 
+       // Show the modal body
+       modal.find('.modal-body').show();
+        modal.find('.closed-message').hide();
+
+
+      }else{
+
+ 
+          modal.find('.modal-body').hide();
+        modal.find('.closed-message').show().text('This Ticket is closed');
+
+      }
+  
+    
 
 
       
