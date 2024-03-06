@@ -1795,12 +1795,34 @@ const sendMailtoUser = async (req, res, next) => {
       responsetoQuery(email, message, subject);
 
       // Fetch queries from the tbl_queries table
+
+      const [openedQueries] = await con.query('SELECT * FROM tbl_queries WHERE status = ? ORDER BY id DESC', ['opened']);
+      const [closedQueries] = await con.query('SELECT * FROM tbl_queries WHERE status = ? ORDER BY id DESC', ['closed']);
+      
+      const allQueries = [...openedQueries, ...closedQueries];
+
+      // Fetch conversation threads for each complain_number
+      for (const query of allQueries) {
+        const [threads] = await con.query('SELECT * FROM tbl_complain_threads WHERE complain_number = ? ORDER BY id DESC', [query.complain_number]);
+        
+        var [user] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [query.user_id ]); 
+     
+
+        query.ticket_thread = threads;
+
+        if(user.length>0){
+          var customer_name = `${user[0].firstname} ${user[0].lastname}`;
+          query.customer_name =  customer_name
+        }else{
+          query.customer_name =  'Deleted User'
+        }          
+    }
      
 
       if (Queries) {
-          res.render('queries', { "output": "Ticket Response Sent to " + email + " and User's Account Successfully", "queries": Queries });
+          res.render('queries', { "output": "Ticket Response Sent to " + email + " and User's Account Successfully", "queries": allQueries });
       } else {
-          res.render('queries', { "output": "Failed to send Email", "queries": Queries });
+          res.render('queries', { "output": "Failed to send Email", "queries": allQueries });
       }
   } catch (error) {
       console.error('Error in ThreadReply by Admin & sendMailtoUser API:', error);
@@ -1809,6 +1831,39 @@ const sendMailtoUser = async (req, res, next) => {
       con.release();
   }
 };
+
+
+const AftersendemailQuriesReload = async (req, res, next) => {
+  const con = await connection(); 
+  try {
+      const [openedQueries] = await con.query('SELECT * FROM tbl_queries WHERE status = ? ORDER BY id DESC', ['opened']);
+      const [closedQueries] = await con.query('SELECT * FROM tbl_queries WHERE status = ? ORDER BY id DESC', ['closed']);
+      
+      const allQueries = [...openedQueries, ...closedQueries];
+
+      // Fetch conversation threads for each complain_number
+      for (const query of allQueries) {
+        const [threads] = await con.query('SELECT * FROM tbl_complain_threads WHERE complain_number = ? ORDER BY id DESC', [query.complain_number]);
+        
+        var [user] = await con.query('SELECT * FROM tbl_users WHERE user_id = ?', [query.user_id ]); 
+     
+
+        query.ticket_thread = threads;
+
+        if(user.length>0){
+          var customer_name = `${user[0].firstname} ${user[0].lastname}`;
+          query.customer_name =  customer_name
+        }else{
+          query.customer_name =  'Deleted User'
+        }          
+    }
+
+      res.render('admin/queries', { "output": "", "queries": allQueries });
+  } catch (error) {
+    console.log("error in fetching queries Admin Panel -> ",error)
+      res.render('admin/kilvish500');
+  }
+}
 
 
 
@@ -4423,7 +4478,7 @@ export {homePage,
         deletetandc , appPass, appPassPost , ForgotPassword , sendOTP , verifyOTP , resetpassword , NotifyPost ,
       
         rentAgreement  , rentAgreementPost , deleteAgreement ,
-         viewAgreements ,updateAgreementStatus , addLocations , addLocationsPost , deleteLocation , addservicesDetails , addservicesDetailsPost }
+         viewAgreements ,updateAgreementStatus , addLocations , addLocationsPost , deleteLocation , addservicesDetails , addservicesDetailsPost ,AftersendemailQuriesReload }
 
 
          

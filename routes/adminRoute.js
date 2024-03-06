@@ -18,7 +18,7 @@ import { Deleteskill, ForgotPassword, NotifyPost, Profile, ProfilePost, QueriesP
      updateAgreementStatus, 
      updatePropertyStatus, updateUserStatus, updateadminpic,
       updatepropType, userPrivacy, userPrivacyPost, verifyOTP, viewAgreements, 
-      viewQuestion, viewQuestionPost, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers , deleteLocation, addservicesDetails, addservicesDetailsPost } from '../controllers/adminController.js';
+      viewQuestion, viewQuestionPost, viewQuestions, viewSkills, viewUser, viewUserPost, viewUsers , deleteLocation, addservicesDetails, addservicesDetailsPost, AftersendemailQuriesReload } from '../controllers/adminController.js';
 
 
 import upload from '../middleware/upload.js';
@@ -228,7 +228,10 @@ router.route('/queries').get(queries)
 
 router.route('/queries').post( QueriesPost)
 
-router.route('/sendemail').post( sendMailtoUser)
+
+router.route('/sendemail').get(AftersendemailQuriesReload)
+
+router.route('/sendemail').post(sendMailtoUser)
 
 
 //--------- add Google App pass to send Emails ---------
