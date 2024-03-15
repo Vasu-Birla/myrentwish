@@ -450,6 +450,7 @@ const  removeAccount = async(req,res,next)=>{
         user.user_images = [];
       }
 
+      user.imagePath = `${BASEURL}${user.image}`;
       
 
       res.json(user);
@@ -465,6 +466,8 @@ const  removeAccount = async(req,res,next)=>{
 
 
   const updateProfile = async (req, res, next) => {
+
+    var BASEURL = `http://${process.env.Host1y}/uploads/`;
     const con = await connection();
     try {
       
@@ -494,7 +497,7 @@ const  removeAccount = async(req,res,next)=>{
 
       console.log(" new image found ...")
        image =  req.file.filename ;
-       imagePath=   req.file.path = `http://${process.env.Host1}/uploads/${req.file.filename}`; 
+       imagePath=   req.file.path =  `${BASEURL}${req.file.filename}`;
     }
   
       // Update user details
@@ -769,7 +772,9 @@ console.log("add Property data from frontend --> ", req.body)
     const is_available = prop_status === 'available';
 
 
-    const images = req.files.map(file => ({path:`http://${process.env.Host1}/uploads/${file.filename}`}));
+    //const images = req.files.map(file => ({path:`http://${process.env.Host1}/uploads/${file.filename}`}));
+
+    const images = req.files.map(file => ({path:`${file.filename}`}));
 
 
 
@@ -936,6 +941,7 @@ const Properties11 = async (req, res, next) => {
 
 const Properties = async (req, res, next) => {
   const con = await connection();
+  var BASEURL = `http://${process.env.Host}/uploads/`;
 
   try {
 
@@ -1017,7 +1023,25 @@ const Properties = async (req, res, next) => {
 
     // Calculate match percentage for each property
     for (const row of allProperties) {
-      row.images = JSON.parse(row.images);
+      //row.images = JSON.parse(row.images);
+
+      
+      if(row.images){
+        row.images = JSON.parse(row.images) 
+       
+            
+        row.images.forEach((item) => {
+                item.path = `${BASEURL}${item.path}`;
+                //delete item.path;
+            });
+  
+      }else{
+        row.images = [];
+      }
+
+
+
+
       row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
 
       // Check if the property is in the user's interest
@@ -1033,7 +1057,9 @@ const Properties = async (req, res, next) => {
       var [[owner]] = await con.query('SELECT * from tbl_users where user_id = ? ',[ownerID]); 
 
       //console.log("Ownerrrrrr    --->>>>> ", row)
-      row.owner_image = owner.imagePath;
+      row.owner_image = `${BASEURL}${owner.image}`;
+
+      
     }
 
     // Sort all properties by match percentage in descending order
@@ -1561,6 +1587,7 @@ const calculateUserMatchPercentage8feb = (Ownerproperties, user) => {
 //-------- fetch my properties -------
 
 const myProperties = async (req, res, next) => {
+  var BASEURL = `http://${process.env.Host}/uploads/`;
   const  con = await connection();
     try {
       await con.beginTransaction();
@@ -1581,7 +1608,22 @@ const myProperties = async (req, res, next) => {
 
       for (const row of properties) {
 
-        row.images = JSON.parse(row.images) 
+
+        if(row.images){
+          row.images = JSON.parse(row.images) 
+         
+              
+          row.images.forEach((item) => {
+                  item.path = `${BASEURL}${item.path}`;
+                  //delete item.path;
+              });
+    
+        }else{
+          row.images = [];
+        }
+
+
+        
         row.available_date = format(new Date(row.available_date), 'yyyy-MM-dd');
     }    
     
@@ -1602,6 +1644,7 @@ const myProperties = async (req, res, next) => {
 
 const property = async (req, res, next) => {
   const con = await connection();
+  var BASEURL = `http://${process.env.Host}/uploads/`;
   try {        
     const prop_id = req.body.prop_id;
     const [[property]] = await con.query('SELECT * FROM tbl_prop WHERE prop_id = ?', [prop_id]);
@@ -1611,7 +1654,20 @@ const property = async (req, res, next) => {
      
     } 
 
-    property.images = JSON.parse(property.images) 
+    if(property.images){
+      property.images = JSON.parse(property.images) 
+     
+          
+      property.images.forEach((item) => {
+              item.path = `${BASEURL}${item.path}`;
+              //delete item.path;
+          });
+
+    }else{
+      property.images = [];
+    }
+
+
     property.available_date = format(new Date(property.available_date), 'yyyy-MM-dd');
 
     res.json(property);
@@ -1696,12 +1752,14 @@ const updateProperty = async (req, res, next) => {
 
       if (req.files && req.files.length > 0) {
         console.log("new Images uploaded")
-        images = req.files.map(file => ({ path: `http://${process.env.Host1}/uploads/${file.filename}` }));
+        //images = req.files.map(file => ({ path: `http://${process.env.Host1}/uploads/${file.filename}` }));
+        images = req.files.map(file => ({path:`${file.filename}`}));
       } else {
         console.log("Existing Images uploaded")
         images = JSON.parse(property.images);
       }
 
+      
 
 
     // Create an object with updated property details
