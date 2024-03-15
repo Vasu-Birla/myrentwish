@@ -318,6 +318,8 @@ export default function initializeChatService(server) {
   // ---------------------- Chat History  ------------------------- 
   socket.on('chatHistory', async (data) =>{  console.log(".........",data.sourceId)
 
+  var BASEURL = `http://${process.env.Host1}/uploads/`;
+
   const con = await connection();
   const [chats] = await con.query("SELECT * FROM messages WHERE (user_from = '" + data.sourceId+ "' AND  user_to = '" + data.targetId + "' ) OR (user_from = '" + data.targetId + "' AND  user_to = '" + data.sourceId+ "')  ORDER BY timeorder ASC")
   
@@ -349,6 +351,7 @@ export default function initializeChatService(server) {
  
   var chatHistory = chats.map(row => { 
     row.id =  ""+ row.id +""      
+    row.filePath = `${BASEURL}${row.filename}`;
     return { ...row };    
 
   })  
@@ -368,7 +371,7 @@ export default function initializeChatService(server) {
 
 
 socket.on('chatList', async (userID) =>{
-
+  var BASEURL = `http://${process.env.Host1}/uploads/`;
   console.log("---...userID ",  userID)
 
   const con = await connection();
@@ -449,6 +452,7 @@ chatList.sort((a, b) => b.timeorder - a.timeorder);
 
    
       if(receiver){
+        receiver.imagePath = `${BASEURL}${receiver.image}`;
         var panewala = {"id":receiver.user_id, "name":receiver.firstname,"image":receiver.imagePath,"LastSeen": lastSeen,"unreadCount":unreadResult.length} 
         receivers.push(panewala)
       }

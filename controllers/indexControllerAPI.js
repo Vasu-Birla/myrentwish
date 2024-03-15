@@ -467,7 +467,7 @@ const  removeAccount = async(req,res,next)=>{
 
   const updateProfile = async (req, res, next) => {
 
-    var BASEURL = `http://${process.env.Host1y}/uploads/`;
+    var BASEURL = `http://${process.env.Host1}/uploads/`;
     const con = await connection();
     try {
       
@@ -941,7 +941,7 @@ const Properties11 = async (req, res, next) => {
 
 const Properties = async (req, res, next) => {
   const con = await connection();
-  var BASEURL = `http://${process.env.Host}/uploads/`;
+  var BASEURL = `http://${process.env.Host1}/uploads/`;
 
   try {
 
@@ -1587,7 +1587,7 @@ const calculateUserMatchPercentage8feb = (Ownerproperties, user) => {
 //-------- fetch my properties -------
 
 const myProperties = async (req, res, next) => {
-  var BASEURL = `http://${process.env.Host}/uploads/`;
+  var BASEURL = `http://${process.env.Host1}/uploads/`;
   const  con = await connection();
     try {
       await con.beginTransaction();
@@ -1644,7 +1644,7 @@ const myProperties = async (req, res, next) => {
 
 const property = async (req, res, next) => {
   const con = await connection();
-  var BASEURL = `http://${process.env.Host}/uploads/`;
+  var BASEURL = `http://${process.env.Host1}/uploads/`;
   try {        
     const prop_id = req.body.prop_id;
     const [[property]] = await con.query('SELECT * FROM tbl_prop WHERE prop_id = ?', [prop_id]);
